@@ -1,0 +1,31 @@
+url: https://chris-prener.github.io/zippeR/
+
+authors:
+  Christopher Prener:
+    href: https://chris-prener.github.io
+
+reference:
+  - title: "Data Preparation"
+    desc: "Ensure vectors of ZIP Codes or ZCTAs are Valid"
+    contents:
+    - zi_validate
+    - zi_repair
+
+  - title: "ZCTA Geometric Data"
+    desc: "Download Five- and Three-Digit Boundary Files"
+    contents:
+    - zi_get_geometry
+    - zi_list_zctas
+
+  - title: "ZCTA Demographic Data"
+    desc: "Download Five-Digit Demographic Data and Calculate Three-Digit Estimates"
+    contents:
+    - zi_get_demographics
+    - zi_aggregate
+
+  - title: "Crosswalk ZIP Codes and ZCTAs"
+    desc: "Identify the Correct ZCTA for a Given ZIP Code"
+    contents:
+    - zi_load_crosswalk
+    - zi_prep_hud
+    - zi_crosswalk

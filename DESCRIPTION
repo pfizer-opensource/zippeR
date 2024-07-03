@@ -1,0 +1,43 @@
+Package: zippeR
+Title: Working with United States ZIP Code and ZIP Code Tabulation Area Data
+Version: 0.1.0.9000
+Authors@R: c(
+    person("Christopher", "Prener", ,"Christopher.Prener@pfizer.com", c("aut", "cre"),
+    comment = c(ORCID = "0000-0002-4310-9888")),
+    person("Timothy", "Wiemken", ,"Timothy.Wiemken@pfizer.com", c("aut"),
+    comment = c(ORCID = "0000-0002-8251-3007")),
+    person("Angela", "Cook", ,"Angela.Cook@pfizer.com", c("aut"))
+    )
+Description: Provides a set of functions for working with American postal codes,
+   which are known as ZIP Codes. These include accessing ZIP Code to ZIP Code 
+   Tabulation Area (ZCTA) crosswalks, retrieving demographic data for ZCTAs, and 
+   tabulating demographic data for three-digit ZCTAs.
+Depends: R (>= 3.5)
+License: Apache License (>= 2)
+URL: https://github.com/pfizer-evgen/zippeR/
+BugReports: https://github.com/pfizer-evgen/zippeR/issues
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+Imports:
+    datasets,
+    dplyr,
+    httr,
+    jsonlite,
+    purrr,
+    readr,
+    sf,
+    spatstat.geom,
+    stats,
+    stringr,
+    tibble,
+    tidycensus,
+    tidyr,
+    tigris,
+    utils
+Suggests:
+    covr,
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr

@@ -1,0 +1,48 @@
+---
+title: "Demographic and Geometric ZCTA Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Demographic and Geometric ZCTA Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## ZCTA Geometry
+`zippeR` providers support for downloading geometric data as `sf` objects. For five-digit ZCTAs, `tigris` is used to access the TIGER/Line database. For three-digit ZCTAs, these are downloaded from [a repository on GitHub](https://github.com/chris-prener/zcta3) maintained by the author. These are generalized versions of the ZCTA geometry designed to provide a smaller file size suitable for storage on GitHub. Nevertheless, each file is still approximately 60MB in size. Users should carefully evaluate the geometric data to ensure they are fit for purpose, and note that these are provided without warranty.
+
+One major difference between `tigris::zctas()` and `zipper::get_geometry()` is that `zippeR` provides support for automatically returning ZCTAs that intersect or whose centroids lie within states and/or counties. This can be used with both the five- and three-digit ZCTAs. In general, the intersect method will yield more ZCTAs than are necessary while the centroid method will yield too few. For example, for Missouri, we need to use the `includes` argument to add several additional ZCTAs in whose centroids do not fall within Missouri itself (they all lie in Iowa):
+
+```r
+geo12 <- zi_get_geometry(year = 2012, state = "MO", method = "centroid", 
+    includes = c("51640", "52542", "52573", "52626"))
+```
+
+If you use the intersect method, the corresponding `excludes` argument can be used to drop ZCTAs that are not needed. Note that all ZCTAs passed to `starts_with` (which accepts two-digit values), `includes`, and `excludes` are validated to ensure they follow formatting requirements. As noted above, the validation process does not ensure that inputs correspond to valid ZCTAs at this time.
+
+One additional option to note is that, when downloading nation-wide ZCTA data, you can use the `shift_geo` argument to place Alaska, Hawaii, and Puerto Rico in the lower left-hand corner of your map:
+
+```r
+geo10 <- zi_get_geometry(year = 2010, shift_geo = TRUE)
+```
+
+## ZCTA Demographics
+Downloading the geometric data can be used for mapping, or simply to produce a vector of all five- or three-digit ZCTAs in a given area. These, in-turn, can be used to define areas where demographic data are desired. The `zi_get_demographics()` wraps `tidycensus` functions to get data using a single, uniform API. For instance, we can download the total population for all ZCTAs based on the 2010 Decennial Census:
+
+```r
+pop10 <- zi_get_demographics(year = 2010, variables = "P001001", survey = "sf1")
+```
+
+*Note: As of now, the Census Bureau has not released ZCTA data for the 2020 Decennial Census.* 
+
+If you are working with output from `zi_get_geometry()`, you can specify the `GEOID` vector in your call to limit the number of ZCTAs returned:
+
+```r
+gini12 <- zi_get_demographics(year = 2012, table = "B19083", survey = "acs5", zcta = geo12$GEOID)
+```

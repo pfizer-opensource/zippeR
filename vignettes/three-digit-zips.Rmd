@@ -1,0 +1,76 @@
+---
+title: "Three-digit ZIP Codes and ZCTAs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Three-digit ZIP Codes and ZCTAs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Three-digit ZIP Codes appear frequently in real world health care data. Since patient registration and medical billing rely on patient addresses, they are common data elements in EHR and medical claims information systems. Providing the first three digits of a ZIP Code is a common data strategy vendors seek to provide geographic data while protecting patient privacy. Unfortunately, ZIP Codes are difficult to work with, and utilizing three-digit versions offers additional challenges.
+
+## Background
+
+Three-digit ZIP Codes refer to a group of ZIP Codes that share the same first three digits. For example, the St. Louis, Missouri ZIP Codes 63101, 63102, and 63103 would all be part of the 631 three-digit ZIP Code. These first three digits correspond to "sectional center facilities" (SCFs) operated by the United States Postal Service (USPS). Sectional center facilities sit between larger "network distribution centers" (NDCs) and local post offices, sorting and distributing mail. Each SCF has one more three-digit ZIP Codes associated with it. The SCF for St. Louis is in St. Louis City, Missouri, and it services approximately a dozen three-digit ZIP Codes in Eastern Missouri and Southern Illinois.
+
+Unlike five-digit ZIP Codes, which have the Census Bureau analogue of ZIP Code Tabulation Areas (ZCTAs), there is no Census equivalent for three-digit ZIP Codes. This is because three-digit ZIP Codes are not geographic areas, but rather mail sorting facilities. Aggregating ZCTAs using their first three digits illustrate yet another challenge - the boundaries of three-digit ZCTAs are not contiguous. This means that some ZCTAs are split into multiple pieces that are not adjacent to each other.
+
+When the first three-digits are the only three digits given, it is not possible to use the ZIP to ZCTA crosswalk files included in `zippeR`. This increases the misclassification rate, because some of the observations will be assigned to the wrong three-digit ZCTA. For example, the ZIP Code 64999 in Kansas City is part of the 649 three-digit ZIP Code, but it is not part of the 649 three-digit ZCTA. According to the 2022 UDS crosswalk file, the appropriate ZCTA for 64999 is 64108, which has the 641 three-digit ZIP Code. 
+
+`zippeR` provides several functions for downloading and using three-digit ZCTA data. They should be used with caution and the user should be aware of the limitations of the data described above.
+
+## Downloading Geometric Data for Three-digit ZCTAs
+
+Three-digit ZCTA geometric data can be downloaded using `zi_get_geometry()`. The following syntax downloads all ZCTA3 for the United States, excluding overseas territories:
+
+```r
+zcta3 <- zi_get_geometry(year = 2020, style = "zcta3", territory = NULL, method = "intersect")
+```
+
+Optionally, you can specify a specific state, county, or territory to limit your data object's extent:
+
+```r
+mo_zcta3 <- zi_get_geometry(year = 2020, style = "zcta3", state = "MO", territory = NULL, method = "intersect")
+```
+
+The `zi_get_geometry()` function downloads pre-made geometric data from the Census Bureau's TIGER/Line Shapefiles, which were created by downloading the ZCTA data, grouping features by the first three digits of the ZCTA, and then summarizing the features to dissolve them. Finally, `sf::st_simplify(out, preserveTopology = TRUE, dTolerance = 20)` was used to simplify the features and reduce the size of each file.
+
+Data are available from 2010 through 2023, excluding 2011. If a specific state or county is requested using those optional arguments, included ZCTAs are defined using either `method = "intersect"` or `method = "centroid"`. The `"intersect"` approach includes any ZCTA that touches a given state or county with an area greater than `0`, while the `"centroid"` approach includes any ZCTA whose geographic midpoint lies within the requested state or county.
+
+## Creating Demographic Estimates for Three-digit ZCTAs
+
+Creating a master list of three-digit ZCTAs is a pre-requisite for creating demographic estimates for these geographies. The object we created above, `mo_zcta3`, has a `ZCTA3` column that can serve as that reference. Once you have your list, you should download demographic data using `zi_get_demographics()`. For example, to download population estimates for 2020, you would use the following code:
+
+```r
+mo_pop20 <- zi_get_demographics(year = 2020, variables = "B01003_001", survey = "acs5")
+```
+
+Be sure not to limit your download with the `zcta` argument. It is important that all ZCTAs are included in the download, even if they are not in the list of three-digit ZCTAs. If only the five-digit ZCTAs that overlap with your state or county of interest are included, you will get incorrect values for ZCTAs that are split across multiple jurisdictions.
+
+Once these are obtained, we can pass the object to `zi_aggregate()` and can specify an input for `zcta` at this stage:
+
+```r
+mo_pop20 <- zi_aggregate(mo_pop20, year = 2020, extensive = "B01003_001", survey = "acs5", zcta = mo_zcta3$ZCTA3)
+```
+
+This will aggregate the population estimates for the five-digit ZCTAs to the three-digit ZCTAs.
+
+The `zi_aggregate()` function requires that you specify two sets of variable lists - those that are `extensive` (i.e. count data) and those that are `intensive` (i.e. ratio or median data). For `extensive` data, `zi_aggregate()` sums the estimates and applies a formula to the margins of error (the square root of the sum of squared margins of error for each five-digit ZCTA within a three-digit region). For `intensive` variables, a weighted mean or median is used for both the estimate and the margin of error. Note that you can pipe this workflow and can specify multiple variables at once for aggregation:
+
+```r
+zi_get_demographics(year = 2020, variables = c("B01003_001", "B19083_001"), survey = "acs5") %>%
+  zi_aggregate(year = 2020, extensive = "B01003_001", intensive = "B19083_001", survey = "acs5") -> demo20
+```
+
+The `variables`, `table` (which can be used in place of `variables` for `zi_get_demographics()`), `extensive`, and `intensive` arguments are not validated before being passed via `tidycensus` to the Census Bureau, so incorrectly formatted variable or table names will generate potentially cryptic errors.
+
+## Conclusion
+
+Three-digit ZIP codes are common, especially in health care data, but are challenging to work with. While `zippeR` provides a set of tools for calculating demographic estimates from the American Community Survey and mapping them, this should be done with caution based on the limitations described above.

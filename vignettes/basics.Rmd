@@ -1,0 +1,109 @@
+---
+title: "Basics of ZIP Codes and ZCTAs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basics of ZIP Codes and ZCTAs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In the United States, ZIP Codes are used to facilitate postal deliveries. They are created and maintained by the United States Postal Service (USPS), but are also required by other shippers and appear in a variety of administrative data contexts. ZIP stands for "Zone Improvement Plan," which was introduced in 1963.
+
+## ZIP Code Basics
+
+A complete ZIP Code consists of two elements - a five-digit number and a four-digit number. Together, these nine digits represent a specific delivery area (sometimes referred to as a carrier route). The first five digits, which we'll refer to as ZIP Codes for shorthand, represent one of the following:
+
+1.  a general delivery area,
+2.  a Post Office, to facilitate deliveries to PO Boxes,
+3.  or a single high-volume customer, such as a university, federal agency, or large company.
+
+The most common form of a ZIP Code is the general delivery area. While we imagine these to be distinct, non-overlapping regions on a map, they are actually collections of carrier routes that sometimes overlap with each other.
+
+Those individual carrier routes are represented by the second, four-digit number. These may correspond to a particular city block, apartment building, or other delivery area within a ZIP Code. For PO Boxes, individual boxes may be assigned their own four-digit number. Generally speaking, the four-digit add-on is not especially useful for RWE.
+
+ZIP codes are assigned to four types of jurisdictions:
+
+1.  states,
+2.  the District of Columbia,
+3.  insular areas, which include:
+    1.  five inhabited territories (American Samoa, Guam, the Northern Mariana Islands, Puerto Rico, and United States Virgin Islands)
+    2.  as well three independent nations (the Federated States of Micronesia, the Republic of the Marshall Islands, and the Republic of Palau) that are part of the Compact of Free Association (COFA), and
+4.  federal facilities in other countries, most notably Department of Defense installations.
+
+The Compact of Free Association (COFA) is a wide-ranging legal agreement that gives the three nations access to many U.S. federal services usually considered domestic programs. This includes USPS deliveries, and so all three nations are assigned ZIP Codes as well.
+
+ZIP Codes *generally* are patterned regionally, with ZIP Codes beginning with `0` being located in the Northeast. Values increase westward, with the highest ZIP Codes in Alaska, Hawaii, and islands in the Pacific. These ZIP Codes all begin with a `9`.
+
+States are assigned one or more initial digits. For example, New York State primarily has ZIP Codes beginning with values between `10` and `14` for their first two digits. However, there are routine exceptions. `06390` (Fishers Island) is also a valid ZIP Code in New York even though it begins with `0`. Likewise, federal agencies located in Maryland and Virginia have Washington, D.C. assigned ZIP Codes. The first digit, therefore, **does not** correspond to Census Region or Division, and it is **not** possible to aggregate up to those geographies based on the first digit alone. ZIP Codes also **cannot** be aggregated to counties or states with complete accuracy.
+
+Since ZIP Codes are designed to facilitate the delivery of mail, and not other uses, they do not neatly nest into other jurisdictional boundaries. They regularly cross county boundaries, and sometimes cross state boundaries as well, especially in rural areas where postal delivery is best facilitated from a neighboring state.
+
+Finally, it is important to know that ZIP Codes are not permanent. Carrier routes are updated frequently, and even the ZIP Codes themselves are subject to revision occasionally. For example, some ZIP Codes have been split to accommodate population growth and housing construction.
+
+## Three-Digit ZIP Codes
+
+Three-digit ZIP Codes have a specific meaning for the USPS, and are sometimes also used in patient-level data to preserve confidentiality. More details on working with three-digit ZIPs can be found in a [separate vignette](three-digit-zips.html).
+
+## ZIP Code Tabulation Areas
+
+The USPS does not publish a map of ZIP Codes because carrier routes are constantly changing and being revised. Moreover, since ZIP Codes are not areas on maps as we imagine them, they are not suitable for aggregation or analysis. The Census Bureau has created ZIP Code Tabulation Areas (ZCTAs) to approximate ZIP Code areas for the purposes of data analysis and mapping. ZCTAs are created by aggregating Census blocks that have the same first three digits of their ZIP Codes. This means that ZCTAs are not the same as ZIP Codes, and they are not the same as carrier routes. They are a useful approximation for many purposes, but they are not perfect. ZCTAs are updated every year, though the most significant updates occur every decade with the release of the Decennial Census.
+
+ZCTAs are created by identifying the most common ZIP Code within each Census Block, and then dissolving those individual Census Blocks together to create a single polygon. This results in misclassification at the address-level, where some address points within a given Census Block will be assigned a ZCTA that differs from their individual ZIP Code. Correcting this form misclassification requires point-level address data, which may be available in some areas but are not available for the entire United States. Addressing this problem is beyond the scope of `zippeR`.
+
+ZCTAs are not created for areas that have no population, or areas that have very sparse populations. This affects areas in the American West, for example, that have very few residents. 
+
+Finally, it is important to note that not all ZIP Codes have an analogous ZCTA. Some ZIP Codes are used for Post Office Boxes, and these are not included in the ZCTA data. Using ZIP to ZCTA crosswalk files can help address this form of misclassification, and is the subject of a separate vignette.
+
+## ZIP Code and ZCTA Formatting
+One of the core features of `zippeR` validate inputs of ZIP codes or ZCTA codes. For example, here are a set of ZCTAs that lie on the Missouri/Iowa border: 
+
+```r
+zcta5 <- c("51640", "52542", "52573", "5262x")
+```
+
+Notice how the last element contains a non-numeric character. When `zcta5` is passed to `zi_validate()`, it will catch the formatting issue. There are two options, one of which returns a single logical value (`TRUE` or `FALSE`):
+
+```r
+> library(zippeR)
+> zi_validate(zcta5)
+[1] FALSE
+```
+
+The other option, with `verbose = TRUE`, provides additional data about where formatting issues may exist:
+
+```r
+> zi_validate(zcta5, verbose = TRUE)
+# A tibble: 4 × 2
+  condition                                   result
+  <chr>                                       <lgl> 
+1 Input is a character vector?                TRUE  
+2 All input values have 5 characters?         TRUE  
+3 No input values are over 5 characters long? TRUE  
+4 All input values are numeric?               FALSE 
+```
+
+For the third and fourth tests, users are strongly encourage to attempt to manually correct problems. However, `zi_repair()` can be used to address the first and second tests, and will return `NA` values for ZIPs or ZCTAs that do not pass the third and fourth tests:
+
+```r
+> zi_repair(zcta5)
+[1] "51640" "52542" "52573" NA     
+Warning message:
+In zi_repair(zcta5) : NAs introduced by coercion
+```
+
+When malformed ZIPs or ZCTAs are replaced with `NA` values, `zi_repair()` will return a warning. Note that `zi_validate()` also works with three-digit ZCTAs as well:
+
+```r
+> zcta3 <- c("516", "525", "526")
+> zi_validate(zcta3, style = "zcta3")
+[1] TRUE
+```
+
+Note that, at this time, the validation process does not ensure that inputs correspond to valid ZCTAs.

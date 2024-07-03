@@ -1,0 +1,106 @@
+---
+title: "Converting ZIP Codes to Other Geographies"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Converting ZIP Codes to Other Geographies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+As we've noted in our basic overview of ZIP Codes, they are identical to the U.S. Census Bureau's ZIP Code Tabulation Areas or other geographies. We therefore use crosswalk files to convert ZIP Codes to these other identifiers. 
+
+## UDS's ZIP Code to ZCTA Crosswalks
+`zippeR` provides an interface for accessing the former UDS Mapper project's ZIP to ZCTA crosswalk files](http://web.archive.org/web/20231218141557/https://udsmapper.org/zip-code-to-zcta-crosswalk/). Crosswalk files are critical because not all ZIP codes are in the exact same ZCTA. The UDS files are available from 2010 through 2021 in a standardized format:
+
+```r
+> zi_load_crosswalk(year = 2020)
+# A tibble: 41,096 × 6                                                                                                                                                                                 
+   ZIP   PO_NAME    STATE ZIP_TYPE                             ZCTA  zip_join_type       
+   <chr> <chr>      <chr> <chr>                                <chr> <chr>               
+ 1 00501 Holtsville NY    Post Office or large volume customer 11742 Spatial join to ZCTA
+ 2 00544 Holtsville NY    Post Office or large volume customer 11742 Spatial join to ZCTA
+ 3 00601 Adjuntas   PR    ZIP Code Area                        00601 ZIP Matches ZCTA    
+ 4 00602 Aguada     PR    ZIP Code Area                        00602 ZIP Matches ZCTA    
+ 5 00603 Aguadilla  PR    ZIP Code Area                        00603 ZIP Matches ZCTA    
+ 6 00604 Aguadilla  PR    Post Office or large volume customer 00603 Spatial join to ZCTA
+ 7 00605 Aguadilla  PR    Post Office or large volume customer 00603 Spatial join to ZCTA
+ 8 00606 Maricao    PR    ZIP Code Area                        00606 ZIP Matches ZCTA    
+ 9 00610 Anasco     PR    ZIP Code Area                        00610 ZIP Matches ZCTA    
+10 00611 Angeles    PR    Post Office or large volume customer 00641 Spatial join to ZCTA
+# … with 41,086 more rows
+```
+
+As with the three-digit ZCTA geometry, users should evaluate these data carefully before using them to ensure they are fit for purpose. In particular, they should note that ZIPs that do not have corresponding ZCTAs (such as Armed Forces mailing ZIPs and those in some overseas territories) are not included. Users should also remember that individuals may live in a different ZCTA from their mailing address when that address is a Post Office or some other large volume customer.
+
+They can be used with `zi_crosswalk()` to convert given ZIP codes to ZCTAs:
+
+```r
+> zips <- data.frame(id = c(1:3), ZIP = c("63139", "63108", "00501"))
+> zi_crosswalk(zips, input_zip = ZIP, dict = "UDS 2021") 
+# A tibble: 3 × 3                                                                                                                                                                                      
+     id ZIP   ZCTA 
+  <int> <chr> <chr>
+1     1 63139 63139
+2     2 63108 63108
+3     3 00501 11742
+```
+
+If `"UDS 2021"` (or any other year between 2009 and 2023) is given for `dict`, `zi_crosswalk()` will automatically download the corresponding UDS crosswalk file. A custom crosswalk can also be supplied for `dict` in lieu of using the UDS data, including a crosswalk created from `zi_load_crosswalk()` using HUD data. In that case, `dict_zip` and `dict_zcta` should be updated to correctly match input variable names. `style` can also be used if the custom dictionary contains three digit ZCTAs instead. If no custom dictionary is supplied, `zi_crosswalk()` will try to convert the dictionary's five-digit ZCTAs to three-digits:
+
+```r
+> zi_crosswalk(zips, input_zip = ZIP, dict = "UDS 2021", style = "zcta3") 
+Dictionary five-digit ZCTAs converted to three-digit ZCTAs.                                                                                                                                            
+# A tibble: 3 × 3
+     id ZIP   ZCTA3
+  <int> <chr> <chr>
+1     1 63139 631  
+2     2 63108 631  
+3     3 00501 117  
+```
+
+## HUD's ZIP Code to Census Geography Crosswalks
+
+The U.S. Housing and Urban Development (HUD) Department provides ZIP code to Census geography crosswalks that can be used to convert ZIP codes to Census Tracts, counties, and other geographies. These data are available through the [HUD User website](https://www.huduser.gov/portal/datasets/usps_crosswalk.html). Unlike the UDS files, ZIP Code Tabulation Areas are not one of the geographies including. If HUD data are used, be aware of ZIP Codes mapping into multiple Census Tracts, counties, etc. Many users may want to pick a "most likely" county (or other Census geometry) based on the proportion of commercial or residential customers.
+
+To use the HUD data, users must first obtain an API key from the [HUD User website](https://www.huduser.gov/portal/dataset/uspszip-api.html). Once you have an API key, they can use `zi_load_crosswalk()` to download the data either by passing the key directly to the function or by storing the key in their [.Rprofile](https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf) under the object name `hud_key`:
+
+```r
+Sys.setenv(hud_key = "<PASTE KEY>")
+```
+
+The key can also be passed to `zi_load_crosswalk` directly with the `key` argument:
+
+```r
+> zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "COUNTY",
++                   query = c("63138", "63139"))
+# A tibble: 3 × 8
+  ZIP   GEOID RES_RATIO BUS_RATIO OTH_RATIO TOT_RATIO CITY        STATE
+  <chr> <chr>     <dbl>     <dbl>     <int>     <dbl> <chr>       <chr>
+1 63138 29189  0.999       0.988          1  0.999    SAINT LOUIS MO   
+2 63138 29510  0.000518    0.0124         0  0.000956 SAINT LOUIS MO   
+3 63139 29510  1           1              1  1        SAINT LOUIS MO 
+```
+
+Queries can be either a single ZIP Code, a vector of ZIP Codes, a state abbreviation, or the word `"ALL"` to download the entire crosswalk file. Using states or `"ALL"` is available from the 1st quarter of 2021 onwards. The `target` argument can be set to "COUNTY", "TRACT", "CBSA", "CBSADIV", "CD", or "COUNTYSUB". The `year` and `qtr` arguments specify the year and quarter of the data to download.
+
+Note that the above query finds that the ZIP Code `63138` straddles two counties, but the vast majority of both residential and commercial customers are in St. Louis City (`GEOID` is `29510`). If you were building a crosswalk file from these, you might want to select St. Louis City as the "most likely" county for ZIP Code `63138`. The 
+
+Since using the HUD data requires a number of analytic choices, it cannot be accessed directly through `zi_crosswalk()`. Instead, you should construct the desired crosswalk file yourself and then pass it to `zi_crosswalk()` as a custom dictionary. The `zi_prep_hud()` function can help you prepare the HUD data for use in joins:
+
+```r
+# access to HUD ZIP Code to County crosswalk for all ZIP Codes in Missouri
+mo <- zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, 
+  target = "COUNTY", query = "MO")
+
+# prep data
+mo <- zi_prep_hud(mo, by = "residential")
+```
+
+The resulting output contains one row of data for each ZIP Code matched with the county that has the highest proportion of residential ZIP Codes. Users can also construct a crosswalk using commercial addresses or total addresses. When used with multiple states, if the ZIP Code straddles two states, two records will be returned.
