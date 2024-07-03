@@ -1,7 +1,6 @@
 # zippeR
 
-[![R build status](https://github.com/pfizer-evgen/zippeR/workflows/R-CMD-check/badge.svg)](https://github.com/pfizer-evgen/zippeR/actions)
-[![Coverage status](https://codecov.io/gh/pfizer-evgen/zippeR/branch/master/graph/badge.svg)](https://codecov.io/github/pfizer-evgen/zippeR?branch=main)
+[![R build status](https://github.com/pfizer-opensource/zippeR/workflows/R-CMD-check/badge.svg)](https://github.com/pfizer-opensource/zippeR/actions)
 
 ## Motivation
 `zippeR` provides a set of functions for working with ZCTAs and building spatial and demographic data for three-digit ZCTAs. These three-digit ZCTAs have limitations (they are large regions), but they are also used within American health care to protect patient confidentiality. `zippeR` therefore offers researchers who must use three-digit ZCTAs the capability to download geometric data and also aggregate demographic data from five-digit ZCTAs to three-digit ZCTAs. In addition, `zippeR` includes functions for validating and formatting vectors of ZIP Codes or ZCTAs as well as tools for cross-walking ZIP codes with ZCTAs.

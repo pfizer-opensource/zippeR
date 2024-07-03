@@ -14,8 +14,7 @@ Description: Provides a set of functions for working with American postal codes,
    tabulating demographic data for three-digit ZCTAs.
 Depends: R (>= 3.5)
 License: Apache License (>= 2)
-URL: https://github.com/pfizer-evgen/zippeR/
-BugReports: https://github.com/pfizer-evgen/zippeR/issues
+URL: https://github.com/pfizer-opensource/zippeR
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1

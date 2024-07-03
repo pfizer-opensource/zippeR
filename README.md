@@ -4,9 +4,7 @@
 # zippeR
 
 [![R build
-status](https://github.com/pfizer-evgen/zippeR/workflows/R-CMD-check/badge.svg)](https://github.com/pfizer-evgen/zippeR/actions)
-[![Coverage
-status](https://codecov.io/gh/pfizer-evgen/zippeR/branch/master/graph/badge.svg)](https://codecov.io/github/pfizer-evgen/zippeR?branch=main)
+status](https://github.com/pfizer-opensource/zippeR/workflows/R-CMD-check/badge.svg)](https://github.com/pfizer-opensource/zippeR/actions)
 
 ## Motivation
 
@@ -27,7 +25,7 @@ The development version of `zippeR` can be accessed from GitHub with
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("pfizer-evgen/zippeR")
+remotes::install_github("pfizer-opensource/zippeR")
 ```
 
 ## Usage

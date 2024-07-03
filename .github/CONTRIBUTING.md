@@ -1,4 +1,4 @@
-# Contributing to this Lesson
+# Contributing to this Package
 Thanks for using this package. Before filing an issue or opening a pull
 request, there are a few places to explore and pieces to put together to make
 the process as smooth as possible.
@@ -47,7 +47,7 @@ issue to gauge our interest before spending time working on a PR!
 
 ### Fork, clone, branch
 The first thing you'll need to do is to [fork](https://help.github.com/articles/fork-a-repo/)
-[this lesson][repoLink], and then clone it locally.
+[this package][repoLink], and then clone it locally.
 We recommend that you create a branch for each PR.
 
 ### Style
@@ -87,5 +87,5 @@ abide by its terms.
 ## Acknowledgements
 These contributing guidelines are modified from those used by [Jenny Bryan](https://github.com/jennybc).
 
-[repoLink]: https://github.com/pfizer-evgen/zippeR
-[issuesLink]: https://github.com/pfizer-evgen/zippeR/issues
+[repoLink]: https://github.com/pfizer-opensource/zippeR
+[issuesLink]: https://github.com/pfizer-opensource/zippeR/issues
