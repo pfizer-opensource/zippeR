@@ -120,5 +120,5 @@ mo_pop20 <- zi_aggregate(mo_pop20, year = 2020, extensive = "B01003_001",
 ## Contributor Code of Conduct
 
 Please note that this project is released with a Contributor [Code of
-Conduct](/.github/CODE_OF_CONDUCT.md). By participating in this project
-you agree to abide by its terms.
+Conduct](https://github.com/pfizer-opensource/zippeR/blob/main/.github/CODE_OF_CONDUCT.md).
+By participating in this project you agree to abide by its terms.
