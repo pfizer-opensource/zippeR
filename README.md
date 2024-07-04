@@ -117,8 +117,12 @@ mo_pop20 <- zi_aggregate(mo_pop20, year = 2020, extensive = "B01003_001",
   survey = "acs5", zcta = mo_zcta3$ZCTA3)
 ```
 
-## Contributor Code of Conduct
+## Feedback and Code of Conduct
 
+If you have feedback on `zippeR`, please [open an issue on
+GitHub](https://github.com/pfizer-opensource/zippeR/issues) after
+checking the [contribution
+guidelines](https://github.com/pfizer-opensource/zippeR/blob/main/.github/CONTRIBUTING.md).
 Please note that this project is released with a Contributor [Code of
 Conduct](https://github.com/pfizer-opensource/zippeR/blob/main/.github/CODE_OF_CONDUCT.md).
 By participating in this project you agree to abide by its terms.
