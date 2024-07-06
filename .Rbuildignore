@@ -20,6 +20,8 @@
 ^\.github$
 ^revdep$
 ^CRAN-SUBMISSION$
-^data-raw$
+^inst/build-data$
+^inst/data-raw$
+^inst/examples$
 ^\.pfizer\.yml$
 ^LICENSE\.md$

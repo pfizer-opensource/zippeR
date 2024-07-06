@@ -1,7 +1,8 @@
 ## Release summary
-This version of `zippeR` is a new submission to CRAN. It is a resubmission following guidance from Uwe Ligges. The package has been updated to address the following issues:
+This version of `zippeR` is a new submission to CRAN. It is a resubmission following guidance from Konstanze Lauseker. The package has been updated to address the following issues:
 
-* The hyperlink in the README was a relative link to the Contributor Code of Conduct that triggered an invalid URL flag. This has been updated to an absolute link and the accompanying text has been updated with additional details as well.
+* The function `hud_key()` has been removed from the package - it was not used in the package and was flagged for writing by default.
+* Code in `inst/extdata` was moved to a different subdirectory of `inst/` and excluded from upload via `.Rbuildignore`. These scripts were flagged for writing to the user's home directory by default and modifying the `.GlobalEnv`.
 
 ## Test environments
 * local macOS install: R 4.4.0
