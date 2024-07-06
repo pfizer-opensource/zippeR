@@ -1,7 +1,10 @@
 #' List ZCTA GEOIDs for States
 #'
 #' @description This function returns a vector of GEOIDs that represent ZCTAs
-#'     in and around states, depending on the method selected.
+#'     in and around states, depending on the method selected. The two methods
+#'     included described in Details below.
+#'
+#' @usage zi_list_zctas(year, state, method)
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
 #'     supports data between 2010 and 2021.
@@ -21,6 +24,8 @@
 #'     their data carefully and, when using other \code{zipperR} functions,
 #'     will likely need to use the \code{include} and \code{exclude} arguments
 #'     to finalize the geographies returned.
+#'
+#' @return A vector of GEOIDs representing ZCTAs in and around the state selected.
 #'
 #' @examples
 #' ## Missouri ZCTAs, Intersect Method

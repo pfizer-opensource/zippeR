@@ -16,9 +16,13 @@ or FIPS codes (e.x. \code{29}).}
 \item{method}{A character scalar - either \code{"intersect"} or \code{"centroid"}.
 See Details below.}
 }
+\value{
+A vector of GEOIDs representing ZCTAs in and around the state selected.
+}
 \description{
 This function returns a vector of GEOIDs that represent ZCTAs
-    in and around states, depending on the method selected.
+    in and around states, depending on the method selected. The two methods
+    included described in Details below.
 }
 \details{
 Since ZCTAs cross state lines, two methods are used to create these
