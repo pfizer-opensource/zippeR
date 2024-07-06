@@ -68,11 +68,11 @@ zi_list_zctas <- function(year, state, method){
   statez <- unlist(sapply(statez, validate_state, USE.NAMES=FALSE))
 
   if (is.numeric(year) == FALSE){
-    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2021.")
+    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
   }
 
-  if (year %in% c(2010:2021) == FALSE){
-    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2021.")
+  if (year %in% c(2010:2023) == FALSE){
+    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
   }
 
   if (method %in% c("centroid", "intersect") == FALSE){

@@ -11,7 +11,7 @@ zi_get_geometry (year, style = "zcta5", return = "id", class = "sf",
 }
 \arguments{
 \item{year}{A four-digit numeric scalar for year. \code{zippeR} currently
-supports data between 2010 and 2022}
+supports data between 2010 and 2023}
 
 \item{style}{A character scalar - either \code{"zcta5"} or \code{"zcta3"}.
 See Details below.}

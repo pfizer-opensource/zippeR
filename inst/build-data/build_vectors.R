@@ -460,8 +460,6 @@ samoa_bounding_box <- zctas(cb = TRUE, year = 2019)
 samoa_bounding_box <- filter(samoa_bounding_box, GEOID10 == "96799")
 samoa_bounding_box <- st_as_sfc(st_bbox(samoa_bounding_box))
 
-# create state crosswalk table ####
-
 # Create Output ####
 save(changes_intersects, changes_centroids, reference_intersects,
      reference_centroids, states_lookup, samoa_bounding_box, zcta3_url,

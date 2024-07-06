@@ -13,7 +13,7 @@
 #'     shift_geo = FALSE)
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
-#'     supports data between 2010 and 2022
+#'     supports data between 2010 and 2023
 #' @param style A character scalar - either \code{"zcta5"} or \code{"zcta3"}.
 #'     See Details below.
 #' @param return A character scalar; if \code{"id"} (default), only the five-digit
@@ -124,11 +124,11 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
   }
 
   if (is.numeric(year) == FALSE){
-    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2021.")
+    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
   }
 
-  if (year %in% c(2010:2021) == FALSE){
-    stop("The 'year' value provided is invalid. Please provide a year between 2010 and 2021.")
+  if (year %in% c(2010:2023) == FALSE){
+    stop("The 'year' value provided is invalid. Please provide a year between 2010 and 2023.")
   }
 
   if (style %in% c("zcta5", "zcta3") == FALSE){

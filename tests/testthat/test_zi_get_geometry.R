@@ -10,9 +10,9 @@ correct_year <- 2011
 
 test_that("incorrectly specified parameters trigger appropriate errors", {
   expect_error(zi_get_geometry(year = chr_year, method = 'centroid'),
-               "The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2021.")
+               "The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
   expect_error(zi_get_geometry(year = incorrect_year, method = 'centroid'),
-               "The 'year' value provided is invalid. Please provide a year between 2010 and 2021.")
+               "The 'year' value provided is invalid. Please provide a year between 2010 and 2023.")
   expect_error(zi_get_geometry(year = correct_year, style = "zcta", method = 'centroid'),
                "The 'style' value provided is invalid. Please select either 'zcta5' or 'zcta3'.")
   expect_error(zi_get_geometry(year = correct_year, return = "ham", method = 'centroid'),
