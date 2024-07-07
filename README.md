@@ -117,6 +117,15 @@ mo_pop20 <- zi_aggregate(mo_pop20, year = 2020, extensive = "B01003_001",
   survey = "acs5", zcta = mo_zcta3$ZCTA3)
 ```
 
+## Gratitude
+
+`zippeR` would not be possible without [Kyle
+Walker’s](https://walker-data.com) packages
+[`tigris`](https://CRAN.R-project.org/package=tigris) and
+[`tidycensus`](https://walker-data.com/tidycensus/), which provide
+access to the underlying data U.S. Census Bureau data this package
+leverages.
+
 ## Feedback and Code of Conduct
 
 If you have feedback on `zippeR`, please [open an issue on
