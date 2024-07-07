@@ -26,6 +26,11 @@ A tibble containing the total population
     U.S. Census Bureau American Communiy Survey estimates for Missouri
     five-digit ZIP Code Tabulation Areas (ZCTAs).
 }
+\details{
+The data included in \code{zi_mo_pop} can be replicated with the
+  following code: \code{zi_get_demographics(year = 2022,
+  variables = c("B01003_001", "B19013_001"), survey = "acs5")}.
+}
 \examples{
 utils::str(zi_mo_pop)
 utils::head(zi_mo_pop)

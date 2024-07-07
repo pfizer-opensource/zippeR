@@ -53,50 +53,49 @@
 #'     \code{tidycensus::census_api_key()} has been used to write your key to
 #'     your \code{.Renviron} file. You can check whether an API key has been
 #'     written to \code{.Renviron} by using \code{Sys.getenv("CENSUS_API_KEY")}.
+#'
 #' @return A tibble containing all aggregated data requested in either
 #'     \code{"tidy"} or \code{"wide"} format.
 #'
 #' @examples
-#' \dontrun{
+#' # load sample demographic data
+#' mo22_demos <- zi_mo_pop
 #'
-#'   # download geometric data
-#'   geo <- zi_get_geometry(year = 2012, style = "zcta3",
-#'       state = "MO", territory = NULL, method = "centroid",
-#'       includes = c("516", "525"))
+#'   # the above data can be replicated with the following code:
+#'   # zi_get_demographics(year = 2022, variables = c("B01003_001", "B19013_001"),
+#'   #   survey = "acs5")
 #'
-#'   # download demographic data
-#'   demo <- zi_get_demographics(year = 2012, variables = "B01003_001",
-#'       survey = "acs5")
+#' # load sample geometric data
+#' mo22_zcta3 <- zi_mo_zcta3
 #'
-#'   # aggregate
-#'   demo <- zi_aggregate(demo, year = 2012, extensive = "B01003_001",
-#'       survey = "acs5", zcta = geo$ZCTA3)
+#'   # the above data can be replicated with the following code:
+#'   # zi_get_geometry(year = 2022, style = "zcta3", state = "MO",
+#'   #   method = "intersect")
 #'
-#' }
+#' # aggregate, outputting wide data
+#' zi_aggregate(mo22_demos, year = 2020,
+#'   extensive = "B01003_001", intensive = "B19013_001", survey = "acs5",
+#'   zcta = mo22_zcta3$ZCTA3, output = "wide")
 #'
 #' @export
 zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
                          intensive_method = "mean", survey,
                          output = "tidy", zcta = NULL, key = NULL){
 
-  # global variables
-  GEOID = ZCTA3 = key = variable = NULL
-
   # evaluate inputs
-
-  if (missing(year) == TRUE & missing(survey) == TRUE){
-    stop("Please specify arguments.")
+  if (missing(year)){
+    stop("The 'year' value is missing. Please provide a numeric value between 2010 and 2022.")
   }
 
-  if (is.numeric(year) == FALSE){
-    stop("The 'year' value provided is invalid. Please provide a numeric value between 2010 and 2020.")
+  if (!is.numeric(year)){
+    stop("The 'year' value provided is invalid. Please provide a numeric value between 2010 and 2022.")
   }
 
   if (length(survey) > 1){
     stop("One only 'survey' product may be requested at a time.")
   }
 
-  if (survey %in% c("sf1", "sf3", "acs1", "acs3", "acs5") == FALSE){
+  if (!survey %in% c("sf1", "sf3", "acs1", "acs3", "acs5")){
     stop("The 'survey' requested is invalid. Please choose one of 'sf1', 'sf3', 'acs1', 'acs3', or 'acs5'.")
   }
 
@@ -112,11 +111,15 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     stop("The 'year' value provided is invalid for 3-year American Community Survey data. Please provide a year between 2010 and 2013.")
   }
 
-  if (output %in% c("tidy", "wide") == FALSE){
+  if (!output %in% c("tidy", "wide")){
     stop("The 'output' requested is invalid. Please choose one of 'tidy' or 'wide'.")
   }
 
-  if (survey %in% c("sf1", "sf3") == TRUE){
+  if (!inherits(.data, what = "data.frame")){
+    stop("The '.data' object provided is not a dataframe or dataframe like object. Please provide a dataframe.")
+  }
+
+  if (survey %in% c("sf1", "sf3")){
     error <- "Input data appear to be malformed - there should be three columns for Decennial Census data: 'GEOID', 'variable', and 'value'. Note that zi_aggregate() only accepts 'tidy' data."
 
     if (length(names(.data)) != 3){
@@ -138,7 +141,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     }
   }
 
-  if (is.null(zcta) == FALSE){
+  if (!is.null(zcta)){
     valid <- zi_validate(zcta, style = "zcta3")
 
     if (valid == FALSE){
@@ -146,15 +149,19 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     }
   }
 
+  if (is.null(extensive) & is.null(intensive)){
+    stop("At least one of 'extensive' or 'intensive' must be provided.")
+  }
+
   # set additional arguments
   ## call type
-  if (is.null(extensive) == FALSE){
+  if (!is.null(extensive)){
     extensive_id <- TRUE
   } else {
     extensive_id <- FALSE
   }
 
-  if (is.null(intensive) == FALSE){
+  if (!is.null(intensive)){
     intensive_id <- TRUE
   } else {
     intensive_id <- FALSE

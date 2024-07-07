@@ -33,8 +33,7 @@ Imports:
     tibble,
     tidycensus,
     tidyr,
-    tigris,
-    utils
+    tigris
 Suggests:
     covr,
     knitr,

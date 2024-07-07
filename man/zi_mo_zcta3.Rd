@@ -22,6 +22,11 @@ A simple features data set containing the geometric data
     for Missouri's three-digit ZIP Code Tabulation Areas (ZCTAs) for 2022,
     derived from the U.S. Census Bureau's 2022 TIGER/Line shapefiles.
 }
+\details{
+The data included in \code{zi_mo_zcta3} can be replicated with the
+  following code: \code{zi_get_geometry(year = 2022, style = "zcta3",
+  state = "MO", method = "intersect")}.
+}
 \examples{
 utils::str(zi_mo_zcta3)
 utils::head(zi_mo_zcta3)

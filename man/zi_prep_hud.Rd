@@ -29,16 +29,16 @@ The output from \code{zi_load_crosswalk()} for HUD data requires
     This function prepares the HUD data for use in joins.
 }
 \examples{
-\dontrun{
+# load sample crosswalk data
+mo_xwalk <- zi_mo_hud
 
-  # access to HUD ZIP Code to County crosswalk for all ZIP Codes in Missouri
-  mo <- zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1,
-    target = "COUNTY", query = "MO")
+  # the above data can be replicated with the following code:
+  # zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1,
+  #   target = "COUNTY", query = "MO")
 
-  # prep data
-  mo <- zi_prep_hud(mo, by, return_max = TRUE)
-
-}
-
+# prep crosswalk
+# when a ZIP Code crosses county boundaries, the portion with the largest
+# number of residential addresses will be returned
+zi_prep_hud(mo_xwalk, by = "residential", return_max = TRUE)
 
 }

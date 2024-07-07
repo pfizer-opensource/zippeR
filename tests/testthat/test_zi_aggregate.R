@@ -27,12 +27,12 @@ vt <-tidycensus:: get_acs(geography = "county",
 
 test_that("missing parameters trigger appropriate errors", {
   expect_error(zi_aggregate(),
-               "Please specify arguments.")
+               "The 'year' value is missing. Please provide a numeric value between 2010 and 2022.")
 })
 
 test_that("incorrectly specified parameters trigger appropriate errors", {
   expect_error(zi_aggregate(year = incorrect_year, survey = correct_survey),
-               "The 'year' value provided is invalid. Please provide a numeric value between 2010 and 2020.")
+               "The 'year' value provided is invalid. Please provide a numeric value between 2010 and 2022.")
   expect_error(zi_aggregate(year = correct_year, survey = incorrect_survey),
                "One only 'survey' product may be requested at a time.")
   expect_error(zi_aggregate(year = correct_year, survey = incorrect_survey_2),

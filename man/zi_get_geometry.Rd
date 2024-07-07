@@ -5,8 +5,8 @@
 \title{Download and Optionally Geoprocess ZCTAs}
 \usage{
 zi_get_geometry (year, style = "zcta5", return = "id", class = "sf",
-    state = NULL, county = NULL, territory = c("AS", "GU", "MP", "PR", "VI"),
-    cb = FALSE, starts_with = NULL, includes = NULL, excludes = NULL, method,
+    state = NULL, county = NULL, territory = NULL, cb = FALSE,
+    starts_with = NULL, includes = NULL, excludes = NULL, method,
     shift_geo = FALSE)
 }
 \arguments{
@@ -41,7 +41,9 @@ Details below for more information. This argument is optional.}
 \item{territory}{A character scalar or vector with character territory abbreviations
 (e.x. \code{"PR"}) or numeric FIPS codes (e.x. \code{72}). ZCTAs that are
 within the given territories will be returned. By default, all territories
-are included.}
+are excluded. The five territory abbreviations are: \code{"AS"} (American
+Samoa), \code{"GU"} (Guam), \code{"MP"} (Northern Mariana Islands),
+\code{"PR"} (Puerto Rico), and \code{"VI"} (U.S. Virgin Islands).}
 
 \item{cb}{A logical scalar; if \code{FALSE}, the most detailed TIGER/Line
     data will be used for \code{style = "zcta5"}. If \code{TRUE}, a
@@ -118,16 +120,26 @@ This function contains options for both the type of ZCTA and,
     either the \code{"intersect"} or \code{"centroid"} method described above.
 }
 \examples{
-\dontrun{
-  # all ZCTAs for 2020
-  geo10 <- zi_get_geometry(year = 2010)
+\donttest{
+  # five-digit ZCTAs
+  ## download all ZCTAs for 2020 including territories
+  zi_get_geometry(year = 2020, territory = c("AS", "GU", "MP", "PR", "VI"),
+      shift_geo = TRUE)
 
-  # all ZCTAs in a single state
-  mo20 <- zi_get_geometry(year = 2020, state = "MO", method = "centroid")
+  ## download all ZCTAs for 2020 excluding territories
+  zi_get_geometry(year = 2020, shift_geo = TRUE)
 
-  # all ZCTAs in a single county
-  stl20 <- zi_get_geometry(year = 2020, state = "MO", county = "29510",
-                           method = "intersect")
+  ## download all ZCTAs in a selection of states, intersects method
+  zi_get_geometry(year = 2020, state = c("IA", "IL", "MO"), method = "intersect")
+
+  ## download all ZCTAs in a single county - St. Louis City, MO
+  zi_get_geometry(year = 2020, state = "MO", county = "29510",
+      method = "intersect")
+
+  # three-digit ZCTAs
+  ## download all ZCTAs for 2018 including territories
+  zi_get_geometry(year = 2018, territory = c("AS", "GU", "MP", "PR", "VI"),
+      shift_geo = TRUE)
 }
 
 }

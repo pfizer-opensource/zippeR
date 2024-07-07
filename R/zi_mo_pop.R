@@ -18,6 +18,10 @@
 #'   \item{moe}{margin of error for associated \code{variable}}
 #'   }
 #'
+#' @details The data included in \code{zi_mo_pop} can be replicated with the
+#'   following code: \code{zi_get_demographics(year = 2022,
+#'   variables = c("B01003_001", "B19013_001"), survey = "acs5")}.
+#'
 #' @source U.S. Census Bureau American Community Survey
 #'
 #' @examples

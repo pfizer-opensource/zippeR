@@ -38,24 +38,18 @@ Since ZCTAs cross state lines, two methods are used to create these
     to finalize the geographies returned.
 }
 \examples{
-## Missouri ZCTAs, Intersect Method
-### Return List
+# Missouri ZCTAs, intersect method
+## return list
 mo_zctas <- zi_list_zctas(year = 2021, state = "MO", method = "intersect")
 
-### Print Total Number of ZCTAs Returned
-length(mo_zctas)
-
-### Preview ZCTAs
+## preview ZCTAs
 mo_zctas[1:10]
 
-## Missouri ZCTAs, Centroid Method
-### Return List
+# Missouri ZCTAs, centroid method
+## return list
 mo_zctas <- zi_list_zctas(year = 2021, state = "MO", method = "centroid")
 
-### Print Total Number of ZCTAs Returned
-length(mo_zctas)
-
-### Preview ZCTAs
+## preview ZCTAs
 mo_zctas[1:10]
 
 }

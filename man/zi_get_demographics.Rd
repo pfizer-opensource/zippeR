@@ -55,17 +55,17 @@ This function returns demographic data for five-digit ZIP Code
     all) USPS ZIP codes.
 }
 \examples{
-\dontrun{
+\donttest{
+  # download all ZCTAs
+  zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5")
 
-  # download geometric data
-  geo <- zi_get_geometry(year = 2012, style = "zcta5",
-      state = "MO", territory = NULL, method = "centroid",
-      includes = c("51640", "52542", "52573", "52626"))
+  # limit output to subset of ZCTAs
+  ## download all ZCTAs in Missouri, intersects method
+  mo20 <- zi_get_geometry(year = 2020, state = "MO", method = "intersect")
 
-  # download demographic data
-  demo <- zi_get_demographics(year = 2012, variables = "B01003_001",
-      survey = "acs5", zcta = geo$GEOID)
-
+  ## download demographic data
+  zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5",
+      zcta = mo20$GEOID)
 }
 
 }

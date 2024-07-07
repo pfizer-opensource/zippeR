@@ -14,6 +14,10 @@
 #'   \item{geometry}{simple features geometry}
 #'   }
 #'
+#' @details The data included in \code{zi_mo_zcta3} can be replicated with the
+#'   following code: \code{zi_get_geometry(year = 2022, style = "zcta3",
+#'   state = "MO", method = "intersect")}.
+#'
 #' @source U.S. Census Bureau's TIGER/Line database
 #'
 #' @examples

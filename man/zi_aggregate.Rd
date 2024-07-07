@@ -73,21 +73,23 @@ This function takes input ZCTA data and aggregates it to three-digit
    American health care contexts for publishing geographic identifiers.
 }
 \examples{
-\dontrun{
+# load sample demographic data
+mo22_demos <- zi_mo_pop
 
-  # download geometric data
-  geo <- zi_get_geometry(year = 2012, style = "zcta3",
-      state = "MO", territory = NULL, method = "centroid",
-      includes = c("516", "525"))
+  # the above data can be replicated with the following code:
+  # zi_get_demographics(year = 2022, variables = c("B01003_001", "B19013_001"),
+  #   survey = "acs5")
 
-  # download demographic data
-  demo <- zi_get_demographics(year = 2012, variables = "B01003_001",
-      survey = "acs5")
+# load sample geometric data
+mo22_zcta3 <- zi_mo_zcta3
 
-  # aggregate
-  demo <- zi_aggregate(demo, year = 2012, extensive = "B01003_001",
-      survey = "acs5", zcta = geo$ZCTA3)
+  # the above data can be replicated with the following code:
+  # zi_get_geometry(year = 2022, style = "zcta3", state = "MO",
+  #   method = "intersect")
 
-}
+# aggregate, outputting wide data
+zi_aggregate(mo22_demos, year = 2020,
+  extensive = "B01003_001", intensive = "B19013_001", survey = "acs5",
+  zcta = mo22_zcta3$ZCTA3, output = "wide")
 
 }

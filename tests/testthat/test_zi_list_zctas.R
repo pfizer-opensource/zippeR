@@ -14,7 +14,7 @@ states = "WA"
 
 test_that("missing parameters trigger appropriate errors", {
   expect_error(zi_list_zctas(),
-               "Please provide a vector of data for validation.")
+               "The 'year' value is missing. Please provide a numeric value between 2010 and 2023.")
 })
 
 test_that("incorrectly specified parameters trigger appropriate errors", {
