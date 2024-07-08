@@ -65,8 +65,8 @@ zi_load_crosswalk <- function(zip_source = "UDS", year, qtr = NULL, target = NUL
     stop("The 'year' value provided is invalid. Please provide a numeric value for the requested year.")
   }
 
-  if (zip_source == "UDS" & year %in% c(2009:2023) == FALSE){
-    stop("The 'year' value provided is invalid for UDS data. Please provide a year between 2009 and 2023.")
+  if (zip_source == "UDS" & year %in% c(2009:2022) == FALSE){
+    stop("The 'year' value provided is invalid for UDS data. Please provide a year between 2009 and 2022.")
   }
 
   if (zip_source == "HUD"){
@@ -89,10 +89,10 @@ zi_load_crosswalk <- function(zip_source = "UDS", year, qtr = NULL, target = NUL
   }
 
   # select zip
-  if (zip_source == 'HUD'){
+  if (zip_source == "HUD"){
     out <- zi_load_hud(year = year, qtr = qtr, target = target, queries = toupper(query),
                 key = key)
-  } else if (zip_source == 'UDS'){
+  } else if (zip_source == "UDS"){
     out <- zi_load_uds(year = year)
   }
 
@@ -124,7 +124,8 @@ zi_load_crosswalk <- function(zip_source = "UDS", year, qtr = NULL, target = NUL
 
 zi_load_uds <- function(year) {
   # Read and bind all CSV files into a single dataframe
-  out <- readr::read_csv(paste0("https://raw.githubusercontent.com/chris-prener/uds-mapper/main/data/uds_crosswalk_", year, ".csv"))
+  out <- readr::read_csv(paste0("https://raw.githubusercontent.com/chris-prener/uds-mapper/main/data/uds_crosswalk_", year, ".csv"),
+                         col_types = readr::cols())
 
   out$zip <- stringr::str_pad(out$zip, width = 5, side = "left", pad = "0")
   out$zcta <- stringr::str_pad(out$zcta, width = 5, side = "left", pad = "0")
