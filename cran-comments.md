@@ -3,12 +3,13 @@ This version of `zippeR` is a new submission to CRAN. It is a resubmission follo
 
 * Working examples were added to the following functions:
   * `zi_aggregate()`
-  * `zi_crosswalk()`
+  * `zi_crosswalk()` (partial)
   * `zi_prep_hud()`
 * To facilitate working examples for the above functions, two exported data objects were added to the package:
   * `zi_mo_pop`
   * `zi_mo_zcta3`
 * `\dontrun{}` was replaced with `\donttest{}` in the examples for the following functions that download data:
+  * `zi_crosswalk` (partial)
   * `zi_get_demographics()`
   * `zi_get_geometry()`
 * Missing `roxygen2` tags have been added `zi_list_zctas()` and are reflected in `zi_list_zctas.Rd` as requested.
@@ -18,7 +19,8 @@ This version of `zippeR` is a new submission to CRAN. It is a resubmission follo
 In addition to the above changes, the following updates were made to the package:
 
 * Global variables set within functions were moved to `zi_globals.R`
-* Additional unit tests were added
+* Additional unit tests were added and modified
+* New functions `zi_convert()`, `zi_load_labels_list()`, and `zi_load_labels()` were added to the package
 
 We did not address the following issues:
 
