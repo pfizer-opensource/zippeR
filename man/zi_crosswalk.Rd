@@ -4,21 +4,9 @@
 \alias{zi_crosswalk}
 \title{Crosswalk ZIP Codes with UDS, HUD, or a Custom Dictionary}
 \usage{
-zi_crosswalk(
-  .data,
-  input_var,
-  zip_source = "UDS",
-  source_var,
-  source_result,
-  year = NULL,
-  qtr = NULL,
-  target = NULL,
-  query = NULL,
-  by = NULL,
-  return_max = NULL,
-  key = NULL,
-  return = "id"
-)
+zi_crosswalk(.data, input_var, zip_source = "UDS", source_var,
+    source_result, year = NULL, qtr = NULL, target = NULL, query = NULL,
+    by = NULL, return_max = NULL, key = NULL, return = "id")
 }
 \arguments{
 \item{.data}{An "input object" that is data.frame or tibble that contains

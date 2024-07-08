@@ -4,6 +4,10 @@
 #'     a crosswalk file that will append ZCTAs. This is an important step because
 #'     not all ZIP Codes have the same five digits as their enclosing ZCTA.
 #'
+#' @usage zi_crosswalk(.data, input_var, zip_source = "UDS", source_var,
+#'     source_result, year = NULL, qtr = NULL, target = NULL, query = NULL,
+#'     by = NULL, return_max = NULL, key = NULL, return = "id")
+#'
 #' @param .data An "input object" that is data.frame or tibble that contains
 #'     ZIP Codes to be crosswalked.
 #' @param input_var The column in the input data that contains five-digit ZIP
