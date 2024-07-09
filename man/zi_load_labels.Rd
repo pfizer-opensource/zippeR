@@ -4,7 +4,8 @@
 \alias{zi_load_labels}
 \title{Load Label Data}
 \usage{
-zi_load_labels(source = "UDS", type = "zip5", vintage = 2022)
+zi_load_labels(source = "UDS", type = "zip5", include_scf = FALSE,
+    vintage = 2022)
 }
 \arguments{
 \item{source}{A required character scalar; specifying the source of the label
@@ -14,6 +15,10 @@ data. The only supported sources are \code{'UDS'} (default) and
 \item{type}{A required character scalar; one of either  \code{'zip3'} or
 \code{'zip5'}. The  \code{'zip3'} type is only available from the 'USPS'
 source, while the \code{'zip5'} type is available from \code{'UDS'}.}
+
+\item{include_scf}{A logical scalar required when \code{source = 'USPS'} and
+\code{type = 'zip3'}; specifying whether to include the SCF (Sectional
+Center Facility) ID in the output. The default is \code{FALSE}.}
 
 \item{vintage}{A required character or numeric scalar; specifying the date
 for \code{source = 'USPS'} or the year of the data for \code{source = 'UDS'}.
