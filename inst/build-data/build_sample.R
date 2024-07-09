@@ -11,6 +11,9 @@ zi_mo_pop <- zi_get_demographics(year = 2022, variables = c("B01003_001", "B1901
 zi_mo_hud <- zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1,
                                target = "COUNTY", query = "MO")
 
+zi_mo_usps <- zi_load_labels(type = "zip3", source = "USPS", vintage = 202408) |>
+  filter(label_state == "MO")
+
 # create variable with first three digits of GEOID
 zi_mo_pop <- mutate(zi_mo_pop, zcta3 = substr(GEOID, 1, 3))
 zi_mo_pop <- filter(zi_mo_pop, zcta3 %in% zi_mo_zcta3$ZCTA3)
@@ -19,6 +22,7 @@ zi_mo_pop <- select(zi_mo_pop, -zcta3)
 save(zi_mo_zcta3, file = "data/zi_mo_zcta3.rda", version = 2, compress = "xz")
 save(zi_mo_pop, file = "data/zi_mo_pop.rda", version = 2, compress = "xz")
 save(zi_mo_hud, file = "data/zi_mo_hud.rda", version = 2, compress = "xz")
+save(zi_mo_usps, file = "data/zi_mo_usps.rda", version = 2, compress = "xz")
 
 # Aggregate Data
 

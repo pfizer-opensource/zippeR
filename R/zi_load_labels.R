@@ -1,16 +1,16 @@
 #' Load Label Data
 #'
 #' @description This function loads a specific label data set that can be used to
-#'     label three-digit ZIP codes in a data frame.
+#'     label five or three-digit ZIP codes in a data frame.
 #'
 #' @usage zi_load_labels(source = "UDS", type = "zip5", include_scf = FALSE,
 #'     vintage = 2022)
 #'
-#' @param source A required character scalar; specifying the source of the label
+#' @param source A required character scalar; specifies the source of the label
 #'     data. The only supported sources are \code{'UDS'} (default) and
 #'     \code{'USPS'}.
 #' @param type A required character scalar; one of either  \code{'zip3'} or
-#'     \code{'zip5'}. The  \code{'zip3'} type is only available from the 'USPS'
+#'     \code{'zip5'}. The  \code{'zip3'} type is only available from the \code{'USPS'}
 #'     source, while the \code{'zip5'} type is available from \code{'UDS'}.
 #' @param include_scf A logical scalar required when \code{source = 'USPS'} and
 #'     \code{type = 'zip3'}; specifying whether to include the SCF (Sectional
@@ -19,6 +19,17 @@
 #'     for \code{source = 'USPS'} or the year of the data for \code{source = 'UDS'}.
 #'     The \code{zip_load_labels_list()} function can be used to see available
 #'     date values for \code{source = 'USPS'}.
+#'
+#' @details Labels are approximations of the actual location of a ZIP Code. For
+#'     five-digit ZIP Codes, the city and state may or may not correspond to
+#'     an individuals' mailing address city (since multiple cities may be
+#'     accepted as valid by USPS for a particular ZIP Code) or state (since ZIP
+#'     Codes may cross state lines).
+#'
+#'     For three-digit ZIP Codes, the area and state may or may not correspond to
+#'     an individuals' mailing address state (since SCFs cover multiple states).
+#'     For example, the three digit ZIP Code \code{010} covers Western Massachusetts
+#'     in practice, but is assigned to the state of Connecticut.
 #'
 #' @examples
 #' \donttest{
