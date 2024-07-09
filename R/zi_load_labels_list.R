@@ -26,7 +26,7 @@ zi_load_labels_list <- function(type = "zip3"){
 
   # create output
   ## load list of available label data sets
-  labels_list <- read.csv(file = "https://raw.githubusercontent.com/chris-prener/usps-zip-ref/main/data/meta.csv")
+  labels_list <- utils::read.csv(file = "https://raw.githubusercontent.com/chris-prener/usps-zip-ref/main/data/meta.csv")
 
   ## subset
   out <- subset(labels_list, type == type)

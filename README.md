@@ -31,9 +31,10 @@ remotes::install_github("pfizer-opensource/zippeR")
 ## Usage
 
 `zippeR` contains functions that support the following tasks: \*
-Converting ZIP Codes to ZCTAs, counties, and other Census geographies \*
-Downloading ZCTA geometries for both five-digit and three-digit areas \*
-Aggregating demographic data from five-digit ZCTAs to three-digit ZCTAs
+Labeling five-digit and three-digit ZIP Codes \* Converting ZIP Codes to
+ZCTAs, counties, and other Census geographies \* Downloading ZCTA
+geometries for both five-digit and three-digit areas \* Aggregating
+demographic data from five-digit ZCTAs to three-digit ZCTAs
 
 While a quick overview of the the core functionality is below, see the
 vignettes and our package website for more information on how to use
