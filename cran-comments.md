@@ -38,4 +38,21 @@ There were no ERRORs, WARNINGs, or NOTEs with local or CI checks. There is one N
 
 0 errors | 0 warnings | 1 note
 
-* This is a new release.
+```r
+Maintainer: 'Christopher Prener <Christopher.Prener@pfizer.com>'
+
+New submission
+
+Possibly misspelled words in DESCRIPTION:
+  ZCTA (14:21)
+  ZCTAs (14:71, 15:48)
+
+Found the following (possibly) invalid URLs:
+  URL: https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf
+    From: inst/doc/converting-zips.html
+    Status: 403
+    Message: Forbidden
+```
+
+Please note that the URLs are valid and the misspelled words are not misspelled.
+
