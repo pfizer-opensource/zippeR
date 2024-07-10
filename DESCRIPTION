@@ -27,7 +27,7 @@ Imports:
     purrr,
     readr,
     sf,
-    spatstat.geom,
+    spatstat.univar,
     stats,
     stringr,
     tibble,

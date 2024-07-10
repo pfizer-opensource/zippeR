@@ -314,10 +314,9 @@ zi_census_intensive <- function(.data, weights, method){
   if (method == "mean"){
     .data <- dplyr::summarise(.data, value = stats::weighted.mean(value, weight, na.rm = TRUE))
   } else if (method == "median"){
-    # .data <- dplyr::summarise(.data, value = spatstat.geom::weighted.median(value, weight, na.rm = TRUE))
     .data <- dplyr::summarise(
       .data,
-      value = spatstat.geom::weighted.quantile(value, weight, probs = 0.5, type = 2)
+      value = spatstat.univar::weighted.median(value, weight)
     )
   }
 
@@ -406,16 +405,11 @@ zi_acs_intensive <- function(.data, weights, method){
                               estimate = stats::weighted.mean(estimate, weight, na.rm = TRUE),
                               moe = stats::weighted.mean(moe, weight, na.rm = TRUE))
   } else if (method == "median"){
-    # .data <- dplyr::summarise(.data,
-     #                         estimate = spatstat.geom::weighted.median(estimate, weight, na.rm = TRUE),
-     #                         moe = spatstat.geom::weighted.median(moe, weight, na.rm = TRUE))
-
     .data <- dplyr::summarise(
       .data,
-      estimate = spatstat.geom::weighted.quantile(estimate, weight, probs = 0.5, type = 2),
-      moe = spatstat.geom::weighted.quantile(moe, weight, probs = 0.5, type = 2)
+      estimate = spatstat.univar::weighted.median(estimate, weight),
+      moe = spatstat.univar::weighted.median(moe, weight)
     )
-
   }
 
   ## return output
