@@ -87,9 +87,15 @@ mo22_zcta3 <- zi_mo_zcta3
   # zi_get_geometry(year = 2022, style = "zcta3", state = "MO",
   #   method = "intersect")
 
-# aggregate, outputting wide data
+# aggregate a single variable
+zi_aggregate(mo22_demos, year = 2020, extensive = "B01003_001", survey = "acs5",
+  zcta = mo22_zcta3$ZCTA3)
+
+\donttest{
+# aggregate multiple variables, outputting wide data
 zi_aggregate(mo22_demos, year = 2020,
   extensive = "B01003_001", intensive = "B19013_001", survey = "acs5",
   zcta = mo22_zcta3$ZCTA3, output = "wide")
+}
 
 }
