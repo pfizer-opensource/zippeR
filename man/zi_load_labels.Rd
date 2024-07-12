@@ -25,6 +25,10 @@ for \code{source = 'USPS'} or the year of the data for \code{source = 'UDS'}.
 The \code{zip_load_labels_list()} function can be used to see available
 date values for \code{source = 'USPS'}.}
 }
+\value{
+A tibble with the specified label data for either five or three-digit
+    ZIP Codes.
+}
 \description{
 This function loads a specific label data set that can be used to
     label five or three-digit ZIP codes in a data frame.

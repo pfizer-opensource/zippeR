@@ -1,5 +1,13 @@
 ## Release summary
-This version of `zippeR` is a new submission to CRAN. It is a resubmission following guidance from Konstanze Lauseker. The package has been updated to address the following issues:
+This version of `zippeR` is a new submission to CRAN. It is a resubmission following guidance from Konstanze Lauseker. 
+
+### Current Resubmission Notes
+The package has been updated to address the following issues:
+
+* Missing `roxygen2` tags have been added to `zi_load_labels()` and are reflected in `zi_load_labels.Rd` as requested.
+
+### Prior Resubmission Notes
+The prior resubmission made the following additional changes:
 
 * Working examples were added to the following functions:
   * `zi_aggregate()`

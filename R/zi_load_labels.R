@@ -20,6 +20,9 @@
 #'     The \code{zip_load_labels_list()} function can be used to see available
 #'     date values for \code{source = 'USPS'}.
 #'
+#' @return A tibble with the specified label data for either five or three-digit
+#'     ZIP Codes.
+#'
 #' @details Labels are approximations of the actual location of a ZIP Code. For
 #'     five-digit ZIP Codes, the city and state may or may not correspond to
 #'     an individuals' mailing address city (since multiple cities may be
