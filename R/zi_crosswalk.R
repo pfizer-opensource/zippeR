@@ -65,11 +65,11 @@
 #' }
 #'
 #' # HUD crosswalk
-#' # you will need to replace <INSERT HUD_KEY> with your own key
+#' # you will need to replace INSERT_HUD_KEY with your own key
 #' \dontrun{
 #'   zi_crosswalk(df, input_var = zip5, zip_source = "HUD", year = 2023,
 #'     qtr = 1, target = "COUNTY", query = "MO", by = "residential",
-#'     return_max = TRUE, key = <INSERT HUD_KEY>)
+#'     return_max = TRUE, key = INSERT_HUD_KEY)
 #' }
 #'
 #' # custom dictionary
