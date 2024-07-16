@@ -16,9 +16,13 @@ or FIPS codes (e.x. \code{29}).}
 \item{method}{A character scalar - either \code{"intersect"} or \code{"centroid"}.
 See Details below.}
 }
+\value{
+A vector of GEOIDs representing ZCTAs in and around the state selected.
+}
 \description{
 This function returns a vector of GEOIDs that represent ZCTAs
-    in and around states, depending on the method selected.
+    in and around states, depending on the method selected. The two methods
+    included described in Details below.
 }
 \details{
 Since ZCTAs cross state lines, two methods are used to create these
@@ -34,24 +38,18 @@ Since ZCTAs cross state lines, two methods are used to create these
     to finalize the geographies returned.
 }
 \examples{
-## Missouri ZCTAs, Intersect Method
-### Return List
+# Missouri ZCTAs, intersect method
+## return list
 mo_zctas <- zi_list_zctas(year = 2021, state = "MO", method = "intersect")
 
-### Print Total Number of ZCTAs Returned
-length(mo_zctas)
-
-### Preview ZCTAs
+## preview ZCTAs
 mo_zctas[1:10]
 
-## Missouri ZCTAs, Centroid Method
-### Return List
+# Missouri ZCTAs, centroid method
+## return list
 mo_zctas <- zi_list_zctas(year = 2021, state = "MO", method = "centroid")
 
-### Print Total Number of ZCTAs Returned
-length(mo_zctas)
-
-### Preview ZCTAs
+## preview ZCTAs
 mo_zctas[1:10]
 
 }

@@ -42,17 +42,17 @@
 #'     \code{"tidy"} or \code{"wide"} format.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#'   # download all ZCTAs
+#'   zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5")
 #'
-#'   # download geometric data
-#'   geo <- zi_get_geometry(year = 2012, style = "zcta5",
-#'       state = "MO", territory = NULL, method = "centroid",
-#'       includes = c("51640", "52542", "52573", "52626"))
+#'   # limit output to subset of ZCTAs
+#'   ## download all ZCTAs in Missouri, intersects method
+#'   mo20 <- zi_get_geometry(year = 2020, state = "MO", method = "intersect")
 #'
-#'   # download demographic data
-#'   demo <- zi_get_demographics(year = 2012, variables = "B01003_001",
-#'       survey = "acs5", zcta = geo$GEOID)
-#'
+#'   ## download demographic data
+#'   zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5",
+#'       zcta = mo20$GEOID)
 #' }
 #'
 #' @export
@@ -60,13 +60,9 @@ zi_get_demographics <- function(year, variables = NULL,
                                 table = NULL, survey, output = "tidy",
                                 zcta = NULL, key = NULL){
 
-  # global variables
-  GEOID10 = GEOID20 = GEOID = NAME = NULL
-
   # check inputs
-
   if (missing(year) == TRUE){
-    stop("Please specify arguments.")
+    stop("The 'year' value is missing. Please provide a numeric value between 2010 and 2022.")
   }
 
   if (is.numeric(year) == FALSE){

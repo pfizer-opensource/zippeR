@@ -167,94 +167,94 @@ if (style == FALSE){
 
   zctas <- zctas(year = 2023, class = "sf")
   zcta2023 <- create_year(year = 2023, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2023, file = "data-raw/zcta2023.rda")
+  save(zcta2023, file = "inst/data-raw/zcta2023.rda")
 
   zcta2023 <- create_year(year = 2023, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2023, file = "data-raw/zcta2023_centroid.rda")
+  save(zcta2023, file = "inst/data-raw/zcta2023_centroid.rda")
 
   zctas <- zctas(year = 2022, class = "sf")
   zcta2022 <- create_year(year = 2022, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2022, file = "data-raw/zcta2022.rda")
+  save(zcta2022, file = "inst/data-raw/zcta2022.rda")
 
   zcta2022 <- create_year(year = 2022, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2022, file = "data-raw/zcta2022_centroid.rda")
+  save(zcta2022, file = "inst/data-raw/zcta2022_centroid.rda")
 
   zctas <- zctas(year = 2021, class = "sf")
   zcta2021 <- create_year(year = 2021, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2021, file = "data-raw/zcta2021.rda")
+  save(zcta2021, file = "inst/data-raw/zcta2021.rda")
 
   zcta2021 <- create_year(year = 2021, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2021, file = "data-raw/zcta2021_centroid.rda")
+  save(zcta2021, file = "inst/data-raw/zcta2021_centroid.rda")
 
   zctas <- zctas(year = 2020, class = "sf")
   zcta2020 <- create_year(year = 2020, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2020, file = "data-raw/zcta2020.rda")
+  save(zcta2020, file = "inst/data-raw/zcta2020.rda")
 
   zcta2020 <- create_year(year = 2020, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2020, file = "data-raw/zcta2020_centroid.rda")
+  save(zcta2020, file = "inst/data-raw/zcta2020_centroid.rda")
 
   zctas <- zctas(year = 2019, class = "sf")
   zcta2019 <- create_year(year = 2019, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2019, file = "data-raw/zcta2019.rda")
+  save(zcta2019, file = "inst/data-raw/zcta2019.rda")
 
   zcta2019 <- create_year(year = 2019, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2019, file = "data-raw/zcta2019_centroid.rda")
+  save(zcta2019, file = "inst/data-raw/zcta2019_centroid.rda")
 
   zctas <- zctas(year = 2018, class = "sf")
   zcta2018 <- create_year(year = 2018, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2018, file = "data-raw/zcta2018.rda")
+  save(zcta2018, file = "inst/data-raw/zcta2018.rda")
 
   zcta2018 <- create_year(year = 2018, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2018, file = "data-raw/zcta2018_centroid.rda")
+  save(zcta2018, file = "inst/data-raw/zcta2018_centroid.rda")
 
   zctas <- zctas(year = 2017, class = "sf")
   zcta2017 <- create_year(year = 2017, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2017, file = "data-raw/zcta2017.rda")
+  save(zcta2017, file = "inst/data-raw/zcta2017.rda")
 
   zcta2017 <- create_year(year = 2017, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2017, file = "data-raw/zcta2017_centroid.rda")
+  save(zcta2017, file = "inst/data-raw/zcta2017_centroid.rda")
 
   zctas <- zctas(year = 2016, class = "sf")
   zcta2016 <- create_year(year = 2016, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2016, file = "data-raw/zcta2016.rda")
+  save(zcta2016, file = "inst/data-raw/zcta2016.rda")
 
   zcta2016 <- create_year(year = 2016, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2016, file = "data-raw/zcta2016_centroid.rda")
+  save(zcta2016, file = "inst/data-raw/zcta2016_centroid.rda")
 
   zctas <- zctas(year = 2015, class = "sf")
   zcta2015 <- create_year(year = 2015, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2015, file = "data-raw/zcta2015.rda")
+  save(zcta2015, file = "inst/data-raw/zcta2015.rda")
 
   zcta2015 <- create_year(year = 2015, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2015, file = "data-raw/zcta2015_centroid.rda")
+  save(zcta2015, file = "inst/data-raw/zcta2015_centroid.rda")
 
   zctas <- zctas(year = 2014, class = "sf")
   zcta2014 <- create_year(year = 2014, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2014, file = "data-raw/zcta2014.rda")
+  save(zcta2014, file = "inst/data-raw/zcta2014.rda")
 
   zcta2014 <- create_year(year = 2014, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2014, file = "data-raw/zcta2014_centroid.rda")
+  save(zcta2014, file = "inst/data-raw/zcta2014_centroid.rda")
 
   zctas <- zctas(year = 2013, class = "sf")
   zcta2013 <- create_year(year = 2013, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2013, file = "data-raw/zcta2013.rda")
+  save(zcta2013, file = "inst/data-raw/zcta2013.rda")
 
   zcta2013 <- create_year(year = 2013, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2013, file = "data-raw/zcta2013_centroid.rda")
+  save(zcta2013, file = "inst/data-raw/zcta2013_centroid.rda")
 
   zctas <- zctas(year = 2012, class = "sf")
   zcta2012 <- create_year(year = 2012, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2012, file = "data-raw/zcta2012.rda")
+  save(zcta2012, file = "inst/data-raw/zcta2012.rda")
 
   zcta2012 <- create_year(year = 2012, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2012, file = "data-raw/zcta2012_centroid.rda")
+  save(zcta2012, file = "inst/data-raw/zcta2012_centroid.rda")
 
   zctas <- zctas(year = 2010, class = "sf")
   zcta2010 <- create_year(year = 2010, zcta = zctas, intersect_by = states_abbrev)
-  save(zcta2010, file = "data-raw/zcta2010.rda")
+  save(zcta2010, file = "inst/data-raw/zcta2010.rda")
 
   zcta2010 <- create_year(year = 2010, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
-  save(zcta2010, file = "data-raw/zcta2010_centroid.rda")
+  save(zcta2010, file = "inst/data-raw/zcta2010_centroid.rda")
 
 }
 
@@ -262,7 +262,7 @@ if (style == FALSE){
 ## Load ZCTA Data ####
 c(2010,2012:2023) %>%
   unlist() %>%
-  map(~load(file = paste0("data-raw/zcta", .x, ".rda"), envir = .GlobalEnv))
+  map(~load(file = paste0("inst/data-raw/zcta", .x, ".rda"), envir = .GlobalEnv))
 
 ## Compare ZCTA Data ####
 ### run comparisons
@@ -348,7 +348,7 @@ rm(states)
 ## Load ZCTA Data ####
 c(2010,2012:2023) %>%
   unlist() %>%
-  map(~load(file = paste0("data-raw/zcta", .x, "_centroid.rda"), envir = .GlobalEnv))
+  map(~load(file = paste0("inst/data-raw/zcta", .x, "_centroid.rda"), envir = .GlobalEnv))
 
 ## Compare ZCTA Data ####
 ### run comparisons
@@ -459,8 +459,6 @@ zcta3_url <- list(
 samoa_bounding_box <- zctas(cb = TRUE, year = 2019)
 samoa_bounding_box <- filter(samoa_bounding_box, GEOID10 == "96799")
 samoa_bounding_box <- st_as_sfc(st_bbox(samoa_bounding_box))
-
-# create state crosswalk table ####
 
 # Create Output ####
 save(changes_intersects, changes_centroids, reference_intersects,

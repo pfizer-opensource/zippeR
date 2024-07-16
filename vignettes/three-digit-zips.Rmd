@@ -26,6 +26,33 @@ When the first three-digits are the only three digits given, it is not possible 
 
 `zippeR` provides several functions for downloading and using three-digit ZCTA data. They should be used with caution and the user should be aware of the limitations of the data described above.
 
+## Labeling Three-digit ZIP Codes
+
+The `zi_load_labels()` function can be used to load a set of labels for three-digit ZIP Codes. The function requires a `type` argument, which should be set to `"zip3"`. The function will return a tibble with the area and state associated with the SCF assigned to a particular three-digit ZIP.
+
+```r
+> zi_load_labels(source = "USPS", type = "zip3", vintage = 202408)
+# A tibble: 931 × 3                                                                                                                                                                                    
+   zip3  label_area label_state
+   <chr> <chr>      <chr>      
+ 1 005   MID-ISLAND NY         
+ 2 006   SAN JUAN   PR         
+ 3 007   SAN JUAN   PR         
+ 4 008   SAN JUAN   PR         
+ 5 009   SAN JUAN   PR         
+ 6 010   HARTFORD   CT         
+ 7 011   HARTFORD   CT         
+ 8 012   HARTFORD   CT         
+ 9 013   CENTRAL    MA         
+10 014   CENTRAL    MA         
+# ℹ 921 more rows
+# ℹ Use `print(n = ...)` to see more rows
+```
+
+Use these values with caution - the area and state may not correspond to the physical location of associated five-digit ZIP Codes. For example, the three-digit ZIP `010` covers Western Massachusetts. However, the SCF that serves it is located in Hartford, CT. The `label_area` and `label_state` values are based on the SCF location, not the geographic area served by the three-digit ZIP Code.
+
+The `zi_label()` function can be used to label your data with these values. If you have five-digit ZIP Codes and you want to convert them to three-digit ZIPs, the `zi_convert()` function is a helpful tool for shortening those values quickly.
+
 ## Downloading Geometric Data for Three-digit ZCTAs
 
 Three-digit ZCTA geometric data can be downloaded using `zi_get_geometry()`. The following syntax downloads all ZCTA3 for the United States, excluding overseas territories:

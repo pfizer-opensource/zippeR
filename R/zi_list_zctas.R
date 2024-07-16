@@ -1,7 +1,10 @@
 #' List ZCTA GEOIDs for States
 #'
 #' @description This function returns a vector of GEOIDs that represent ZCTAs
-#'     in and around states, depending on the method selected.
+#'     in and around states, depending on the method selected. The two methods
+#'     included described in Details below.
+#'
+#' @usage zi_list_zctas(year, state, method)
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
 #'     supports data between 2010 and 2021.
@@ -22,37 +25,50 @@
 #'     will likely need to use the \code{include} and \code{exclude} arguments
 #'     to finalize the geographies returned.
 #'
+#' @return A vector of GEOIDs representing ZCTAs in and around the state selected.
+#'
 #' @examples
-#' ## Missouri ZCTAs, Intersect Method
-#' ### Return List
+#' # Missouri ZCTAs, intersect method
+#' ## return list
 #' mo_zctas <- zi_list_zctas(year = 2021, state = "MO", method = "intersect")
 #'
-#' ### Print Total Number of ZCTAs Returned
-#' length(mo_zctas)
-#'
-#' ### Preview ZCTAs
+#' ## preview ZCTAs
 #' mo_zctas[1:10]
 #'
-#' ## Missouri ZCTAs, Centroid Method
-#' ### Return List
+#' # Missouri ZCTAs, centroid method
+#' ## return list
 #' mo_zctas <- zi_list_zctas(year = 2021, state = "MO", method = "centroid")
 #'
-#' ### Print Total Number of ZCTAs Returned
-#' length(mo_zctas)
-#'
-#' ### Preview ZCTAs
+#' ## preview ZCTAs
 #' mo_zctas[1:10]
 #'
 #' @export
 zi_list_zctas <- function(year, state, method){
 
-  #check inputs non-missing
-  if (missing(state) == TRUE & missing(year) == TRUE & missing(method) == TRUE){
-    stop("Please provide a vector of data for validation.")
+  # check inputs
+  if (missing(year) == TRUE){
+    stop("The 'year' value is missing. Please provide a numeric value between 2010 and 2023.")
   }
 
-  # global variables
-  fips = NULL
+  if (is.numeric(year) == FALSE){
+    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
+  }
+
+  if (year %in% c(2010:2023) == FALSE){
+    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
+  }
+
+  if (missing(state) == TRUE){
+    stop("Please provide a vector of valid state abbreviations for the 'state' argument.")
+  }
+
+  if (missing(method) == TRUE){
+    stop("Please select a valid method for returning ZCTA values. Your choices are 'centroid' and 'intersect'. See documentation for details.")
+  }
+
+  if (method %in% c("centroid", "intersect") == FALSE){
+    stop("The two valid methods for returning ZCTA values are 'centroid' and 'intersect'. See documentation for details.")
+  }
 
   # rename args
   statez <- state
@@ -62,19 +78,7 @@ zi_list_zctas <- function(year, state, method){
   ## validate state (using tigris workflow)
   statez <- unlist(sapply(statez, validate_state, USE.NAMES=FALSE))
 
-  if (is.numeric(year) == FALSE){
-    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2021.")
-  }
-
-  if (year %in% c(2010:2021) == FALSE){
-    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2021.")
-  }
-
-  if (method %in% c("centroid", "intersect") == FALSE){
-    stop("The two valid methods for returning ZCTA values are 'centroid' and 'intersect'. See documentation for details.")
-  }
-
-  ## subset based on method
+  # subset based on method
   if (method == "centroid"){
     sub <- dplyr::filter(reference_centroids, fips %in% statez == TRUE & year == yearz)
   } else if (method == "intersect"){
@@ -83,7 +87,7 @@ zi_list_zctas <- function(year, state, method){
 
   sub <- sub$obj
 
-  ## pull ZCTAs
+  # pull ZCTAs to create output
   if (method == "centroid"){
     out <- changes_centroids[sub]
   } else if (method == "intersect"){

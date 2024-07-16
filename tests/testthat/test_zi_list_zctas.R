@@ -14,14 +14,14 @@ states = "WA"
 
 test_that("missing parameters trigger appropriate errors", {
   expect_error(zi_list_zctas(),
-               "Please provide a vector of data for validation.")
+               "The 'year' value is missing. Please provide a numeric value between 2010 and 2023.")
 })
 
 test_that("incorrectly specified parameters trigger appropriate errors", {
   expect_error(zi_list_zctas(year = incorrect_year_str, method = correct_method, state = states),
-               "The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2021.")
+               "The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
   expect_error(zi_list_zctas(year = incorrect_year_num, method = correct_method, state = states),
-               "The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2021.")
+               "The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
   expect_error(zi_list_zctas(method = incorrect_method, year = correct_year, state = states),
                "The two valid methods for returning ZCTA values are 'centroid' and 'intersect'. See documentation for details.")
 })

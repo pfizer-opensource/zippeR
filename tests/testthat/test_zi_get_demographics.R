@@ -14,7 +14,7 @@ dec_year <- 2011
 
 test_that("missing parameters trigger appropriate errors", {
   expect_error(zi_get_demographics(),
-               "Please specify arguments.")
+               "The 'year' value is missing. Please provide a numeric value between 2010 and 2022.")
 })
 
 test_that("incorrectly specified parameters trigger appropriate errors", {

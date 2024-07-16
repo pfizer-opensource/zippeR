@@ -20,17 +20,17 @@
 #' @return A tibble that has been further prepared for use as a crosswalk.
 #'
 #' @examples
-#' \dontrun{
+#' # load sample crosswalk data
+#' mo_xwalk <- zi_mo_hud
 #'
-#'   # access to HUD ZIP Code to County crosswalk for all ZIP Codes in Missouri
-#'   mo <- zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1,
-#'     target = "COUNTY", query = "MO")
+#'   # the above data can be replicated with the following code:
+#'   # zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1,
+#'   #   target = "COUNTY", query = "MO")
 #'
-#'   # prep data
-#'   mo <- zi_prep_hud(mo, by, return_max = TRUE)
-#'
-#' }
-#'
+#' # prep crosswalk
+#' # when a ZIP Code crosses county boundaries, the portion with the largest
+#' # number of residential addresses will be returned
+#' zi_prep_hud(mo_xwalk, by = "residential", return_max = TRUE)
 #'
 #' @export
 zi_prep_hud <- function(.data, by, return_max = TRUE){
@@ -52,14 +52,12 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   hud <- dplyr::rename_with(.data, tolower)
 
   if (by == "residential"){
-    hud <- dplyr::select(hud, zip5 = zip, fips = geoid, ratio = res_ratio)
+    hud <- dplyr::select(hud, zip5 = zip, geoid, state, ratio = res_ratio)
   } else if (by == "commercial"){
-    hud <- dplyr::select(hud, zip5 = zip, fips = geoid, ratio = bus_ratio)
+    hud <- dplyr::select(hud, zip5 = zip, geoid, state, ratio = bus_ratio)
   } else if (by == "total"){
-    hud <- dplyr::select(hud, zip5 = zip, fips = geoid, ratio = tot_ratio)
+    hud <- dplyr::select(hud, zip5 = zip, geoid, state, ratio = tot_ratio)
   }
-
-  hud <- dplyr::mutate(hud, state_fips = substr(fips, 1, 2), .after = "fips")
 
   # convert state_fips
   state_df <- tigris::states(year = 2022, cb = TRUE, resolution = "20m")
@@ -67,15 +65,15 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   state_df <- dplyr::select(state_df, state = STUSPS, state_fips = STATEFP)
   state_df <- dplyr::filter(state_df, as.numeric(state_fips) < 60)
 
-  out <- dplyr::left_join(hud, state_df, by = "state_fips")
-  out <- dplyr::select(out, zip5, fips, state, state_fips, ratio)
+  out <- dplyr::left_join(hud, state_df, by = "state")
+  out <- dplyr::select(out, zip5, geoid, state, state_fips, ratio)
 
   # identify max
   out <- dplyr::arrange(out, zip5, state, geoid)
   out <- dplyr::group_by(out, zip5, state)
 
   if (return_max == TRUE){
-    out <- dplyr::arrange(out, fips)
+    out <- dplyr::arrange(out, geoid)
     out <- dplyr::filter(out, ratio == max(ratio, na.rm = TRUE))
     out <- dplyr::slice(out, 1)
   } else if (return_max == FALSE){

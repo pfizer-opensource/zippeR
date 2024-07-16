@@ -29,7 +29,7 @@ ZIP Codes, a two-letter character state abbreviation, or \code{"all"}.}
 
 \item{key}{Optional when \code{zip_code} is \code{"HUD"}. This should be a
 character string containing your HUD API key. Alternatively, it can be
-stored in your \code{.RProfile} as \code{HUD_API_KEY}.}
+stored in your \code{.RProfile} as \code{hud_key}.}
 }
 \value{
 A tibble containing the crosswalk file.
@@ -46,21 +46,22 @@ Spatial data on USPS ZIP Codes are not published by the U.S.
     of geographies including counties.
 }
 \examples{
-\dontrun{
-  ## access to former UDS mapper crosswalk
-  zi_load_crosswalk(zip_source = "UDS", year = 2020)
+\donttest{
+ # former UDS mapper crosswalks
+ zi_load_crosswalk(zip_source = "UDS", year = 2020)
 
-  ## access to HUD ZIP Code to Tract crosswalk for ZIP Code 27703
-  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "TRACT",
-      query = 27703)
+ # HUD crosswalks
+ ## ZIP Code to CBSA crosswalk for all ZIP Codes
+ zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "CBSA",
+     query = "all")
 
-  ## access to HUD ZIP Code to County crosswalk for all ZIP Codes in North Carolina
-  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "COUNTY",
-      query = "NC")
+ ## ZIP Code to County crosswalk for all ZIP Codes in Missouri
+ zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "COUNTY",
+     query = "MO")
 
-  ## access to HUD ZIP Code to CBSA crosswalk for all ZIP Codes
-  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "CBSA",
-      query = "all")
+ ## ZIP Code to Tract crosswalk for ZIP Code 63139 in St. Louis City
+ zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "TRACT",
+     query = 63139)
 }
 
 }
