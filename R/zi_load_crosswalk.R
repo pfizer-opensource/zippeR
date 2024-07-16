@@ -39,7 +39,7 @@
 #'  zi_load_crosswalk(zip_source = "UDS", year = 2020)
 #' }
 #'
-#' \donttest{
+#' \dontrun{
 #'  # HUD crosswalks
 #'  # you will need to replace INSERT_HUD_KEY with your own key
 #'  ## ZIP Code to CBSA crosswalk for all ZIP Codes
