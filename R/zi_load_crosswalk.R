@@ -37,19 +37,22 @@
 #' \donttest{
 #'  # former UDS mapper crosswalks
 #'  zi_load_crosswalk(zip_source = "UDS", year = 2020)
+#' }
 #'
+#' \donttest{
 #'  # HUD crosswalks
+#'  # you will need to replace <INSERT HUD_KEY> with your own key
 #'  ## ZIP Code to CBSA crosswalk for all ZIP Codes
 #'  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "CBSA",
-#'      query = "all")
+#'      query = "all", key = <INSERT HUD_KEY>)
 #'
 #'  ## ZIP Code to County crosswalk for all ZIP Codes in Missouri
 #'  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "COUNTY",
-#'      query = "MO")
+#'      query = "MO", key = <INSERT HUD_KEY>)
 #'
 #'  ## ZIP Code to Tract crosswalk for ZIP Code 63139 in St. Louis City
 #'  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "TRACT",
-#'      query = 63139)
+#'      query = 63139, key = <INSERT HUD_KEY>)
 #' }
 #'
 #' @export
