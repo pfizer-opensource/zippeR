@@ -5,20 +5,31 @@
 
 [![R build
 status](https://github.com/pfizer-opensource/zippeR/workflows/R-CMD-check/badge.svg)](https://github.com/pfizer-opensource/zippeR/actions)
+[![CRAN_status_badge](https://www.r-pkg.org/badges/version/zippeR)](https://cran.r-project.org/package=zippeR)
+[![cranchecks](https://badges.cranchecks.info/worst/zippeR.svg)](https://cran.r-project.org/web/checks/check_results_zippeR.html)
+[![Downloads](https://cranlogs.r-pkg.org/badges/zippeR?color=brightgreen)](https://www.r-pkg.org/pkg/zippeR)
+[![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.zippeR-blue)](https://doi.org/10.32614/CRAN.package.zippeR)
 
 ## Motivation
 
-`zippeR` provides a set of functions for working with ZCTAs and building
-spatial and demographic data for three-digit ZCTAs. These three-digit
-ZCTAs have limitations (they are large regions), but they are also used
-within American health care to protect patient confidentiality. `zippeR`
-therefore offers researchers who must use three-digit ZCTAs the
-capability to download geometric data and also aggregate demographic
-data from five-digit ZCTAs to three-digit ZCTAs. In addition, `zippeR`
-includes functions for validating and formatting vectors of ZIP Codes or
-ZCTAs as well as tools for cross-walking ZIP codes with ZCTAs.
+`zippeR` provides a set of functions for working with ZIP Codes and
+ZCTAs as well as building spatial and demographic data for three-digit
+ZCTAs. These three-digit ZCTAs have limitations (they are large
+regions), but they are also used within American health care to protect
+patient confidentiality. `zippeR` therefore offers researchers who must
+use three-digit ZCTAs the capability to download geometric data and also
+aggregate demographic data from five-digit ZCTAs to three-digit ZCTAs.
+In addition, `zippeR` includes functions for validating and formatting
+vectors of ZIP Codes or ZCTAs as well as tools for cross-walking ZIP
+codes with ZCTAs.
 
 ## Installation
+
+The easiest way to get started with `zippeR` is to install it from CRAN:
+
+``` r
+install.packages("zippeR")
+```
 
 The development version of `zippeR` can be accessed from GitHub with
 `remotes`:
