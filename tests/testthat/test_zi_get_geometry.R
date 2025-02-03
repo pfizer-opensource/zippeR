@@ -48,5 +48,5 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
 
 test_that("incorrectly specified parameters trigger appropriate errors", {
   skip_on_cran()
-  expect_error(zi_get_geometry(year = correct_year, method = "centroid"), NA)
+  expect_error(zi_get_geometry(year = 2020, method = "centroid"), NA)
 })
