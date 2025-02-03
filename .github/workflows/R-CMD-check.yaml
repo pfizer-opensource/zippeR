@@ -8,6 +8,8 @@ on:
 
 name: R-CMD-check
 
+permissions: read-all
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -32,8 +34,6 @@ jobs:
 
     env:
       R_KEEP_PKG_SOURCE: yes
-      # R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      # RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -45,22 +45,6 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-pandoc@v2
-
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-r-${{ matrix.config.r }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}-1-
-
       - name: Install macOS specific dependencies for sf
         if: runner.os == 'macOS'
         run: brew install udunits gdal proj
@@ -69,10 +53,13 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
-      - name: Install language dependencies
-        run: |
-          remotes::install_deps(dependencies = TRUE, build = FALSE)
-        shell: Rscript {0}
+      - name: Install Dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+          with:
+            cahce: TRUE
+            install-pandoc: TRUE
+            extra-packages: any::rcmdcheck
+            needs: check
 
       - name: Session info
         run: |
@@ -86,4 +73,3 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
-
