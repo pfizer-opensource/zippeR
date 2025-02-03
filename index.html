@@ -19,7 +19,7 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">zippeR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1.9000</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -71,7 +71,7 @@
 <li>
   <a href="https://github.com/pfizer-opensource/zippeR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -82,7 +82,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="contents col-md-9">
@@ -93,13 +93,16 @@
 <div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
 </h2>
-<p><code>zippeR</code> provides a set of functions for working with ZCTAs and building spatial and demographic data for three-digit ZCTAs. These three-digit ZCTAs have limitations (they are large regions), but they are also used within American health care to protect patient confidentiality. <code>zippeR</code> therefore offers researchers who must use three-digit ZCTAs the capability to download geometric data and also aggregate demographic data from five-digit ZCTAs to three-digit ZCTAs. In addition, <code>zippeR</code> includes functions for validating and formatting vectors of ZIP Codes or ZCTAs as well as tools for cross-walking ZIP codes with ZCTAs.</p>
+<p><code>zippeR</code> provides a set of functions for working with ZIP Codes and ZCTAs as well as building spatial and demographic data for three-digit ZCTAs. These three-digit ZCTAs have limitations (they are large regions), but they are also used within American health care to protect patient confidentiality. <code>zippeR</code> therefore offers researchers who must use three-digit ZCTAs the capability to download geometric data and also aggregate demographic data from five-digit ZCTAs to three-digit ZCTAs. In addition, <code>zippeR</code> includes functions for validating and formatting vectors of ZIP Codes or ZCTAs as well as tools for cross-walking ZIP codes with ZCTAs.</p>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p>The development version of <code>zippeR</code> can be accessed from GitHub with <code>remotes</code>:</p>
+<p>The easiest way to get started with <code>zippeR</code> is to install it from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"zippeR"</span><span class="op">)</span></span></code></pre></div>
+<p>The development version of <code>zippeR</code> can be accessed from GitHub with <code>remotes</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"pfizer-evgen/zippeR"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -109,9 +112,9 @@
 <p>The <code>zippeR</code> site includes dedicated articles on the following topics: * <a href="articles/basics.html">ZIP Code and ZIP Code Tabulation Area Basics</a> * <a href="articles/coverting-zips.html">Converting ZIP Codes to Other Geographies</a> * <a href="articles/demographic-geometric-zcta-data.html">Demographic and Geometric ZCTA Data</a> * <a href="articles/three-digit-zips.html">Three-digit ZIP Codes and ZCTAs</a></p>
 </div>
 <div class="section level2">
-<h2 id="contributor-code-of-conduct">Contributor Code of Conduct<a class="anchor" aria-label="anchor" href="#contributor-code-of-conduct"></a>
+<h2 id="feedback-and-code-of-conduct">Feedback and Code of Conduct<a class="anchor" aria-label="anchor" href="#feedback-and-code-of-conduct"></a>
 </h2>
-<p>Please note that this project is released with a Contributor <a href="/CODE_OF_CONDUCT.html">Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
+<p>If you have feedback on <code>zippeR</code>, please <a href="https://github.com/pfizer-opensource/zippeR/issues" class="external-link">open an issue on GitHub</a> after checking the <a href="https://github.com/pfizer-opensource/zippeR/blob/main/.github/CONTRIBUTING.md" class="external-link">contribution guidelines</a>. Please note that this project is released with a Contributor <a href="https://github.com/pfizer-opensource/zippeR/blob/main/.github/CODE_OF_CONDUCT.md" class="external-link">Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
 </div>
 </div>
   </div>
@@ -120,6 +123,7 @@
     <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=zippeR" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/pfizer-opensource/zippeR/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
@@ -169,16 +173,16 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>
