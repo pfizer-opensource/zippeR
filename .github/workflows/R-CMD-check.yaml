@@ -55,11 +55,11 @@ jobs:
 
       - name: Install Dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
-          with:
-            cahce: TRUE
-            install-pandoc: TRUE
-            extra-packages: any::rcmdcheck
-            needs: check
+        with:
+          cache: TRUE
+          install-pandoc: TRUE
+          extra-packages: any::rcmdcheck
+          needs: check
 
       - name: Session info
         run: |
