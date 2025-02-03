@@ -29,3 +29,18 @@ reference:
     - zi_load_crosswalk
     - zi_prep_hud
     - zi_crosswalk
+
+  - title: "Label ZIP Codes"
+    desc: "Append Contextual Data to ZIP Codes"
+    contents:
+    - zi_label
+    - zi_load_labels
+    - zi_load_labels_list
+
+  - title: "Sample Data"
+    desc: "Data Used for Examples"
+    contents:
+    - zi_mo_hud
+    - zi_mo_pop
+    - zi_mo_usps
+    - zi_mo_zcta3
