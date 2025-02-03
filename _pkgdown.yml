@@ -37,6 +37,11 @@ reference:
     - zi_load_labels
     - zi_load_labels_list
 
+  - title: "Convert to Three-digit ZIP Codes"
+    desc: "Adapt Five-digit ZIP Codes to Three-digit ZIP Codes"
+    contents:
+    - zi_convert
+
   - title: "Sample Data"
     desc: "Data Used for Examples"
     contents:
