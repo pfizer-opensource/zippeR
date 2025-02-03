@@ -69,11 +69,10 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
-      # - name: Install language dependencies
-      #   run: |
-      #     remotes::install_deps(dependencies = TRUE, build = FALSE)
-      #     remotes::install_cran("rcmdcheck")
-      #   shell: Rscript {0}
+      - name: Install language dependencies
+        run: |
+          remotes::install_deps(dependencies = TRUE, build = FALSE)
+        shell: Rscript {0}
 
       - name: Session info
         run: |

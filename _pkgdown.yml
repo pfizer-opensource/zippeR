@@ -1,5 +1,8 @@
 url: https://pfizer-opensource.github.io/zippeR/
 
+template:
+  bootstrap: 5
+
 reference:
   - title: "Data Preparation"
     desc: "Ensure vectors of ZIP Codes or ZCTAs are Valid"
