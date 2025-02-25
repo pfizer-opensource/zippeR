@@ -69,7 +69,7 @@ Dictionary five-digit ZCTAs converted to three-digit ZCTAs.
 
 The U.S. Housing and Urban Development (HUD) Department provides ZIP code to Census geography crosswalks that can be used to convert ZIP codes to Census Tracts, counties, and other geographies. These data are available through the [HUD User website](https://www.huduser.gov/portal/datasets/usps_crosswalk.html). Unlike the UDS files, ZIP Code Tabulation Areas are not one of the geographies including. If HUD data are used, be aware of ZIP Codes mapping into multiple Census Tracts, counties, etc. Many users may want to pick a "most likely" county (or other Census geometry) based on the proportion of commercial or residential customers.
 
-To use the HUD data, users must first obtain an API key from the [HUD User website](https://www.huduser.gov/portal/dataset/uspszip-api.html). Once you have an API key, they can use `zi_load_crosswalk()` to download the data either by passing the key directly to the function or by storing the key in their [.Rprofile](https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf) under the object name `hud_key`:
+To use the HUD data, users must first obtain an API key from the [HUD User website](https://www.huduser.gov/portal/dataset/uspszip-api.html). Once you have an API key, they can use `zi_load_crosswalk()` to download the data either by passing the key directly to the function or by storing the key in their [.Rprofile](https://docs.posit.co/ide/user/ide/guide/environments/r/managing-r.html) under the object name `hud_key`:
 
 ```r
 Sys.setenv(hud_key = "<PASTE KEY>")
