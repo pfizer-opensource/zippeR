@@ -237,21 +237,23 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
   }
 
   # finalize output
-  if (class == "sf" & shift_geo == TRUE){
+  if (!is.null(out)){
+    if (class == "sf" & shift_geo == TRUE){
 
-    ## shift geometry
-    out <- tigris::shift_geometry(out, position = "below")
+      ## shift geometry
+      out <- tigris::shift_geometry(out, position = "below")
 
-  }
+    }
 
-  if (class == "tibble"){
+    if (class == "tibble"){
 
-    ## remove geometry
-    sf::st_geometry(out) <- NULL
+      ## remove geometry
+      sf::st_geometry(out) <- NULL
 
-    ## finalize tibble
-    out <- tibble::as_tibble(out)
+      ## finalize tibble
+      out <- tibble::as_tibble(out)
 
+    }
   }
 
   # return output
@@ -266,106 +268,114 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
   # global variables
   GEOID10 = GEOID20 = GEOID = NULL
 
-  # tigris call
-  out <- suppressMessages(tigris::zctas(year = year, cb = cb))
+  # tigris call - TAG
+  out <- zi_get_tigris(.f = "zctas", year = year, state = NULL, cb = cb)
 
   # process geometry
-  if (is.null(state) == FALSE & is.null(county) == TRUE) {
+  if (!is.null(out)){
+    if (is.null(state) == FALSE & is.null(county) == TRUE) {
 
-    ## generate vector of requested state ZCTAs
-    zcta_vec <- zi_list_zctas(year = year, state = c(state, territory), method = method)
+      ## generate vector of requested state ZCTAs
+      zcta_vec <- zi_list_zctas(year = year, state = c(state, territory), method = method)
 
-    ## add inclusions, remove exclusions
-    zcta_vec <- unique(c(zcta_vec, includes))
-    zcta_vec <- zcta_vec[zcta_vec %in% excludes == FALSE]
+      ## add inclusions, remove exclusions
+      zcta_vec <- unique(c(zcta_vec, includes))
+      zcta_vec <- zcta_vec[zcta_vec %in% excludes == FALSE]
 
-    ## rename year
-    if (year < 2020){
-      out <- dplyr::rename(out, GEOID = GEOID10)
-    } else if (year >= 2020){
-      out <- dplyr::rename(out, GEOID = GEOID20)
-    }
-
-    ## subset
-    out <- dplyr::filter(out, GEOID %in% zcta_vec == TRUE)
-
-  } else if (is.null(state) == FALSE & is.null(county) == FALSE){
-
-    ## geoprocess based on county to produced vector of ZCTAs
-    zcta_vec <- zi_process_county(cb = cb, state = c(state, territory), county = county,
-                                  year = year, zcta = out, method = method,
-                                  style = "zcta5")
-
-    ## add inclusions, remove exclusions
-    zcta_vec <- unique(c(zcta_vec, includes))
-    zcta_vec <- zcta_vec[zcta_vec %in% excludes == FALSE]
-
-    ## rename year
-    if (year < 2020){
-      out <- dplyr::rename(out, GEOID = GEOID10)
-    } else if (year >= 2020){
-      out <- dplyr::rename(out, GEOID = GEOID20)
-    }
-
-    ## subset
-    out <- dplyr::filter(out, GEOID %in% zcta_vec == TRUE)
-
-  } else if (is.null(state) == TRUE & is.null(county) == TRUE){
-
-    ## rename year
-    if (year < 2020){
-      out <- dplyr::rename(out, GEOID = GEOID10)
-    } else if (year >= 2020){
-      out <- dplyr::rename(out, GEOID = GEOID20)
-    }
-
-    ## manage territories
-    if (is.null(territory) == TRUE){
-
-      ## all territories not including American Samoa
-      out <- dplyr::filter(out, substr(GEOID, 1,3) %in% c("006", "007", "008", "009", "969") == FALSE)
-
-      ## American Samoa
-      out <- dplyr::filter(out, GEOID != "96799")
-
-    } else if (is.null(territory) == FALSE){
-
-      ## territory vector
-      territory_vec <- c("AS", "GU", "MP", "PR", "VI")
-
-      if (all(territory == territory_vec) == FALSE){
-
-        ## construct list
-        territory_vec <- territory_vec[territory_vec %in% territory == FALSE]
-
-        ## create vector
-        zcta_vec <- zi_list_zctas(year = year, state = territory_vec, method = "intersect")
-
-        ## append to excludes
-        excludes <- unique(sort(c(excludes, zcta_vec)))
-
+      ## rename year
+      if (year < 2020){
+        out <- dplyr::rename(out, GEOID = GEOID10)
+      } else if (year >= 2020){
+        out <- dplyr::rename(out, GEOID = GEOID20)
       }
+
+      ## subset
+      out <- dplyr::filter(out, GEOID %in% zcta_vec == TRUE)
+
+    } else if (is.null(state) == FALSE & is.null(county) == FALSE){
+
+      ## geoprocess based on county to produced vector of ZCTAs
+      zcta_vec <- zi_process_county(cb = cb, state = c(state, territory), county = county,
+                                    year = year, zcta = out, method = method,
+                                    style = "zcta5")
+
+      if (!is.null(zcta_vec)){
+        ## add inclusions, remove exclusions
+        zcta_vec <- unique(c(zcta_vec, includes))
+        zcta_vec <- zcta_vec[zcta_vec %in% excludes == FALSE]
+
+        ## rename year
+        if (year < 2020){
+          out <- dplyr::rename(out, GEOID = GEOID10)
+        } else if (year >= 2020){
+          out <- dplyr::rename(out, GEOID = GEOID20)
+        }
+
+        ## subset
+        out <- dplyr::filter(out, GEOID %in% zcta_vec == TRUE)
+      } else {
+        out <- NULL
+      }
+
+    } else if (is.null(state) == TRUE & is.null(county) == TRUE){
+
+      ## rename year
+      if (year < 2020){
+        out <- dplyr::rename(out, GEOID = GEOID10)
+      } else if (year >= 2020){
+        out <- dplyr::rename(out, GEOID = GEOID20)
+      }
+
+      ## manage territories
+      if (is.null(territory) == TRUE){
+
+        ## all territories not including American Samoa
+        out <- dplyr::filter(out, substr(GEOID, 1,3) %in% c("006", "007", "008", "009", "969") == FALSE)
+
+        ## American Samoa
+        out <- dplyr::filter(out, GEOID != "96799")
+
+      } else if (is.null(territory) == FALSE){
+
+        ## territory vector
+        territory_vec <- c("AS", "GU", "MP", "PR", "VI")
+
+        if (all(territory == territory_vec) == FALSE){
+
+          ## construct list
+          territory_vec <- territory_vec[territory_vec %in% territory == FALSE]
+
+          ## create vector
+          zcta_vec <- zi_list_zctas(year = year, state = territory_vec, method = "intersect")
+
+          ## append to excludes
+          excludes <- unique(sort(c(excludes, zcta_vec)))
+
+        }
+      }
+
+      ## subset
+      if (is.null(excludes) == FALSE){
+        out <- dplyr::filter(out, GEOID %in% excludes == FALSE)
+      }
+
     }
 
-    ## subset
-    if (is.null(excludes) == FALSE){
-      out <- dplyr::filter(out, GEOID %in% excludes == FALSE)
+    # subset based on starts with
+    if (!is.null(out)){
+      if (is.null(starts_with) == FALSE){
+        out <- dplyr::filter(out, substr(GEOID, 1, 2) %in% starts_with == TRUE)
+      }
+
+      # subset columns based on return
+      if (return == "id"){
+        out <- dplyr::select(out, GEOID)
+      }
+
+      # order output
+      out <- dplyr::arrange(out, GEOID)
     }
-
   }
-
-  # subset based on starts with
-  if (is.null(starts_with) == FALSE){
-    out <- dplyr::filter(out, substr(GEOID, 1, 2) %in% starts_with == TRUE)
-  }
-
-  # subset columns based on return
-  if (return == "id"){
-    out <- dplyr::select(out, GEOID)
-  }
-
-  # order output
-  out <- dplyr::arrange(out, GEOID)
 
   # return output
   return(out)
@@ -378,38 +388,41 @@ zi_process_county <- function(cb, state, county, year, zcta, method, style){
   # global variables
   GEOID = GEOID10 = GEOID20 = NULL
 
-  # tigris call
-  counties <- suppressMessages(tigris::counties(cb = cb, state = state, year = year))
+  # tigris call - TAG
+  counties <- zi_get_tigris(.f = "counties", year = year, state = state, cb = cb)
 
-  counties <- dplyr::select(counties, GEOID)
-  counties <- dplyr::filter(counties, GEOID %in% county)
+  # if tigris call successful, wrangle
+  if (!is.null(counties)){
+    counties <- dplyr::select(counties, GEOID)
+    counties <- dplyr::filter(counties, GEOID %in% county)
 
-  # calculate centroids
-  if (method == "centroid"){
-    zcta <- sf::st_centroid(zcta)
-  }
-
-  # create simplified data
-  if (style == "zcta5"){
-    if (year < 2020){
-      zcta <- dplyr::select(zcta, GEOID10)
-    } else if (year >= 2020) {
-      zcta <- dplyr::select(zcta, GEOID20)
+    # calculate centroids
+    if (method == "centroid"){
+      zcta <- sf::st_centroid(zcta)
     }
-  }
 
-  # geoprocess
-  intersect <- suppressWarnings(sf::st_intersection(zcta, counties))
-
-  # create output
-  if (style == "zcta5"){
-    if (year < 2020){
-      out <- intersect$GEOID10
-    } else if (year >= 2020) {
-      out <- intersect$GEOID20
+    # create simplified data
+    if (style == "zcta5"){
+      if (year < 2020){
+        zcta <- dplyr::select(zcta, GEOID10)
+      } else if (year >= 2020) {
+        zcta <- dplyr::select(zcta, GEOID20)
+      }
     }
-  } else if (style == "zcta3"){
-    out <- intersect$ZCTA3
+
+    # geoprocess
+    intersect <- suppressWarnings(sf::st_intersection(zcta, counties))
+
+    # create output
+    if (style == "zcta5"){
+      if (year < 2020){
+        out <- intersect$GEOID10
+      } else if (year >= 2020) {
+        out <- intersect$GEOID20
+      }
+    } else if (style == "zcta3"){
+      out <- intersect$ZCTA3
+    }
   }
 
   # return output
@@ -455,12 +468,16 @@ zi_get_zcta3 <- function(year, state, county, territory, cb, starts_with,
                                   year = year, zcta = out, method = method,
                                   style = "zcta3")
 
-    ## add inclusions, remove exclusions
-    zcta_vec <- unique(c(zcta_vec, includes))
-    zcta_vec <- zcta_vec[zcta_vec %in% excludes == FALSE]
+    if (!is.null(zcta_vec)){
+      ## add inclusions, remove exclusions
+      zcta_vec <- unique(c(zcta_vec, includes))
+      zcta_vec <- zcta_vec[zcta_vec %in% excludes == FALSE]
 
-    ## subset based on year
-    out <- dplyr::filter(out, ZCTA3 %in% zcta_vec == TRUE)
+      ## subset based on year
+      out <- dplyr::filter(out, ZCTA3 %in% zcta_vec == TRUE)
+    } else {
+      out <- NULL
+    }
 
   } else if (is.null(state) == TRUE & is.null(county) == TRUE){
 
@@ -512,12 +529,14 @@ zi_get_zcta3 <- function(year, state, county, territory, cb, starts_with,
   }
 
   # subset based on starts with
-  if (is.null(starts_with) == FALSE){
-    out <- dplyr::filter(out, substr(ZCTA3, 1, 2) %in% starts_with == TRUE)
-  }
+  if (!is.null(out)){
+    if (is.null(starts_with) == FALSE){
+      out <- dplyr::filter(out, substr(ZCTA3, 1, 2) %in% starts_with == TRUE)
+    }
 
-  # order output
-  out <- dplyr::arrange(out, ZCTA3)
+    # order output
+    out <- dplyr::arrange(out, ZCTA3)
+  }
 
   # return output
   return(out)
@@ -559,3 +578,24 @@ zi_validate_starts <- function(x){
   return(out)
 
 }
+
+zi_get_tigris <- function(.f, year, state, cb){
+
+  ## attempt to use tigris
+  out <- try(
+    suppressWarnings(
+      do.call(what = eval(parse(text = paste0("tigris::", .f))), args = list(year = year, state = state, cb = cb))
+    ),
+    silent = TRUE
+  )
+
+  if (inherits(out, what = "try-error")){
+    cli::cli_inform(message = c("x" = "Errors occurred while attempting to download data from the Census Bureau FTP Server. Returning {.code NULL} instead."))
+
+    out <- NULL
+  }
+
+  return(out)
+
+}
+

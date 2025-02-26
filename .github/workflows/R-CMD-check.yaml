@@ -22,7 +22,6 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: windows-latest, r: '4.0'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
@@ -59,7 +58,7 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: Session info
+      - name: Session Info
         run: |
           options(width = 100)
           pkgs <- installed.packages()[, "Package"]
