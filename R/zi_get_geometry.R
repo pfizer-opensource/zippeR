@@ -579,23 +579,5 @@ zi_validate_starts <- function(x){
 
 }
 
-zi_get_tigris <- function(.f, year, state, cb){
 
-  ## attempt to use tigris
-  out <- try(
-    suppressWarnings(
-      do.call(what = eval(parse(text = paste0("tigris::", .f))), args = list(year = year, state = state, cb = cb))
-    ),
-    silent = TRUE
-  )
-
-  if (inherits(out, what = "try-error")){
-    cli::cli_inform(message = c("x" = "Errors occurred while attempting to download data from the Census Bureau FTP Server. Returning {.code NULL} instead."))
-
-    out <- NULL
-  }
-
-  return(out)
-
-}
 

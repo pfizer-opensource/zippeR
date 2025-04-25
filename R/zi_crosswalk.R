@@ -236,13 +236,13 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
     dict <- zip_source
 
     if (return == "id"){
-      dict <- dplyr::select(dict, source_varQN, source_resultQN)
+      dict <- dplyr::select(dict, dplyr::all_of(source_varQN), dplyr::all_of(source_resultQN))
 
       source_new_result <- paste0("source_", source_resultQN)
       names(dict)[names(dict) == source_resultQN] <- source_new_result
 
     } else if (return == "all"){
-      dict <- dplyr::select(dict, source_varQN, source_resultQN, dplyr::everything())
+      dict <- dplyr::select(dict, dplyr::all_of(source_varQN), dplyr::all_of(source_resultQN), dplyr::everything())
     }
   }
 

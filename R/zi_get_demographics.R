@@ -109,29 +109,34 @@ zi_get_demographics <- function(year, variables = NULL,
   if (survey %in% c("sf1", "sf3")){
 
     ## call get_decennial
-    out <- suppressMessages(tidycensus::get_decennial(geography = "zcta", variables = variables,
-                                                      table = table, year = year, output = output,
-                                                      sumfile = survey, key = key))
+    out <- zi_get_decennial(geography = "zcta", variables = variables,
+                            table = table, year = year, output = output,
+                            survey = survey, key = key)
 
   } else if (survey %in% c("acs1", "acs3", "acs5")){
 
     ## call get_acs
-    out <- suppressMessages(tidycensus::get_acs(geography = "zcta", variables = variables,
-                                                table = table, year = year, output = output,
-                                                survey = survey, key = key))
+    out <- zi_get_acs(geography = "zcta", variables = variables,
+                      table = table, year = year, output = output,
+                      survey = survey, key = key)
 
     ## prep data
-    out <- dplyr::mutate(out, GEOID = stringr::word(NAME, 2))
+    if (!is.null(out)){
+      out <- dplyr::mutate(out, GEOID = stringr::word(NAME, 2))
+    }
 
   }
 
-  ## remove additional cols and re-arrange
-  out <- dplyr::select(out, -NAME)
-  out <- dplyr::arrange(out, GEOID)
+  # tidy if data are returned
+  if(!is.null(out)){
+    ## remove additional cols and re-arrange
+    out <- dplyr::select(out, -NAME)
+    out <- dplyr::arrange(out, GEOID)
 
-  # optionally subset
-  if (is.null(zcta) == FALSE){
-    out <- dplyr::filter(out, GEOID %in% zcta == TRUE)
+    ## optionally subset
+    if (is.null(zcta) == FALSE){
+      out <- dplyr::filter(out, GEOID %in% zcta == TRUE)
+    }
   }
 
   # return output

@@ -1,3 +1,67 @@
+zi_get_tigris <- function(.f, year, state, cb){
+
+  ## attempt to use tigris
+  out <- try(
+    suppressWarnings(
+      do.call(what = eval(parse(text = paste0("tigris::", .f))), args = list(year = year, state = state, cb = cb))
+    ),
+    silent = TRUE
+  )
+
+  if (inherits(out, what = "try-error")){
+    cli::cli_inform(message = c("x" = "Errors occurred while attempting to download data from the Census Bureau FTP Server. Returning {.code NULL} instead."))
+
+    out <- NULL
+  }
+
+  return(out)
+
+}
+
+zi_get_decennial <- function(geography, variables, table, year, output, survey, key){
+
+  ## attempt to use tidycensus
+  out <- try(
+    suppressWarnings(suppressMessages(
+      tidycensus::get_decennial(geography = geography, variables = variables,
+                                table = table, year = year, output = output,
+                                sumfile = survey, key = key)
+    )),
+    silent = TRUE
+  )
+
+  if (inherits(out, what = "try-error")){
+    cli::cli_inform(message = c("x" = "Errors occurred while attempting to download data from the Census Bureau API. Returning {.code NULL} instead."))
+
+    out <- NULL
+  }
+
+  return(out)
+
+}
+
+zi_get_acs <- function(geography, variables, table, year, output, survey, key){
+
+  ## attempt to use tidycensus
+  out <- try(
+    suppressWarnings(suppressMessages(
+      tidycensus::get_acs(geography = geography, variables = variables,
+                          table = table, year = year, output = output,
+                          survey = survey, key = key)
+    )),
+    silent = TRUE
+  )
+
+  if (inherits(out, what = "try-error")){
+    cli::cli_inform(message = c("x" = "Errors occurred while attempting to download data from the Census Bureau API. Returning {.code NULL} instead."))
+
+    out <- NULL
+  }
+
+  return(out)
+
+}
+
 # these are all functions from the tigris package that are not exported
 # https://github.com/walkerke/tigris/blob/master/R/utils.R
 # used based on terms of the MIT License used by the package's author, Kyle Walker

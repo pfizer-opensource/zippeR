@@ -89,6 +89,10 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
                          output = "tidy", zcta = NULL, key = NULL){
 
   # evaluate inputs
+  # if (is.null(.data)){
+  #   stop("The '.data' object provided is NULL. Please provide a dataframe.")
+  # }
+
   if (missing(year)){
     stop("The 'year' value is missing. Please provide a numeric value between 2010 and 2022.")
   }
@@ -192,7 +196,11 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
       weights <- zi_census_weights(year = year, key = key)
 
       ## aggregate
-      out <- zi_census_intensive(.data, weights = weights, method = intensive_method)
+      if (!is.null(weights)){
+        out <- zi_census_intensive(.data, weights = weights, method = intensive_method)
+      } else {
+        out <- NULL
+      }
 
     } else if (extensive_id == TRUE & intensive_id == TRUE){
 
@@ -203,13 +211,17 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
       ## calculate weights
       weights <- zi_census_weights(year = year, key = key)
 
-      ## aggregate
-      extensive_df <- zi_census_extensive(extensive_df)
-      intensive_df <- zi_census_intensive(intensive_df, weights = weights, method = intensive_method)
+      if (!is.null(weights)){
+        ## aggregate
+        extensive_df <- zi_census_extensive(extensive_df)
+        intensive_df <- zi_census_intensive(intensive_df, weights = weights, method = intensive_method)
 
-      ## combine
-      out <- dplyr::bind_rows(extensive_df, intensive_df)
-      out <- dplyr::arrange(out, ZCTA3, variable)
+        ## combine
+        out <- dplyr::bind_rows(extensive_df, intensive_df)
+        out <- dplyr::arrange(out, ZCTA3, variable)
+      } else {
+        out <- NULL
+      }
 
     }
 
@@ -227,7 +239,11 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
       weights <- zi_acs_weights(year = year, survey = survey, key = key)
 
       ## aggregate
-      out <- zi_acs_intensive(.data, weights = weights, method = intensive_method)
+      if (!is.null(weights)){
+        out <- zi_acs_intensive(.data, weights = weights, method = intensive_method)
+      } else {
+        out <- NULL
+      }
 
     } else if (extensive_id == TRUE & intensive_id == TRUE){
 
@@ -238,43 +254,47 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
       ## calculate weights
       weights <- zi_acs_weights(year = year, survey = survey, key = key)
 
-      ## aggregate
-      extensive_df <- zi_acs_extensive(extensive_df)
-      intensive_df <- zi_acs_intensive(intensive_df, weights = weights, method = intensive_method)
+      if (!is.null(weights)){
+        ## aggregate
+        extensive_df <- zi_acs_extensive(extensive_df)
+        intensive_df <- zi_acs_intensive(intensive_df, weights = weights, method = intensive_method)
 
-      ## combine
-      out <- dplyr::bind_rows(extensive_df, intensive_df)
-      out <- dplyr::arrange(out, ZCTA3, variable)
-
+        ## combine
+        out <- dplyr::bind_rows(extensive_df, intensive_df)
+        out <- dplyr::arrange(out, ZCTA3, variable)
+      } else {
+        out <- NULL
+      }
     }
 
   }
 
-  # optionally subset
+  if (!is.null(out)){
+    # optionally subset
+    if (is.null(zcta) == FALSE){
+      out <- dplyr::filter(out, ZCTA3 %in% zcta == TRUE)
+    }
 
-  if (is.null(zcta) == FALSE){
-    out <- dplyr::filter(out, ZCTA3 %in% zcta == TRUE)
-  }
+    # optionally pivot
+    if (output == "wide"){
 
-  # optionally pivot
-  if (output == "wide"){
+      ## prep names
+      out <- dplyr::rename(out, "E" = "estimate", "M" = "moe")
 
-    ## prep names
-    out <- dplyr::rename(out, "E" = "estimate", "M" = "moe")
+      ## pivot
+      out <- tidyr::pivot_wider(out, id_cols = "ZCTA3", names_from = "variable",
+                                names_glue = "{variable}{.value}",
+                                values_from = c("E", "M"))
 
-    ## pivot
-    out <- tidyr::pivot_wider(out, id_cols = "ZCTA3", names_from = "variable",
-                              names_glue = "{variable}{.value}",
-                              values_from = c("E", "M"))
+      ## re-order names alphabetically
+      wide_names <- names(out)
+      wide_names <- wide_names[wide_names != "ZCTA3"]
+      wide_names <- c("ZCTA3", sort(wide_names))
 
-    ## re-order names alphabetically
-    wide_names <- names(out)
-    wide_names <- wide_names[wide_names != "ZCTA3"]
-    wide_names <- c("ZCTA3", sort(wide_names))
+      ## re-order columns alphabetically
+      out <- dplyr::select(out, wide_names)
 
-    ## re-order columns alphabetically
-    out <- dplyr::select(out, wide_names)
-
+    }
   }
 
   # return output
@@ -332,32 +352,29 @@ zi_census_weights <- function(year, key){
   GEOID = NAME = ZCTA3 = total_pop = value = weight = NULL
 
   ## call get_decennial
-  out <- suppressMessages(
-    tidycensus::get_decennial(
-      geography = "zcta",
-      variables = "P001001",
-      year = year,
-      output = "tidy",
-      key = key
-  ))
+  out <- zi_get_decennial(geography = "zcta", variables = "P001001",
+                          table = NULL, year = year, output = "tidy",
+                          survey = NULL, key = key)
 
-  ## prep data
-  out <- dplyr::mutate(out, ZCTA3 = substr(GEOID, 1, 3), .before = GEOID)
-  out <- dplyr::select(out, -NAME)
-  out <- dplyr::arrange(out, ZCTA3)
+  if (!is.null(out)){
+    ## prep data
+    out <- dplyr::mutate(out, ZCTA3 = substr(GEOID, 1, 3), .before = GEOID)
+    out <- dplyr::select(out, -NAME)
+    out <- dplyr::arrange(out, ZCTA3)
 
-  ## group by and sum
-  totals <- dplyr::group_by(out, ZCTA3)
-  totals <- dplyr::summarise(totals, total_pop = sum(value, na.rm = TRUE))
+    ## group by and sum
+    totals <- dplyr::group_by(out, ZCTA3)
+    totals <- dplyr::summarise(totals, total_pop = sum(value, na.rm = TRUE))
 
-  ## join
-  out <- dplyr::left_join(out, totals, by = "ZCTA3")
+    ## join
+    out <- dplyr::left_join(out, totals, by = "ZCTA3")
 
-  ## calculate proportions
-  out <- dplyr::mutate(out, weight = value/total_pop)
+    ## calculate proportions
+    out <- dplyr::mutate(out, weight = value/total_pop)
 
-  ## subset
-  out <- dplyr::select(out, ZCTA3, weight)
+    ## subset
+    out <- dplyr::select(out, ZCTA3, weight)
+  }
 
   ## return output
   return(out)
@@ -424,33 +441,30 @@ zi_acs_weights <- function(year, survey, key){
   GEOID = NAME = ZCTA3 = total_pop = estimate = weight = NULL
 
   ## call get_acs
-  out <- suppressMessages(
-    tidycensus::get_acs(
-      geography = "zcta",
-      variables = "B01003_001",
-      year = year, output = "tidy",
-      survey = survey,
-      key = key
-  ))
+  out <- zi_get_acs(geography = "zcta", variables = "B01003_001",
+                    table = NULL, year = year, output = "tidy",
+                    survey = survey, key = key)
 
-  ## prep data
-  out <- dplyr::mutate(out, GEOID = stringr::word(NAME, 2))
-  out <- dplyr::mutate(out, ZCTA3 = substr(GEOID, 1, 3), .before = GEOID)
-  out <- dplyr::select(out, -NAME)
-  out <- dplyr::arrange(out, ZCTA3)
+  if (!is.null(out)){
+    ## prep data
+    out <- dplyr::mutate(out, GEOID = stringr::word(NAME, 2))
+    out <- dplyr::mutate(out, ZCTA3 = substr(GEOID, 1, 3), .before = GEOID)
+    out <- dplyr::select(out, -NAME)
+    out <- dplyr::arrange(out, ZCTA3)
 
-  ## group by and sum
-  totals <- dplyr::group_by(out, ZCTA3)
-  totals <- dplyr::summarise(totals, total_pop = sum(estimate, na.rm = TRUE))
+    ## group by and sum
+    totals <- dplyr::group_by(out, ZCTA3)
+    totals <- dplyr::summarise(totals, total_pop = sum(estimate, na.rm = TRUE))
 
-  ## join
-  out <- dplyr::left_join(out, totals, by = "ZCTA3")
+    ## join
+    out <- dplyr::left_join(out, totals, by = "ZCTA3")
 
-  ## calculate proportions
-  out <- dplyr::mutate(out, weight = estimate/total_pop)
+    ## calculate proportions
+    out <- dplyr::mutate(out, weight = estimate/total_pop)
 
-  ## subset
-  out <- dplyr::select(out, ZCTA3, weight)
+    ## subset
+    out <- dplyr::select(out, ZCTA3, weight)
+  }
 
   ## return output
   return(out)
