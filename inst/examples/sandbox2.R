@@ -10,10 +10,7 @@ dec10_zcta3 <- zi_aggregate(dec10, year = 2010, extensive = "P001001",
 
 dec10 <- zi_get_demographics(year = 2010, variables = c("P001001", "P013001"),
                              survey = "sf1")
-dec10 <- zi_get_demographics(year = 2010, variables = c("P001001", "P013001"),
-                             survey = "sf1", debug = "messages")
-dec10 <- zi_get_demographics(year = 2010, variables = c("P001001", "P013001"),
-                             survey = "sf1", debug = "call")
+
 dec10_zcta3 <- zi_aggregate(dec10, year = 2010, extensive = "P001001", intensive = "P013001",
                             survey = "sf1")
 
@@ -29,9 +26,6 @@ geo12_3 <- zi_get_geometry(year = 2012, style = "zcta3", state = "MO", method = 
 
 dec12 <- zi_get_demographics(year = 2012, table = "B19083", survey = "acs5")
 dec12 <- zi_get_demographics(year = 2012, table = "B19083", survey = "acs5", zcta = geo12$GEOID)
-dec12 <- zi_get_demographics(year = 2012, table = "B19083", survey = "acs5", zcta = geo12$GEOID, debug = "messages")
-dec12 <- zi_get_demographics(year = 2012, table = "B19083", survey = "acs5", zcta = geo12$GEOID, debug = "call")
-
 zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5") %>%
   zi_aggregate(year = 2012, extensive = "B01003_001", survey = "acs5", zcta = geo12_3$ZCTA3) -> dec12_zcta3
 
