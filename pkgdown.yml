@@ -6,7 +6,7 @@ articles:
   converting-zips: converting-zips.html
   demographic-geometric-zcta-data: demographic-geometric-zcta-data.html
   three-digit-zips: three-digit-zips.html
-last_built: 2025-04-25T20:03Z
+last_built: 2025-04-25T20:12Z
 urls:
   reference: https://pfizer-opensource.github.io/zippeR/reference
   article: https://pfizer-opensource.github.io/zippeR/articles
