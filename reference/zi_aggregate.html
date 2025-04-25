@@ -179,12 +179,6 @@ written to <code>.Renviron</code> by using <code>Sys.getenv("CENSUS_API_KEY")</c
 <span class="r-in"><span><span class="fu">zi_aggregate</span><span class="op">(</span><span class="va">mo22_demos</span>, year <span class="op">=</span> <span class="fl">2020</span>,</span></span>
 <span class="r-in"><span>  extensive <span class="op">=</span> <span class="st">"B01003_001"</span>, intensive <span class="op">=</span> <span class="st">"B19013_001"</span>, survey <span class="op">=</span> <span class="st">"acs5"</span>,</span></span>
 <span class="r-in"><span>  zcta <span class="op">=</span> <span class="va">mo22_zcta3</span><span class="op">$</span><span class="va">ZCTA3</span>, output <span class="op">=</span> <span class="st">"wide"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #00BBBB;">•</span> You have not set a Census API key. Users without a key are limited to 500</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> queries per day and may experience performance limitations.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> For best results, get a Census API key at</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> http://api.census.gov/data/key_signup.html and then supply the key to the</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> `census_api_key()` function to use it throughout your tidycensus session.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once per session.</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 31 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   ZCTA3 [31]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ZCTA3 B01003_001E B01003_001M B19013_001E B19013_001M</span>
