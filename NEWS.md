@@ -1,3 +1,7 @@
+# zippeR 0.1.2
+
+* Address issues with Census Bureau API being offline
+
 # zippeR 0.1.1
 
 * Updates to `README.md` and `NEWS.md` to reflect the fact that the package is now on CRAN
