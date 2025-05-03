@@ -1,12 +1,12 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   basics: basics.html
   converting-zips: converting-zips.html
   demographic-geometric-zcta-data: demographic-geometric-zcta-data.html
   three-digit-zips: three-digit-zips.html
-last_built: 2025-04-25T20:12Z
+last_built: 2025-05-03T01:24Z
 urls:
   reference: https://pfizer-opensource.github.io/zippeR/reference
   article: https://pfizer-opensource.github.io/zippeR/articles
