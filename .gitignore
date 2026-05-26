@@ -86,3 +86,7 @@ inst/doc
 .github/skills
 .github/VENDOR_MANIFEST.json
 .github/vendored-decisions
+
+# Agent-generated docs (owned by skills, not tracked)
+docs/WORKFLOW.md
+docs/README.md
