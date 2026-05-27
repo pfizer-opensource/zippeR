@@ -10,9 +10,21 @@ incorrect_survey <- c("sf1", "sf3")
 incorrect_survey_2 <- c("sf2")
 dec_year <- 2011
 
-age10 <- tidycensus::get_decennial(geography = "state",
+# The test data setup requires a Census API key. Guard with tryCatch so
+# CI environments without the key skip gracefully instead of failing.
+age10 <- tryCatch(
+ tidycensus::get_decennial(geography = "state",
                        variables = "P013001",
-                       year = 2010)
+                       year = 2010),
+  error = function(e) NULL
+)
+
+if (is.null(age10)) {
+  test_that("skipping zi_aggregate tests (no Census API key)", {
+    skip("Census API key not available")
+  })
+  return(invisible())
+}
 
 age11 <- age10 %>% dplyr::rename(estimate = value, moe = NAME) %>% dplyr::select("GEOID", "variable", "estimate", "moe")
 
