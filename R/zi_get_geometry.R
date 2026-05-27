@@ -130,69 +130,99 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
 
   # check inputs
   if (!is.numeric(year)){
-    stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
+    cli::cli_abort(c(
+      "{.arg year} must be numeric.",
+      "i" = "You provided {.val {year}}."
+    ))
   }
 
   if (!(year %in% c(2010:2023))){
-    stop("The 'year' value provided is invalid. Please provide a year between 2010 and 2023.")
+    cli::cli_abort(c(
+      "{.arg year} must be between {.val 2010} and {.val 2023}.",
+      "i" = "You provided {.val {year}}."
+    ))
   }
 
   if (!(style %in% c("zcta5", "zcta3"))){
-    stop("The 'style' value provided is invalid. Please select either 'zcta5' or 'zcta3'.")
+    cli::cli_abort(c(
+      "{.arg style} must be {.val zcta5} or {.val zcta3}.",
+      "i" = "You provided {.val {style}}."
+    ))
   }
 
   if (!(return %in% c("id", "full"))){
-    stop("The 'return' value provided is invalid. Please select either 'id' or 'full'.")
+    cli::cli_abort(c(
+      "{.arg return} must be {.val id} or {.val full}.",
+      "i" = "You provided {.val {return}}."
+    ))
   }
 
   if (style == "zcta3" & return == "full"){
-    warning("The 'full' option for 'return' is not available for 'zcta3' data. Please use 'id' instead.")
+    cli::cli_warn(c(
+      "{.arg return} cannot be {.val full} when {.arg style} is {.val zcta3}.",
+      "i" = "Use {.val id} instead."
+    ))
   }
 
   if (style == "zcta3" & cb){
-    warning("The 'cb' argument does not apply to 'zcta3' data.")
+    cli::cli_warn(c(
+      "{.arg cb} does not apply when {.arg style} is {.val zcta3}.",
+      "i" = "You provided {.val {cb}}."
+    ))
   }
 
   if (!is.logical(shift_geo)){
-    stop("The 'shift_geo' value provided is invalid. Please select either 'TRUE' or 'FALSE'.")
+    cli::cli_abort(c(
+      "{.arg shift_geo} must be {.val TRUE} or {.val FALSE}.",
+      "i" = "You provided {.val {shift_geo}}."
+    ))
   }
 
   if (shift_geo & !is.null(state)){
-    stop("The 'shift_geo' functionality can only be used when you are returning data for all states.")
+    cli::cli_abort("{.arg shift_geo} can only be used when returning data for all states.")
   }
 
   if (any(state %in% c("AS", "GU", "MP", "PR", "VI"))){
-    stop("Please specify territories using the 'territory' argument instead. Valid territories are: 'AS', 'GU', 'MP', 'PR', or 'VI' (or their equivalent FIPS codes).")
+    cli::cli_abort(c(
+      "Territories must be supplied with {.arg territory}, not {.arg state}.",
+      "i" = "Valid territories are {.val AS}, {.val GU}, {.val MP}, {.val PR}, and {.val VI}, or their equivalent FIPS codes."
+    ))
   }
 
   if (!is.null(state)){
-    state <- unlist(sapply(state, validate_state, USE.NAMES=FALSE))
+    state <- unlist(sapply(state, validate_state, USE.NAMES = FALSE))
   }
 
   if (!is.null(county) & is.null(state)){
-    stop("Please provide at least one state abbreviation or FIPS code for the 'state' argument that corresponds to data passed to the 'county' argument.")
+    cli::cli_abort("{.arg state} is required when {.arg county} is supplied.")
   }
 
   if (!is.null(state) & missing(method)){
-    stop("Please select a valid method for returning ZCTA values. Your choices are 'centroid' and 'intersect'. See documentation for details.")
+    cli::cli_abort("{.arg method} is required. Choose {.val centroid} or {.val intersect}.")
     }
 
   if (!is.null(method)){
     if (!(method %in% c("centroid", "intersect"))){
-      stop("The two valid methods for returning ZCTA values are 'centroid' and 'intersect'. See documentation for details.")
+      cli::cli_abort(c(
+        "{.arg method} must be {.val centroid} or {.val intersect}.",
+        "i" = "You provided {.val {method}}."
+      ))
     }
   }
 
   ## validate counties
   if (!is.null(territory) & !any(territory %in% c("AS", "GU", "MP", "PR", "VI"))){
-    stop("An abbreviation given for the 'territory' argument is invalid. Please use one or more of: 'AS', 'GU', 'MP', 'PR', or 'VI' (or their equivalent FIPS codes).")
+    cli::cli_abort(c(
+      "{.arg territory} contains an invalid value.",
+      "i" = "Use one or more of {.val AS}, {.val GU}, {.val MP}, {.val PR}, or {.val VI}, or their equivalent FIPS codes."
+    ))
     }
 
   if (!is.null(starts_with)){
     valid <- zi_validate_starts(starts_with)
 
     if (!valid){
-      stop("ZCTA data passed to the 'starts_with' argument are invalid. Please use a character vector with only two-digit values.")
+      cli::cli_abort("{.arg starts_with} must be a character vector of two-digit values.")
     }
   }
 
@@ -200,7 +230,10 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
     valid <- zi_validate(includes, style = style)
 
     if (!valid){
-      stop("ZCTA data passed to the 'includes' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues.")
+      cli::cli_abort(c(
+        "{.arg includes} contains invalid ZCTA values.",
+        "i" = "Use {.fn zi_validate} with {.code verbose = TRUE} to investigate further."
+      ))
     }
   }
 
@@ -208,7 +241,10 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
     valid <- zi_validate(excludes, style = style)
 
     if (!valid){
-      stop("ZCTA data passed to the 'excludes' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues.")
+      cli::cli_abort(c(
+        "{.arg excludes} contains invalid ZCTA values.",
+        "i" = "Use {.fn zi_validate} with {.code verbose = TRUE} to investigate further."
+      ))
     }
   }
 
@@ -330,7 +366,7 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
       if (is.null(territory)){
 
         ## all territories not including American Samoa
-        out <- dplyr::filter(out, !(substr(GEOID, 1,3) %in% c("006", "007", "008", "009", "969")))
+        out <- dplyr::filter(out, !(substr(GEOID, 1, 3) %in% c("006", "007", "008", "009", "969")))
 
         ## American Samoa
         out <- dplyr::filter(out, GEOID != "96799")
@@ -578,6 +614,3 @@ zi_validate_starts <- function(x){
   return(out)
 
 }
-
-
-

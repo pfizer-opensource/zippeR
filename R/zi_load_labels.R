@@ -49,17 +49,23 @@ zi_load_labels <- function(source = "UDS", type = "zip5", include_scf = FALSE,
 
   # check inputs
   if (!source %in% c("USPS", "UDS")){
-    stop("The only 'source' values currently supported are 'USPS' and 'UDS'.")
+    cli::cli_abort(c(
+      "{.arg source} must be {.val USPS} or {.val UDS}.",
+      "i" = "You provided {.val {source}}."
+    ))
   }
 
   if (!type %in% c("zip3", "zip5")){
-    stop("The 'type' must be one of 'zip3' or 'zip5'.")
+    cli::cli_abort(c(
+      "{.arg type} must be {.val zip3} or {.val zip5}.",
+      "i" = "You provided {.val {type}}."
+    ))
   }
 
   if (source == "UDS"){
 
     if (type == "zip3"){
-      stop("The 'UDS' source only provides ZIP5 data, replace 'type' with 'zip5'.")
+      cli::cli_abort("{.arg type} must be {.val zip5} when {.arg source} is {.val UDS}.")
     }
 
     if (!is.numeric(vintage)){
@@ -69,17 +75,23 @@ zi_load_labels <- function(source = "UDS", type = "zip5", include_scf = FALSE,
     }
 
     if (!vintage_num %in% c(2009:2022)){
-      stop("The 'UDS' source only provides ZIP5 data between 2009 and 2022.")
+      cli::cli_abort(c(
+        "{.arg vintage} must be between {.val 2009} and {.val 2022} when {.arg source} is {.val UDS}.",
+        "i" = "You provided {.val {vintage}}."
+      ))
     }
 
     if (include_scf){
-      warning("The 'include_scf' argument only modifies the output of 'zip3' labels.")
+      cli::cli_warn(c(
+        "{.arg include_scf} only affects {.val zip3} labels.",
+        "i" = "{.arg type} is {.val {type}}."
+      ))
     }
 
   } else if (source == "USPS"){
 
     if (type == "zip5"){
-      stop("The 'USPS' source only provides ZIP3 data, replace 'type' with 'zip3'.")
+      cli::cli_abort("{.arg type} must be {.val zip3} when {.arg source} is {.val USPS}.")
     }
 
     if (is.numeric(vintage)){
@@ -93,7 +105,10 @@ zi_load_labels <- function(source = "UDS", type = "zip5", include_scf = FALSE,
     result <- subset(labels_list, vintage == vintage_chr)
 
     if (nrow(result) != 1){
-      stop("The requested vintage is not available. Use 'zi_load_labels_list()' to see available vintages.")
+      cli::cli_abort(c(
+        "{.arg vintage} is not available.",
+        "i" = "Use {.fn zi_load_labels_list} to see available vintages."
+      ))
     }
 
   }

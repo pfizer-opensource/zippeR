@@ -43,6 +43,7 @@ Imports:
     tigris
 Suggests:
     knitr,
+    lintr,
     rmarkdown,
     testthat
 VignetteBuilder: knitr

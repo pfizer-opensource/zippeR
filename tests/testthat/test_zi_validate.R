@@ -25,11 +25,11 @@ test_that("missing parameters trigger appropriate errors", {
 
 test_that("incorrectly specified parameters trigger appropriate errors", {
   expect_error(zi_validate(incorrect_df),
-               "Please provide a vector of data, instead of a data frame, for validation.")
+               "Please provide a vector of data, instead of a data frame", fixed = TRUE)
   expect_error(zi_validate(correct_zips_1, style = "ham"),
-               "The 'style' value provided is invalid. Please select either 'zcta5' or 'zcta3'.")
+               "`style` must be", fixed = TRUE)
   expect_error(zi_validate(correct_zips_1, verbose = "ham"),
-               "The 'verbose' value provided is invalid. Please select either 'TRUE' or 'FALSE'.")
+               "`verbose` must be", fixed = TRUE)
 })
 
 # test inputs ------------------------------------------------

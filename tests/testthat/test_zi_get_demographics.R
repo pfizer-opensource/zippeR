@@ -14,28 +14,28 @@ dec_year <- 2011
 
 test_that("missing parameters trigger appropriate errors", {
   expect_error(zi_get_demographics(),
-               "The 'year' value is missing. Please provide a numeric value between 2010 and 2022.")
+               "`year` is required", fixed = TRUE)
 })
 
 test_that("incorrectly specified parameters trigger appropriate errors", {
   expect_error(zi_get_demographics(year = incorrect_year, survey = correct_survey),
-               "The 'year' value provided is invalid. Please provide a numeric value between 2010 and 2022.")
+               "`year` must be numeric", fixed = TRUE)
   expect_error(zi_get_demographics(year = correct_year, survey = incorrect_survey),
-               "One only 'survey' product may be requested at a time.")
+               "`survey` must contain a single value", fixed = TRUE)
   expect_error(zi_get_demographics(year = correct_year, survey = incorrect_survey_2),
-               "The 'survey' requested is invalid. Please choose one of 'sf1', 'sf3', 'acs1', 'acs3', or 'acs5'.")
+               "`survey` must be one of", fixed = TRUE)
   expect_error(zi_get_demographics(survey = "sf1", year = dec_year),
-               "The 'year' value provided is invalid for Decennial Census data. Only 2010 may be requested currently.")
+               "Decennial Census data", fixed = TRUE)
   expect_error(zi_get_demographics(survey = "acs1", year = incorrect_year_2),
-               "The 'year' value provided is invalid for 1- or 5-year American Community Survey data. Please provide a year between 2010 and 2022.")
+               "`year` must be between", fixed = TRUE)
   expect_error(zi_get_demographics(survey = "acs3", year = 2014),
-               "The 'year' value provided is invalid for 3-year American Community Survey data. Please provide a year between 2010 and 2013.")
+               "`year` must be between", fixed = TRUE)
   expect_error(zi_get_demographics(year = correct_year, survey = correct_survey, output = "tidi"),
-               "The 'output' requested is invalid. Please choose one of 'tidy' or 'wide'.")
+               "`output` must be", fixed = TRUE)
   expect_error(zi_get_demographics(year = correct_year, survey = correct_survey, variables = c(medincome = "B19013_001"), table = "acs1"),
-               "The 'variables' or 'table' arguments cannot be used simultaneously. Please choose one or the other.")
+               "`variables` and `table` cannot be used together", fixed = TRUE)
   expect_error(zi_get_demographics(year = correct_year, survey = "acs1", zcta = 7613),
-               "ZCTA data passed to the ", fixed = TRUE)
+               "`zcta` contains invalid ZCTA values.", fixed = TRUE)
 })
 
 

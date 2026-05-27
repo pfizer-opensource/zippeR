@@ -21,7 +21,10 @@ zi_load_labels_list <- function(type = "zip3"){
 
   # check inputs
   if (!type %in% c("zip3")){
-    stop("The only 'type' currently supported is 'zip3'.")
+    cli::cli_abort(c(
+      "{.arg type} must be {.val zip3}.",
+      "i" = "You provided {.val {type}}."
+    ))
   }
 
   # create output
