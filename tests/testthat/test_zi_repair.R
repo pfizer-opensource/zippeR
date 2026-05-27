@@ -25,9 +25,9 @@ test_that("missing parameters trigger appropriate errors", {
 
 test_that("incorrectly specified parameters trigger appropriate errors", {
   expect_error(zi_validate(incorrect_df),
-               "Please provide a vector of data, instead of a data frame, for validation.")
+               "Please provide a vector of data, instead of a data frame", fixed = TRUE)
   expect_error(zi_validate(correct_zips_1, style = "ham"),
-               "The 'style' value provided is invalid. Please select either 'zcta5' or 'zcta3'.")
+               "`style` must be", fixed = TRUE)
 })
 
 # test inputs ------------------------------------------------
@@ -45,13 +45,13 @@ test_that("correctly specified functions produce expected classes", {
 })
 
 test_that("correctly specified functions produce messages", {
-  expect_message(zi_repair(correct_zips_1), "This is a valid vector of ZIP or ZCTA codes - nothing to repair!")
-  expect_message(zi_repair(correct_zips_2, style = "zcta3"), "This is a valid vector of ZIP or ZCTA codes - nothing to repair!")
+  expect_message(zi_repair(correct_zips_1), "This is a valid vector of ZIP or ZCTA codes; nothing to repair.", fixed = TRUE)
+  expect_message(zi_repair(correct_zips_2, style = "zcta3"), "This is a valid vector of ZIP or ZCTA codes; nothing to repair.", fixed = TRUE)
 })
 
 test_that("correctly specified functions produce warnings", {
-  expect_warning(zi_repair(incorrect_zips_1), "NAs introduced by coercion")
-  expect_warning(zi_repair(incorrect_zips_4), "NAs introduced by coercion")
+  expect_warning(zi_repair(incorrect_zips_1), "NAs introduced by coercion.", fixed = TRUE)
+  expect_warning(zi_repair(incorrect_zips_4), "NAs introduced by coercion.", fixed = TRUE)
 })
 
 result1 <- suppressWarnings(zi_repair(incorrect_zips_1))

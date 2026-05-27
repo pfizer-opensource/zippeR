@@ -61,33 +61,51 @@ zi_load_crosswalk <- function(zip_source = "UDS", year, qtr = NULL, target = NUL
 
   # check inputs
   if (!(zip_source %in% c("UDS", "HUD"))){
-    stop("The 'zip_source' value provided is invalid. Please input either 'UDS' or 'HUD'.")
+    cli::cli_abort(c(
+      "{.arg zip_source} must be {.val UDS} or {.val HUD}.",
+      "i" = "You provided {.val {zip_source}}."
+    ))
   }
 
   if (!is.numeric(year)){
-    stop("The 'year' value provided is invalid. Please provide a numeric value for the requested year.")
+    cli::cli_abort(c(
+      "{.arg year} must be numeric.",
+      "i" = "You provided {.val {year}}."
+    ))
   }
 
   if (zip_source == "UDS" & !(year %in% c(2009:2022))){
-    stop("The 'year' value provided is invalid for UDS data. Please provide a year between 2009 and 2022.")
+    cli::cli_abort(c(
+      "{.arg year} must be between {.val 2009} and {.val 2022} when {.arg zip_source} is {.val UDS}.",
+      "i" = "You provided {.val {year}}."
+    ))
   }
 
   if (zip_source == "HUD"){
 
     if (!(year %in% c(2010:2024))){
-      stop("The 'year' value provided is invalid for HUD data. Please provide a year between 2010 and 2024.")
+      cli::cli_abort(c(
+        "{.arg year} must be between {.val 2010} and {.val 2024} when {.arg zip_source} is {.val HUD}.",
+        "i" = "You provided {.val {year}}."
+      ))
     }
 
     if (!(qtr %in% c(1:4))){
-      stop("The 'qtr' value is required when 'zip_source' is 'HUD'. Please provide a value between 1 and 4.")
+      cli::cli_abort(c(
+        "{.arg qtr} must be between {.val 1} and {.val 4} when {.arg zip_source} is {.val HUD}.",
+        "i" = "You provided {.val {qtr}}."
+      ))
     }
 
     if (!(target %in% c("TRACT", "COUNTY", "CBSA", "CBSADIV", "CD", "COUNTYSUB"))){
-      stop("The 'target' value is required when 'zip_source' is 'HUD'. Please provide a valid target value (see help file).")
+      cli::cli_abort(c(
+        "{.arg target} is invalid when {.arg zip_source} is {.val HUD}.",
+        "i" = "Use one of {.val TRACT}, {.val COUNTY}, {.val CBSA}, {.val CBSADIV}, {.val CD}, or {.val COUNTYSUB}."
+      ))
     }
 
     if (is.null(query)){
-      stop("The 'query' value is required when 'zip_source' is 'HUD'. Please provide a valid query value (see help file).")
+      cli::cli_abort("{.arg query} is required when {.arg zip_source} is {.val HUD}.")
     }
   }
 
@@ -161,13 +179,19 @@ zi_load_uds <- function(year) {
   valid_zip <- zi_validate(out$zip)
 
   if (!valid_zip) {
-    warning("The 'zip' column failed initial validation. Inspect it closely and address issues found with 'zi_validate()' before using.")
+    cli::cli_warn(c(
+      "The {.arg zip} column failed initial validation.",
+      "i" = "Inspect it closely and address issues found with {.fn zi_validate} before using it."
+    ))
   }
 
   valid_zcta <- zi_validate(out$zcta)
 
   if (!valid_zcta) {
-    warning("The 'ZCTA' column failed initial validation. Inspect it closely and address issues found with 'zi_validate()' before using.")
+    cli::cli_warn(c(
+      "The {.arg ZCTA} column failed initial validation.",
+      "i" = "Inspect it closely and address issues found with {.fn zi_validate} before using it."
+    ))
   }
 
   names(out) <- toupper(names(out))
@@ -182,7 +206,7 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
   }
 
   if (key == ""){
-    stop("Please provide a valid HUD API key.")
+    cli::cli_abort("Please provide a valid HUD API key.")
   }
 
   url <- "https://www.huduser.gov/hudapi/public/usps"
@@ -191,19 +215,31 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
   result <- purrr::map_dfr(queries, function(query) {
 
     if (year <= 2020 & query %in% c(datasets::state.abb, "VI", "PR", "ALL")){
-      stop("Queries with two letter state abbreviations or ALL are only available from the 1st quarter of 2021 onwards.")
+      cli::cli_abort(c(
+        "Two-letter state abbreviations and {.val ALL} are only available from the first quarter of {.val 2021} onward.",
+        "i" = "You requested {.val {query}} for {.val {year}} Q{qtr}."
+      ))
     }
 
-    if (target == "CBSADIV" & year <= 2016 | target == 'CBSADIV' & year == 2017 & qtr < 4){
-      stop("CBSADIV data is available from the 4th quarter of 2017 onwards.")
+    if (target == "CBSADIV" & year <= 2016 | target == "CBSADIV" & year == 2017 & qtr < 4){
+      cli::cli_abort(c(
+        "{.val CBSADIV} data is only available from the fourth quarter of {.val 2017} onward.",
+        "i" = "You requested {.val {year}} Q{qtr}."
+      ))
     }
 
-    if (target == "COUNTYSUB" & year < 2018 | target == 'COUNTYSUB' & year == 2018 & qtr < 2){
-      stop("COUNTYSUB data is available from the 2nd quarter of 2018 onwards.")
+    if (target == "COUNTYSUB" & year < 2018 | target == "COUNTYSUB" & year == 2018 & qtr < 2){
+      cli::cli_abort(c(
+        "{.val COUNTYSUB} data is only available from the second quarter of {.val 2018} onward.",
+        "i" = "You requested {.val {year}} Q{qtr}."
+      ))
     }
 
     if (!(query %in% c(datasets::state.abb, "VI", "PR", "ALL")) & !is.numeric(query) && nchar(as.character(query)) != 5){
-      stop("The 'query' value provided is invalid. Please input a valid state abbreviation or zip code.")
+      cli::cli_abort(c(
+        "{.arg query} must be a state abbreviation, {.val ALL}, or a five-digit ZIP Code.",
+        "i" = "You provided {.val {query}}."
+      ))
     }
 
     url <- "https://www.huduser.gov/hudapi/public/usps"
@@ -227,7 +263,7 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
     request <- httr::GET(paste0(url, type, query, "&year=", year, "&quarter=", qtr), httr::add_headers(Authorization = paste("Bearer", key, sep = " ")))
     content <- httr::content(request, "text", encoding = "UTF-8")
     json <- jsonlite::fromJSON(content)
-    list <- lapply(json,"[[",5)
+    list <- lapply(json, "[[", 5)
 
     # create output
     out <- as.data.frame(list)

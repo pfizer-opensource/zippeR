@@ -37,15 +37,21 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
 
   # check input data
   if (missing(by)){
-    stop("A value for 'by' value is missing and is required. Please input either 'residential', 'commercial', or 'total'.")
+    cli::cli_abort("{.arg by} is required. Please provide {.val residential}, {.val commercial}, or {.val total}.")
   }
 
   if (!(by %in% c("residential", "commercial", "total"))){
-    stop("The 'by' value provided is invalid. Please input either 'residential', 'commercial', or 'total'.")
+    cli::cli_abort(c(
+      "{.arg by} must be {.val residential}, {.val commercial}, or {.val total}.",
+      "i" = "You provided {.val {by}}."
+    ))
   }
 
   if (!is.logical(return_max)){
-    stop("A logical value must be provided for the 'return_max' argument.")
+    cli::cli_abort(c(
+      "{.arg return_max} must be {.val TRUE} or {.val FALSE}.",
+      "i" = "You provided {.val {return_max}}."
+    ))
   }
 
   ## tidy

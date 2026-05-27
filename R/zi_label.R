@@ -86,22 +86,28 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
   } else if (label_source %in% c("UDS", "USPS")){
     workflow <- "api"
   } else {
-    stop("The 'label_source' argument is invalid. Please provide either 'UDS', 'USPS', or a custom dictionary.")
+    cli::cli_abort(c(
+      "{.arg label_source} must be {.val UDS}, {.val USPS}, or a data frame.",
+      "i" = "You provided {.val {label_source}}."
+    ))
   }
 
   ## checks regardless of workflow
   if (!inherits(.data, what = "data.frame")){
-    stop("The '.data' object provided is not a data frame.")
+    cli::cli_abort("{.arg .data} must be a data frame.")
   }
 
   if (missing(input_var)){
-    stop("The 'input_var' argument is missing. Please provide the column name in '.data' that contains ZIP Code values.")
+    cli::cli_abort("{.arg input_var} is required. Provide the column in {.arg .data} that contains ZIP Code values.")
   }
 
   input_varQN <- as.character(substitute(input_var))
 
   if (!(input_varQN %in% names(.data))){
-    stop("The given 'input_var' column is not found in your input object.")
+    cli::cli_abort(c(
+      "{.arg input_var} was not found in {.arg .data}.",
+      "i" = "You provided {.val {input_varQN}}."
+    ))
   }
 
   if (type == "zip5"){
@@ -109,32 +115,44 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
   } else if (type == "zip3"){
     type_zcta <- "zcta3"
   } else {
-    stop("The 'type' argument must be either 'zip5' or 'zip3'.")
+    cli::cli_abort(c(
+      "{.arg type} must be {.val zip5} or {.val zip3}.",
+      "i" = "You provided {.val {type}}."
+    ))
   }
 
   valid <- zi_validate(x = .data[[input_varQN]], style = type_zcta)
 
   if (!valid){
-    stop(paste0("Input ZIP Code data in the '", input_varQN, "' column are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues."))
+    cli::cli_abort(c(
+      "Input ZIP Code data in {.arg {input_varQN}} are invalid.",
+      "i" = "Use {.fn zi_validate} with {.code verbose = TRUE} to investigate further."
+    ))
   }
 
   ## checks dependent on workflow
   if (workflow == "custom"){
 
     if (missing(source_var)){
-      stop("The 'source_var' argument is missing. Please provide the column name in the dictionary object that contains ZIP Code values.")
+      cli::cli_abort("{.arg source_var} is required. Provide the column in {.arg label_source} that contains ZIP Code values.")
     }
 
     source_varQN <- as.character(substitute(source_var))
 
     if (!(source_varQN %in% names(label_source))){
-      stop("The given 'source_var' column is not found in your dictionary object.")
+      cli::cli_abort(c(
+        "{.arg source_var} was not found in {.arg label_source}.",
+        "i" = "You provided {.val {source_varQN}}."
+      ))
     }
 
     valid <- zi_validate(x = label_source[[source_varQN]], style = type_zcta)
 
     if (!valid){
-      stop(paste0("Dictionary ZCTA data in the '", source_varQN, "' column are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues."))
+      cli::cli_abort(c(
+        "Dictionary ZCTA data in {.arg {source_varQN}} are invalid.",
+        "i" = "Use {.fn zi_validate} with {.code verbose = TRUE} to investigate further."
+      ))
     }
 
   } else if (workflow == "api"){
@@ -142,7 +160,7 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
     if (label_source == "UDS"){
 
       if (type == "zip3"){
-        stop("The 'UDS' source only provides ZIP5 data, replace 'type' with 'zip5'.")
+        cli::cli_abort("{.arg type} must be {.val zip5} when {.arg label_source} is {.val UDS}.")
       }
 
       if (!is.numeric(vintage)){
@@ -152,17 +170,23 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
       }
 
       if (!vintage_num %in% c(2009:2022)){
-        stop("The 'UDS' source only provides ZIP5 data between 2009 and 2022.")
+        cli::cli_abort(c(
+          "{.arg vintage} must be between {.val 2009} and {.val 2022} when {.arg label_source} is {.val UDS}.",
+          "i" = "You provided {.val {vintage}}."
+        ))
       }
 
       if (include_scf){
-        warning("The 'include_scf' argument only modifies the output of 'zip3' labels.")
+        cli::cli_warn(c(
+          "{.arg include_scf} only affects {.val zip3} labels.",
+          "i" = "{.arg type} is {.val {type}}."
+        ))
       }
 
     } else if (label_source == "USPS"){
 
       if (type == "zip5"){
-        stop("The 'USPS' source only provides ZIP3 data, replace 'type' with 'zip3'.")
+        cli::cli_abort("{.arg type} must be {.val zip3} when {.arg label_source} is {.val USPS}.")
       }
 
       if (is.numeric(vintage)){
@@ -176,7 +200,10 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
       result <- subset(labels_list, date == vintage_chr)
 
       if (nrow(result) != 1){
-        stop("The requested vintage is not available. Use 'zi_load_labels_list()' to see available vintages.")
+        cli::cli_abort(c(
+          "{.arg vintage} is not available.",
+          "i" = "Use {.fn zi_load_labels_list} to see available vintages."
+        ))
       }
 
     }
@@ -212,7 +239,7 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
   dict_names <- names(dict)[names(dict) != source_varQN]
 
   if (any(dict_names %in% names(.data))){
-    warning("The column names in the dictionary object conflict with column names in the input data. Please inspect output carefully.")
+    cli::cli_warn("Column names in {.arg label_source} conflict with columns in {.arg .data}. Inspect the output carefully.")
   }
 
   ## join with input data

@@ -53,19 +53,25 @@ zi_validate <- function(x, style = "zcta5", verbose = FALSE){
 
   # check inputs
   if (missing(x)){
-    stop("Please provide a vector of data for validation.")
+    cli::cli_abort("Please provide a vector of data for validation.")
   }
 
   if (is.data.frame(x)){
-    stop("Please provide a vector of data, instead of a data frame, for validation.")
+    cli::cli_abort("Please provide a vector of data, instead of a data frame, for validation.")
   }
 
   if (!(style %in% c("zcta5", "zcta3"))){
-    stop("The 'style' value provided is invalid. Please select either 'zcta5' or 'zcta3'.")
+    cli::cli_abort(c(
+      "{.arg style} must be {.val zcta5} or {.val zcta3}.",
+      "i" = "You provided {.val {style}}."
+    ))
   }
 
   if (!is.logical(verbose)){
-    stop("The 'verbose' value provided is invalid. Please select either 'TRUE' or 'FALSE'.")
+    cli::cli_abort(c(
+      "{.arg verbose} must be {.val TRUE} or {.val FALSE}.",
+      "i" = "You provided {.val {verbose}}."
+    ))
   }
 
   # ensure character
@@ -207,15 +213,18 @@ zi_repair <- function(x, style = "zcta5"){
 
   # check inputs
   if (missing(x)){
-    stop("Please provide a vector of data for validation.")
+    cli::cli_abort("Please provide a vector of data for validation.")
   }
 
   if (is.data.frame(x)){
-    stop("Please provide a vector of data, instead of a data frame, for validation.")
+    cli::cli_abort("Please provide a vector of data, instead of a data frame, for validation.")
   }
 
   if (!(style %in% c("zcta5", "zcta3"))){
-    stop("The 'style' value provided is invalid. Please select either 'zcta5' or 'zcta3'.")
+    cli::cli_abort(c(
+      "{.arg style} must be {.val zcta5} or {.val zcta3}.",
+      "i" = "You provided {.val {style}}."
+    ))
   }
 
   # run validation
@@ -257,11 +266,11 @@ zi_repair <- function(x, style = "zcta5"){
 
     # returning warning
     if (!valid$result[3] | !valid$result[4]){
-      warning("NAs introduced by coercion")
+      cli::cli_warn("NAs introduced by coercion.")
     }
 
   } else {
-    message("This is a valid vector of ZIP or ZCTA codes - nothing to repair!")
+    cli::cli_inform("This is a valid vector of ZIP or ZCTA codes; nothing to repair.")
   }
 
   # return output

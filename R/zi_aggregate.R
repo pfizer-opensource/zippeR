@@ -94,60 +94,81 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
   # }
 
   if (missing(year)){
-    stop("The 'year' value is missing. Please provide a numeric value between 2010 and 2022.")
+    cli::cli_abort("{.arg year} is required. Please provide a numeric value between {.val 2010} and {.val 2022}.")
   }
 
   if (!is.numeric(year)){
-    stop("The 'year' value provided is invalid. Please provide a numeric value between 2010 and 2022.")
+    cli::cli_abort(c(
+      "{.arg year} must be numeric.",
+      "i" = "You provided {.val {year}}."
+    ))
   }
 
   if (length(survey) > 1){
-    stop("One only 'survey' product may be requested at a time.")
+    cli::cli_abort(c(
+      "{.arg survey} must contain a single value.",
+      "i" = "You provided {.val {survey}}."
+    ))
   }
 
   if (!survey %in% c("sf1", "sf3", "acs1", "acs3", "acs5")){
-    stop("The 'survey' requested is invalid. Please choose one of 'sf1', 'sf3', 'acs1', 'acs3', or 'acs5'.")
+    cli::cli_abort(c(
+      "{.arg survey} must be one of {.val sf1}, {.val sf3}, {.val acs1}, {.val acs3}, or {.val acs5}.",
+      "i" = "You provided {.val {survey}}."
+    ))
   }
 
   if (survey %in% c("sf1", "sf3") & year != 2010){
-    stop("The 'year' value provided is invalid for Decennial Census data. Only 2010 may be requested currently.")
+    cli::cli_abort(c(
+      "{.arg year} must be {.val 2010} for Decennial Census data.",
+      "i" = "You requested {.val {survey}} for {.val {year}}."
+    ))
   }
 
   if (survey %in% c("acs1", "acs5") & !(year %in% c(2010:2022))){
-    stop("The 'year' value provided is invalid for 1- or 5-year American Community Survey data. Please provide a year between 2010 and 2022.")
+    cli::cli_abort(c(
+      "{.arg year} must be between {.val 2010} and {.val 2022} for {.arg survey} values {.val acs1} and {.val acs5}.",
+      "i" = "You requested {.val {survey}} for {.val {year}}."
+    ))
   }
 
   if (survey == "acs3" & !(year %in% c(2010:2013))){
-    stop("The 'year' value provided is invalid for 3-year American Community Survey data. Please provide a year between 2010 and 2013.")
+    cli::cli_abort(c(
+      "{.arg year} must be between {.val 2010} and {.val 2013} when {.arg survey} is {.val acs3}.",
+      "i" = "You provided {.val {year}}."
+    ))
   }
 
   if (!output %in% c("tidy", "wide")){
-    stop("The 'output' requested is invalid. Please choose one of 'tidy' or 'wide'.")
+    cli::cli_abort(c(
+      "{.arg output} must be {.val tidy} or {.val wide}.",
+      "i" = "You provided {.val {output}}."
+    ))
   }
 
   if (!inherits(.data, what = "data.frame")){
-    stop("The '.data' object provided is not a dataframe or dataframe like object. Please provide a dataframe.")
+    cli::cli_abort("{.arg .data} must be a data frame or data frame-like object.")
   }
 
   if (survey %in% c("sf1", "sf3")){
     error <- "Input data appear to be malformed - there should be three columns for Decennial Census data: 'GEOID', 'variable', and 'value'. Note that zi_aggregate() only accepts 'tidy' data."
 
     if (length(names(.data)) != 3){
-      stop(error)
+      cli::cli_abort(error)
     }
 
     if (!all(names(.data) == c("GEOID", "variable", "value"))){
-      stop(error)
+      cli::cli_abort(error)
     }
   } else if (survey %in% c("acs1", "acs3", "acs5")){
     error <- "Input data appear to be malformed - there should be four columns for ACS data: 'GEOID', 'variable', 'estimate', and 'moe'. Note that zi_aggregate() only accepts 'tidy' data."
 
     if (length(names(.data)) != 4){
-      stop(error)
+      cli::cli_abort(error)
     }
 
     if (!all(names(.data) == c("GEOID", "variable", "estimate", "moe"))){
-      stop(error)
+      cli::cli_abort(error)
     }
   }
 
@@ -155,12 +176,15 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     valid <- zi_validate(zcta, style = "zcta3")
 
     if (!valid){
-      stop("ZCTA data passed to the 'zcta' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues.")
+      cli::cli_abort(c(
+        "{.arg zcta} contains invalid ZCTA values.",
+        "i" = "Use {.fn zi_validate} with {.code verbose = TRUE} to investigate further."
+      ))
     }
   }
 
   if (is.null(extensive) & is.null(intensive)){
-    stop("At least one of 'extensive' or 'intensive' must be provided.")
+    cli::cli_abort("At least one of {.arg extensive} or {.arg intensive} must be provided.")
   }
 
   # set additional arguments
@@ -370,7 +394,7 @@ zi_census_weights <- function(year, key){
     out <- dplyr::left_join(out, totals, by = "ZCTA3")
 
     ## calculate proportions
-    out <- dplyr::mutate(out, weight = value/total_pop)
+    out <- dplyr::mutate(out, weight = value / total_pop)
 
     ## subset
     out <- dplyr::select(out, ZCTA3, weight)
@@ -460,7 +484,7 @@ zi_acs_weights <- function(year, survey, key){
     out <- dplyr::left_join(out, totals, by = "ZCTA3")
 
     ## calculate proportions
-    out <- dplyr::mutate(out, weight = estimate/total_pop)
+    out <- dplyr::mutate(out, weight = estimate / total_pop)
 
     ## subset
     out <- dplyr::select(out, ZCTA3, weight)
@@ -470,4 +494,3 @@ zi_acs_weights <- function(year, survey, key){
   return(out)
 
 }
-
