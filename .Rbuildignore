@@ -25,3 +25,4 @@
 ^inst/examples$
 ^\.pfizer\.yml$
 ^LICENSE\.md$
+^CHANGELOG\.md$

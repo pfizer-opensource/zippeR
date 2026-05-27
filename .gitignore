@@ -78,3 +78,15 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 inst/doc
+
+# GitHub Copilot agents/skills (vendored, not tracked) #
+#########################################################
+.github/agents
+.github/copilot-instructions.md
+.github/skills
+.github/VENDOR_MANIFEST.json
+.github/vendored-decisions
+
+# Agent-generated docs (owned by skills, not tracked)
+docs/WORKFLOW.md
+docs/README.md
