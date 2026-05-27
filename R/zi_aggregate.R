@@ -109,15 +109,15 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     stop("The 'survey' requested is invalid. Please choose one of 'sf1', 'sf3', 'acs1', 'acs3', or 'acs5'.")
   }
 
-  if (survey %in% c("sf1", "sf3") == TRUE & year != 2010){
+  if (survey %in% c("sf1", "sf3") & year != 2010){
     stop("The 'year' value provided is invalid for Decennial Census data. Only 2010 may be requested currently.")
   }
 
-  if (survey %in% c("acs1", "acs5") == TRUE & year %in% c(2010:2022) == FALSE){
+  if (survey %in% c("acs1", "acs5") & !(year %in% c(2010:2022))){
     stop("The 'year' value provided is invalid for 1- or 5-year American Community Survey data. Please provide a year between 2010 and 2022.")
   }
 
-  if (survey == "acs3" & year %in% c(2010:2013) == FALSE){
+  if (survey == "acs3" & !(year %in% c(2010:2013))){
     stop("The 'year' value provided is invalid for 3-year American Community Survey data. Please provide a year between 2010 and 2013.")
   }
 
@@ -136,17 +136,17 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
       stop(error)
     }
 
-    if (all(names(.data) == c("GEOID", "variable", "value")) == FALSE){
+    if (!all(names(.data) == c("GEOID", "variable", "value"))){
       stop(error)
     }
-  } else if (survey %in% c("acs1", "acs3", "acs5") == TRUE){
+  } else if (survey %in% c("acs1", "acs3", "acs5")){
     error <- "Input data appear to be malformed - there should be four columns for ACS data: 'GEOID', 'variable', 'estimate', and 'moe'. Note that zi_aggregate() only accepts 'tidy' data."
 
     if (length(names(.data)) != 4){
       stop(error)
     }
 
-    if (all(names(.data) == c("GEOID", "variable", "estimate", "moe")) == FALSE){
+    if (!all(names(.data) == c("GEOID", "variable", "estimate", "moe"))){
       stop(error)
     }
   }
@@ -154,7 +154,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
   if (!is.null(zcta)){
     valid <- zi_validate(zcta, style = "zcta3")
 
-    if (valid == FALSE){
+    if (!valid){
       stop("ZCTA data passed to the 'zcta' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues.")
     }
   }
@@ -182,15 +182,15 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
   .data <- dplyr::arrange(.data, ZCTA3)
 
   # call underlying tidycensus data
-  if (survey %in% c("sf1", "sf3") == TRUE){
+  if (survey %in% c("sf1", "sf3")){
 
     ## summarize data
-    if (extensive_id == TRUE & intensive_id == FALSE){
+    if (extensive_id & !intensive_id){
 
       ## aggregate
       out <- zi_census_extensive(.data)
 
-    } else if (extensive_id == FALSE & intensive_id == TRUE){
+    } else if (!extensive_id & intensive_id){
 
       ## calculate weights
       weights <- zi_census_weights(year = year, key = key)
@@ -202,11 +202,11 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
         out <- NULL
       }
 
-    } else if (extensive_id == TRUE & intensive_id == TRUE){
+    } else if (extensive_id & intensive_id){
 
       ## subset data
-      extensive_df <- dplyr::filter(.data, variable %in% extensive == TRUE)
-      intensive_df <- dplyr::filter(.data, variable %in% intensive == TRUE)
+      extensive_df <- dplyr::filter(.data, variable %in% extensive)
+      intensive_df <- dplyr::filter(.data, variable %in% intensive)
 
       ## calculate weights
       weights <- zi_census_weights(year = year, key = key)
@@ -225,15 +225,15 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
 
     }
 
-  } else if (survey %in% c("acs1", "acs3", "acs5") == TRUE){
+  } else if (survey %in% c("acs1", "acs3", "acs5")){
 
     ## summarize data
-    if (extensive_id == TRUE & intensive_id == FALSE){
+    if (extensive_id & !intensive_id){
 
       ## aggregate
       out <- zi_acs_extensive(.data)
 
-    } else if (extensive_id == FALSE & intensive_id == TRUE){
+    } else if (!extensive_id & intensive_id){
 
       ## calculate weights
       weights <- zi_acs_weights(year = year, survey = survey, key = key)
@@ -245,11 +245,11 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
         out <- NULL
       }
 
-    } else if (extensive_id == TRUE & intensive_id == TRUE){
+    } else if (extensive_id & intensive_id){
 
       ## subset data
-      extensive_df <- dplyr::filter(.data, variable %in% extensive == TRUE)
-      intensive_df <- dplyr::filter(.data, variable %in% intensive == TRUE)
+      extensive_df <- dplyr::filter(.data, variable %in% extensive)
+      intensive_df <- dplyr::filter(.data, variable %in% intensive)
 
       ## calculate weights
       weights <- zi_acs_weights(year = year, survey = survey, key = key)
@@ -271,8 +271,8 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
 
   if (!is.null(out)){
     # optionally subset
-    if (is.null(zcta) == FALSE){
-      out <- dplyr::filter(out, ZCTA3 %in% zcta == TRUE)
+    if (!is.null(zcta)){
+      out <- dplyr::filter(out, ZCTA3 %in% zcta)
     }
 
     # optionally pivot

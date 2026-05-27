@@ -7,5 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Remove `== TRUE` / `== FALSE` anti-patterns across all R/ sources (#11)
+
 ### Added
 - EVGen workflow scaffolding vendored from pfizer-evgen/rwd-agent-skills

@@ -62,7 +62,7 @@ zi_load_labels <- function(source = "UDS", type = "zip5", include_scf = FALSE,
       stop("The 'UDS' source only provides ZIP5 data, replace 'type' with 'zip5'.")
     }
 
-    if (is.numeric(vintage) == FALSE){
+    if (!is.numeric(vintage)){
       vintage_num <- as.numeric(vintage)
     } else {
       vintage_num <- vintage
@@ -72,7 +72,7 @@ zi_load_labels <- function(source = "UDS", type = "zip5", include_scf = FALSE,
       stop("The 'UDS' source only provides ZIP5 data between 2009 and 2022.")
     }
 
-    if (include_scf == TRUE){
+    if (include_scf){
       warning("The 'include_scf' argument only modifies the output of 'zip3' labels.")
     }
 
@@ -82,7 +82,7 @@ zi_load_labels <- function(source = "UDS", type = "zip5", include_scf = FALSE,
       stop("The 'USPS' source only provides ZIP3 data, replace 'type' with 'zip3'.")
     }
 
-    if (is.numeric(vintage) == TRUE){
+    if (is.numeric(vintage)){
       vintage_chr <- as.character(vintage)
     } else {
       vintage_chr <- vintage
@@ -148,7 +148,7 @@ zi_load_labels_usps <- function(type, include_scf, vintage){
     out <- dplyr::rename(out, label_area = destination_area, label_state = destination_state)
 
     ## optionally remove scf cols
-    if (include_scf == FALSE){
+    if (!include_scf){
       out <- subset(out, select = -c(scf_id, scf_name, scf_state))
     }
 

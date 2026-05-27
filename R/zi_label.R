@@ -100,7 +100,7 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
 
   input_varQN <- as.character(substitute(input_var))
 
-  if (input_varQN %in% names(.data) == FALSE){
+  if (!(input_varQN %in% names(.data))){
     stop("The given 'input_var' column is not found in your input object.")
   }
 
@@ -114,7 +114,7 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
 
   valid <- zi_validate(x = .data[[input_varQN]], style = type_zcta)
 
-  if (valid == FALSE){
+  if (!valid){
     stop(paste0("Input ZIP Code data in the '", input_varQN, "' column are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues."))
   }
 
@@ -127,13 +127,13 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
 
     source_varQN <- as.character(substitute(source_var))
 
-    if (source_varQN %in% names(label_source) == FALSE){
+    if (!(source_varQN %in% names(label_source))){
       stop("The given 'source_var' column is not found in your dictionary object.")
     }
 
     valid <- zi_validate(x = label_source[[source_varQN]], style = type_zcta)
 
-    if (valid == FALSE){
+    if (!valid){
       stop(paste0("Dictionary ZCTA data in the '", source_varQN, "' column are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues."))
     }
 
@@ -145,7 +145,7 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
         stop("The 'UDS' source only provides ZIP5 data, replace 'type' with 'zip5'.")
       }
 
-      if (is.numeric(vintage) == FALSE){
+      if (!is.numeric(vintage)){
         vintage_num <- as.numeric(vintage)
       } else {
         vintage_num <- vintage
@@ -155,7 +155,7 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
         stop("The 'UDS' source only provides ZIP5 data between 2009 and 2022.")
       }
 
-      if (include_scf == TRUE){
+      if (include_scf){
         warning("The 'include_scf' argument only modifies the output of 'zip3' labels.")
       }
 
@@ -165,7 +165,7 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
         stop("The 'USPS' source only provides ZIP3 data, replace 'type' with 'zip3'.")
       }
 
-      if (is.numeric(vintage) == TRUE){
+      if (is.numeric(vintage)){
         vintage_chr <- as.character(vintage)
       } else {
         vintage_chr <- vintage
