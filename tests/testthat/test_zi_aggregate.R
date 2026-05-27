@@ -17,11 +17,11 @@ age10 <- tidycensus::get_decennial(geography = "state",
 age11 <- age10 %>% dplyr::rename(estimate = value, moe = NAME) %>% dplyr::select("GEOID", "variable", "estimate", "moe")
 
 
-vt <-tidycensus:: get_acs(geography = "county",
+vt <- tidycensus::get_acs(geography = "county",
               variables = c(medincome = "B19013_001"),
               state = "VT",
               year = 2020) %>%
-  dplyr:: select(-NAME)
+  dplyr::select(-NAME)
 
 # test errors ------------------------------------------------
 

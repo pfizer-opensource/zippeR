@@ -33,4 +33,3 @@ test_that("correctly specified functions execute without error", {
 })
 
 # test outputs ------------------------------------------------
-
