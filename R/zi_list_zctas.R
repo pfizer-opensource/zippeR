@@ -46,27 +46,27 @@
 zi_list_zctas <- function(year, state, method){
 
   # check inputs
-  if (missing(year) == TRUE){
+  if (missing(year)){
     stop("The 'year' value is missing. Please provide a numeric value between 2010 and 2023.")
   }
 
-  if (is.numeric(year) == FALSE){
+  if (!is.numeric(year)){
     stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
   }
 
-  if (year %in% c(2010:2023) == FALSE){
+  if (!(year %in% c(2010:2023))){
     stop("The 'year' value provided is invalid. Please provide a numeric value between years 2010 and 2023.")
   }
 
-  if (missing(state) == TRUE){
+  if (missing(state)){
     stop("Please provide a vector of valid state abbreviations for the 'state' argument.")
   }
 
-  if (missing(method) == TRUE){
+  if (missing(method)){
     stop("Please select a valid method for returning ZCTA values. Your choices are 'centroid' and 'intersect'. See documentation for details.")
   }
 
-  if (method %in% c("centroid", "intersect") == FALSE){
+  if (!(method %in% c("centroid", "intersect"))){
     stop("The two valid methods for returning ZCTA values are 'centroid' and 'intersect'. See documentation for details.")
   }
 
@@ -80,9 +80,9 @@ zi_list_zctas <- function(year, state, method){
 
   # subset based on method
   if (method == "centroid"){
-    sub <- dplyr::filter(reference_centroids, fips %in% statez == TRUE & year == yearz)
+    sub <- dplyr::filter(reference_centroids, fips %in% statez & year == yearz)
   } else if (method == "intersect"){
-    sub <- dplyr::filter(reference_intersects, fips %in% statez == TRUE & year == yearz)
+    sub <- dplyr::filter(reference_intersects, fips %in% statez & year == yearz)
   }
 
   sub <- sub$obj

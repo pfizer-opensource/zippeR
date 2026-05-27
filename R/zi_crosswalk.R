@@ -112,13 +112,13 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
 
   input_varQN <- as.character(substitute(input_var))
 
-  if (input_varQN %in% names(.data) == FALSE){
+  if (!(input_varQN %in% names(.data))){
     stop("The given 'input_var' column is not found in your input object.")
   }
 
   valid <- zi_validate(x = .data[[input_varQN]])
 
-  if (valid == FALSE){
+  if (!valid){
     stop(paste0("Input ZIP Code data in the '", input_varQN, "' column are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues."))
   }
 
@@ -135,13 +135,13 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
 
     source_varQN <- as.character(substitute(source_var))
 
-    if (source_varQN %in% names(zip_source) == FALSE){
+    if (!(source_varQN %in% names(zip_source))){
       stop("The given 'source_var' column is not found in your dictionary object.")
     }
 
     valid <- zi_validate(x = zip_source[[source_varQN]], style = "zcta5")
 
-    if (valid == FALSE){
+    if (!valid){
       stop(paste0("Dictionary ZCTA data in the '", source_varQN, "' column are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues."))
     }
 
@@ -151,35 +151,35 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
 
     source_resultQN <- as.character(substitute(source_result))
 
-    if (source_resultQN %in% names(zip_source) == FALSE){
+    if (!(source_resultQN %in% names(zip_source))){
       stop("The given 'source_result' column is not found in your dictionary object.")
     }
 
   } else if (workflow == "api"){
 
-    if (is.numeric(year) == FALSE){
+    if (!is.numeric(year)){
       stop("The 'year' value provided is invalid. Please provide a numeric value for the requested year.")
     }
 
-    if (zip_source == "UDS" & year %in% c(2009:2022) == FALSE){
+    if (zip_source == "UDS" & !(year %in% c(2009:2022))){
       stop("The 'year' value provided is invalid for UDS data. Please provide a year between 2009 and 2022.")
     }
 
     if (zip_source == "HUD"){
 
-      if (year %in% c(2010:2024) == FALSE){
+      if (!(year %in% c(2010:2024))){
         stop("The 'year' value provided is invalid for HUD data. Please provide a year between 2010 and 2024.")
       }
 
-      if (qtr %in% c(1:4) == FALSE){
+      if (!(qtr %in% c(1:4))){
         stop("The 'qtr' value is required when 'zip_source' is 'HUD'. Please provide a value between 1 and 4.")
       }
 
-      if (target %in% c("TRACT", "COUNTY", "CBSA", "CBSADIV", "CD", "COUNTYSUB") == FALSE){
+      if (!(target %in% c("TRACT", "COUNTY", "CBSA", "CBSADIV", "CD", "COUNTYSUB"))){
         stop("The 'target' value is required when 'zip_source' is 'HUD'. Please provide a valid target value (see help file).")
       }
 
-      if (is.null(query) == TRUE){
+      if (is.null(query)){
         stop("The 'query' value is required when 'zip_source' is 'HUD'. Please provide a valid query value (see help file).")
       }
 
@@ -187,7 +187,7 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
         stop("A valid value for 'by' value is required. Please input either 'residential', 'commercial', or 'total'.")
       }
 
-      if (by %in% c("residential", "commercial", "total") == FALSE){
+      if (!(by %in% c("residential", "commercial", "total"))){
         stop("The 'by' value provided is invalid. Please input either 'residential', 'commercial', or 'total'.")
       }
 

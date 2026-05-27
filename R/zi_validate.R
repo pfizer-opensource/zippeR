@@ -52,24 +52,24 @@
 zi_validate <- function(x, style = "zcta5", verbose = FALSE){
 
   # check inputs
-  if (missing(x) == TRUE){
+  if (missing(x)){
     stop("Please provide a vector of data for validation.")
   }
 
-  if (is.data.frame(x) == TRUE){
+  if (is.data.frame(x)){
     stop("Please provide a vector of data, instead of a data frame, for validation.")
   }
 
-  if (style %in% c("zcta5", "zcta3") == FALSE){
+  if (!(style %in% c("zcta5", "zcta3"))){
     stop("The 'style' value provided is invalid. Please select either 'zcta5' or 'zcta3'.")
   }
 
-  if (is.logical(verbose) == FALSE){
+  if (!is.logical(verbose)){
     stop("The 'verbose' value provided is invalid. Please select either 'TRUE' or 'FALSE'.")
   }
 
   # ensure character
-  if (is.character(x) == FALSE){
+  if (!is.character(x)){
     chr_out <- FALSE
   } else {
     chr_out <- TRUE
@@ -134,9 +134,9 @@ zi_validate <- function(x, style = "zcta5", verbose = FALSE){
   }
 
   # create output
-  if (verbose == FALSE){
+  if (!verbose){
     out <- all(c(chr_out, len_out2, len_out3, num_out))
-  } else if (verbose == TRUE){
+  } else if (verbose){
 
     if (style == "zcta5"){
       length_prompt <- "No input values are over 5 characters long?"
@@ -206,30 +206,30 @@ zi_validate <- function(x, style = "zcta5", verbose = FALSE){
 zi_repair <- function(x, style = "zcta5"){
 
   # check inputs
-  if (missing(x) == TRUE){
+  if (missing(x)){
     stop("Please provide a vector of data for validation.")
   }
 
-  if (is.data.frame(x) == TRUE){
+  if (is.data.frame(x)){
     stop("Please provide a vector of data, instead of a data frame, for validation.")
   }
 
-  if (style %in% c("zcta5", "zcta3") == FALSE){
+  if (!(style %in% c("zcta5", "zcta3"))){
     stop("The 'style' value provided is invalid. Please select either 'zcta5' or 'zcta3'.")
   }
 
   # run validation
   valid <- zi_validate(x, style = style, verbose = TRUE)
 
-  if (all(valid$result) == FALSE){
+  if (!all(valid$result)){
 
     # ensure character
-    if (valid$result[1] == FALSE){
+    if (!valid$result[1]){
       x <- as.character(x)
     }
 
     # identify issue where length is too long
-    if (valid$result[3] == FALSE){
+    if (!valid$result[3]){
 
       if (style == "zcta5"){
         x <- ifelse(nchar(x) > 5, NA, x)
@@ -240,12 +240,12 @@ zi_repair <- function(x, style = "zcta5"){
     }
 
     # convert characters to NA
-    if (valid$result[4] == FALSE){
+    if (!valid$result[4]){
       x <- as.character(suppressWarnings(as.numeric(x)))
     }
 
     # ensure padding
-    if (valid$result[2] == FALSE){
+    if (!valid$result[2]){
 
       if (style == "zcta5"){
         x <- stringr::str_pad(x, 5, pad = "0")
@@ -256,7 +256,7 @@ zi_repair <- function(x, style = "zcta5"){
     }
 
     # returning warning
-    if (valid$result[3] == FALSE | valid$result[4] == FALSE){
+    if (!valid$result[3] | !valid$result[4]){
       warning("NAs introduced by coercion")
     }
 

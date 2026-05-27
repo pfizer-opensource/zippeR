@@ -60,33 +60,33 @@ zi_load_crosswalk <- function(zip_source = "UDS", year, qtr = NULL, target = NUL
                               query = NULL, key = NULL){
 
   # check inputs
-  if (zip_source %in% c("UDS", "HUD") == FALSE){
+  if (!(zip_source %in% c("UDS", "HUD"))){
     stop("The 'zip_source' value provided is invalid. Please input either 'UDS' or 'HUD'.")
   }
 
-  if (is.numeric(year) == FALSE){
+  if (!is.numeric(year)){
     stop("The 'year' value provided is invalid. Please provide a numeric value for the requested year.")
   }
 
-  if (zip_source == "UDS" & year %in% c(2009:2022) == FALSE){
+  if (zip_source == "UDS" & !(year %in% c(2009:2022))){
     stop("The 'year' value provided is invalid for UDS data. Please provide a year between 2009 and 2022.")
   }
 
   if (zip_source == "HUD"){
 
-    if (year %in% c(2010:2024) == FALSE){
+    if (!(year %in% c(2010:2024))){
       stop("The 'year' value provided is invalid for HUD data. Please provide a year between 2010 and 2024.")
     }
 
-    if (qtr %in% c(1:4) == FALSE){
+    if (!(qtr %in% c(1:4))){
       stop("The 'qtr' value is required when 'zip_source' is 'HUD'. Please provide a value between 1 and 4.")
     }
 
-    if (target %in% c("TRACT", "COUNTY", "CBSA", "CBSADIV", "CD", "COUNTYSUB") == FALSE){
+    if (!(target %in% c("TRACT", "COUNTY", "CBSA", "CBSADIV", "CD", "COUNTYSUB"))){
       stop("The 'target' value is required when 'zip_source' is 'HUD'. Please provide a valid target value (see help file).")
     }
 
-    if (is.null(query) == TRUE){
+    if (is.null(query)){
       stop("The 'query' value is required when 'zip_source' is 'HUD'. Please provide a valid query value (see help file).")
     }
   }
@@ -135,7 +135,7 @@ zi_load_uds <- function(year) {
 
   # Remove military zip if 'zip_type' column exists
   if ("zip_type" %in% names(out)) {
-    out <- dplyr::filter(out, grepl("^M", zip_type) == FALSE)
+    out <- dplyr::filter(out, !grepl("^M", zip_type))
   }
 
   # Convert 'po_name' to title case if it exists
@@ -145,7 +145,7 @@ zi_load_uds <- function(year) {
 
   # Remove N/A zcta if 'zcta' column exists
   if ("zcta" %in% names(out)) {
-    out <- dplyr::filter(out, zcta %in% c("N/A", NA) == FALSE)
+    out <- dplyr::filter(out, !(zcta %in% c("N/A", NA)))
   }
 
   ## remove non-ZCTA geometries
@@ -160,13 +160,13 @@ zi_load_uds <- function(year) {
   # check validation
   valid_zip <- zi_validate(out$zip)
 
-  if (valid_zip == FALSE) {
+  if (!valid_zip) {
     warning("The 'zip' column failed initial validation. Inspect it closely and address issues found with 'zi_validate()' before using.")
   }
 
   valid_zcta <- zi_validate(out$zcta)
 
-  if (valid_zcta == FALSE) {
+  if (!valid_zcta) {
     warning("The 'ZCTA' column failed initial validation. Inspect it closely and address issues found with 'zi_validate()' before using.")
   }
 
@@ -177,7 +177,7 @@ zi_load_uds <- function(year) {
 
 zi_load_hud <- function(year, qtr, target, queries, key = NULL){
 
-  if (is.null(key) == TRUE){
+  if (is.null(key)){
     key <- Sys.getenv("hud_key")
   }
 
@@ -190,7 +190,7 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
   # Loop over queries using map_dfr
   result <- purrr::map_dfr(queries, function(query) {
 
-    if (year <= 2020 & query %in% c(datasets::state.abb, "VI", "PR", "ALL") == TRUE){
+    if (year <= 2020 & query %in% c(datasets::state.abb, "VI", "PR", "ALL")){
       stop("Queries with two letter state abbreviations or ALL are only available from the 1st quarter of 2021 onwards.")
     }
 
@@ -202,7 +202,7 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
       stop("COUNTYSUB data is available from the 2nd quarter of 2018 onwards.")
     }
 
-    if (query %in% c(datasets::state.abb, "VI", "PR", "ALL") == FALSE & is.numeric(query) == FALSE && nchar(as.character(query)) != 5){
+    if (!(query %in% c(datasets::state.abb, "VI", "PR", "ALL")) & !is.numeric(query) && nchar(as.character(query)) != 5){
       stop("The 'query' value provided is invalid. Please input a valid state abbreviation or zip code.")
     }
 

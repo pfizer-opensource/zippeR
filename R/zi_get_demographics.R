@@ -61,11 +61,11 @@ zi_get_demographics <- function(year, variables = NULL,
                                 zcta = NULL, key = NULL){
 
   # check inputs
-  if (missing(year) == TRUE){
+  if (missing(year)){
     stop("The 'year' value is missing. Please provide a numeric value between 2010 and 2022.")
   }
 
-  if (is.numeric(year) == FALSE){
+  if (!is.numeric(year)){
     stop("The 'year' value provided is invalid. Please provide a numeric value between 2010 and 2022.")
   }
 
@@ -73,34 +73,34 @@ zi_get_demographics <- function(year, variables = NULL,
     stop("One only 'survey' product may be requested at a time.")
   }
 
-  if (survey %in% c("sf1", "sf3", "acs1", "acs3", "acs5") == FALSE){
+  if (!(survey %in% c("sf1", "sf3", "acs1", "acs3", "acs5"))){
     stop("The 'survey' requested is invalid. Please choose one of 'sf1', 'sf3', 'acs1', 'acs3', or 'acs5'.")
   }
 
-  if (survey %in% c("sf1", "sf3") == TRUE & year != 2010){
+  if (survey %in% c("sf1", "sf3") & year != 2010){
     stop("The 'year' value provided is invalid for Decennial Census data. Only 2010 may be requested currently.")
   }
 
-  if (survey %in% c("acs1", "acs5") == TRUE & year %in% c(2010:2022) == FALSE){
+  if (survey %in% c("acs1", "acs5") & !(year %in% c(2010:2022))){
     stop("The 'year' value provided is invalid for 1- or 5-year American Community Survey data. Please provide a year between 2010 and 2022.")
   }
 
-  if (survey == "acs3" & year %in% c(2010:2013) == FALSE){
+  if (survey == "acs3" & !(year %in% c(2010:2013))){
     stop("The 'year' value provided is invalid for 3-year American Community Survey data. Please provide a year between 2010 and 2013.")
   }
 
-  if (is.null(variables) == FALSE & is.null(table) == FALSE){
+  if (!is.null(variables) & !is.null(table)){
     stop("The 'variables' or 'table' arguments cannot be used simultaneously. Please choose one or the other.")
   }
 
-  if (output %in% c("tidy", "wide") == FALSE){
+  if (!(output %in% c("tidy", "wide"))){
     stop("The 'output' requested is invalid. Please choose one of 'tidy' or 'wide'.")
   }
 
-  if (is.null(zcta) == FALSE){
+  if (!is.null(zcta)){
     valid <- zi_validate(zcta)
 
-    if (valid == FALSE){
+    if (!valid){
       stop("ZCTA data passed to the 'zcta' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues.")
     }
   }
@@ -134,8 +134,8 @@ zi_get_demographics <- function(year, variables = NULL,
     out <- dplyr::arrange(out, GEOID)
 
     ## optionally subset
-    if (is.null(zcta) == FALSE){
-      out <- dplyr::filter(out, GEOID %in% zcta == TRUE)
+    if (!is.null(zcta)){
+      out <- dplyr::filter(out, GEOID %in% zcta)
     }
   }
 

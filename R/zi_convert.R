@@ -45,20 +45,20 @@ zi_convert <- function(.data, input_var, output_var){
 
   input_varQN <- as.character(substitute(input_var))
 
-  if (input_varQN %in% names(.data) == FALSE){
+  if (!(input_varQN %in% names(.data))){
     stop("The given 'input_var' column is not found in your data object.")
   }
 
   valid <- zi_validate(x = .data[[input_varQN]])
 
-  if (valid == FALSE){
+  if (!valid){
     stop(paste0("Input ZIP Code data in the '", input_varQN, "' column are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues."))
   }
 
   if (!missing(output_var)){
     output_varQN <- as.character(substitute(input_var))
 
-    if (output_varQN %in% names(.data) == TRUE){
+    if (output_varQN %in% names(.data)){
       warning(paste0("The given 'output_var' column, '", output_varQN , "', was found in your data object, and the column was overwritten."))
     }
   } else {

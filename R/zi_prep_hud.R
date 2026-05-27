@@ -36,15 +36,15 @@
 zi_prep_hud <- function(.data, by, return_max = TRUE){
 
   # check input data
-  if (missing(by) == TRUE){
+  if (missing(by)){
     stop("A value for 'by' value is missing and is required. Please input either 'residential', 'commercial', or 'total'.")
   }
 
-  if (by %in% c("residential", "commercial", "total") == FALSE){
+  if (!(by %in% c("residential", "commercial", "total"))){
     stop("The 'by' value provided is invalid. Please input either 'residential', 'commercial', or 'total'.")
   }
 
-  if (is.logical(return_max) == FALSE){
+  if (!is.logical(return_max)){
     stop("A logical value must be provided for the 'return_max' argument.")
   }
 
@@ -72,11 +72,11 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   out <- dplyr::arrange(out, zip5, state, geoid)
   out <- dplyr::group_by(out, zip5, state)
 
-  if (return_max == TRUE){
+  if (return_max){
     out <- dplyr::arrange(out, geoid)
     out <- dplyr::filter(out, ratio == max(ratio, na.rm = TRUE))
     out <- dplyr::slice(out, 1)
-  } else if (return_max == FALSE){
+  } else if (!return_max){
     out <- dplyr::mutate(out,
                          max = ifelse(ratio == max(ratio, na.rm = TRUE),
                                       TRUE, FALSE)
@@ -86,7 +86,7 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   out <- dplyr::ungroup(out)
 
   # subset on max and prep output
-  out <- dplyr::filter(out, is.na(state) == FALSE)
+  out <- dplyr::filter(out, !is.na(state))
 
   # return output
   return(out)
