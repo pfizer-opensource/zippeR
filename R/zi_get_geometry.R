@@ -200,7 +200,7 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
     valid <- zi_validate(includes, style = style)
 
     if (valid == FALSE){
-      stop("ZCTA data passed to the 'includes' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investgiate further. The 'zi_repair()' function may be used to address issues.")
+      stop("ZCTA data passed to the 'includes' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues.")
     }
   }
 
@@ -208,7 +208,7 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
     valid <- zi_validate(excludes, style = style)
 
     if (valid == FALSE){
-      stop("ZCTA data passed to the 'excludes' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investgiate further. The 'zi_repair()' function may be used to address issues.")
+      stop("ZCTA data passed to the 'excludes' argument are invalid. Please use 'zi_validate()' with the 'verbose = TRUE' option to investigate further. The 'zi_repair()' function may be used to address issues.")
     }
   }
 
