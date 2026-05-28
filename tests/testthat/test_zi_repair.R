@@ -1,5 +1,3 @@
-context("test zi_repair function")
-
 # create test data ------------------------------------------------
 
 correct_zips_1 <- c("63088", "63108", "63139")

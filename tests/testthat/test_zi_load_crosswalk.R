@@ -1,5 +1,3 @@
-context("test zi_load_crosswalk function")
-
 # test errors ------------------------------------------------
 
 test_that("incorrectly specified parameters trigger appropriate errors", {

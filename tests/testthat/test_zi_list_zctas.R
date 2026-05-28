@@ -1,5 +1,3 @@
-context("test zi_list_zctas function")
-
 # create test data ------------------------------------------------
 
 incorrect_year_str <- "2010"

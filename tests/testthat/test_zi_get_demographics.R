@@ -1,5 +1,3 @@
-context("test zi_get_demographics function")
-
 # create test data ------------------------------------------------
 
 correct_year = 2010
@@ -42,9 +40,9 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
 
 # test inputs ------------------------------------------------
 
-# # can't get this to work
-# test_that("correctly specified functions execute without error", {
-#   expect_error(zi_get_demographics(year = 2011, survey = "acs1", variables = c(medincome = "B01003_001")), NA)
-# })
-
-# test outputs ------------------------------------------------
+test_that("correctly specified functions execute without error", {
+  skip_on_cran()
+  skip_if_offline()
+  skip_if(nchar(Sys.getenv("CENSUS_API_KEY")) == 0, "Census API key not available")
+  expect_no_error(zi_get_demographics(year = 2012, survey = "acs5", variables = c(pop = "B01003_001")))
+})

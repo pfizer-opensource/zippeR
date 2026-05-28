@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Remove `== TRUE` / `== FALSE` anti-patterns across all R/ sources (#11)
+- Remove deprecated `context()` calls from all test files; adopt testthat 3rd edition (#8)
 
 ### Added
 - EVGen workflow scaffolding vendored from pfizer-evgen/rwd-agent-skills
+- Tests for `zi_convert`, `zi_label`, `zi_load_labels`, `zi_load_labels_list`, `zi_prep_hud` (#7)
+- Complete placeholder tests in `test_zi_crosswalk.R` and `test_zi_get_demographics.R` (#18)
