@@ -1,5 +1,5 @@
 ---
-last_updated: "2026-05-26"
+last_updated: "2026-05-28"
 ---
 # Roadmap — zippeR
 
@@ -17,4 +17,4 @@ _No epics in the backlog._
 
 ## Recently Shipped
 
-_Nothing shipped yet._
+- **[Epic A] Test Coverage & Quality** (#22) — closed 2026-05-28
