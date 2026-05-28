@@ -5,7 +5,7 @@ last_updated: "2026-05-28"
 
 ## Now (in progress)
 
-_No epics currently in flight._
+- **[Epic D] Package Infrastructure & CRAN Readiness** (#25) — 0/3 sub-issues closed + #32 CI caching
 
 ## Next (planned)
 
