@@ -1,5 +1,3 @@
-context("test zi_get_geometry function")
-
 # create test data ------------------------------------------------
 
 chr_year <- "2010"

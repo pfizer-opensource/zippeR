@@ -1,5 +1,3 @@
-context("test zi_aggregate function")
-
 # create test data ------------------------------------------------
 
 correct_year = 2010

@@ -1,5 +1,3 @@
-context("test zi_crosswalk function")
-
 # create test data ------------------------------------------------
 
 df_data_bad <- data.frame(
@@ -33,3 +31,11 @@ test_that("correctly specified functions execute without error", {
 })
 
 # test outputs ------------------------------------------------
+
+test_that("correctly specified functions produce expected output", {
+  result <- zi_crosswalk(df_data_good, input_var = good_zip, zip_source = hud_dict, source_var = zip5, source_result = geoid)
+  expect_s3_class(result, "tbl_df")
+  expect_true("source_geoid" %in% names(result))
+  expect_equal(nrow(result), nrow(df_data_good))
+  expect_type(result$source_geoid, "character")
+})
