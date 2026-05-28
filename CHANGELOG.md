@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove base packages (`datasets`, `stats`) from Imports (#10)
 - Add minimum version constraints for all dependencies (#15)
 - Enable R package dependency caching in lint and pkgdown CI workflows; bump `actions/checkout` v2 → v4 in pkgdown (#32)
+- Cache system dependencies (GDAL, PROJ, GEOS, udunits) on Linux and macOS in CI; install steps run only on cache miss (#32)
 - Remove `== TRUE` / `== FALSE` anti-patterns across all R/ sources (#11)
 - Remove deprecated `context()` calls from all test files; adopt testthat 3rd edition (#8)
 

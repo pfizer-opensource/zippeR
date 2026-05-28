@@ -42,13 +42,51 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install macOS specific dependencies for sf
+      # Cache system dependencies to avoid reinstalling GDAL/PROJ/GEOS each run.
+      # Key includes OS, workflow file hash, and a weekly rolling date segment
+      # so caches refresh periodically but hit on most runs.
+      - name: Get week number for cache rotation
+        id: week
+        run: echo "week=$(date +%V)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Linux system dependencies
+        id: cache-linux-syslibs
+        if: runner.os == 'Linux'
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/lib/x86_64-linux-gnu/libgdal*
+            /usr/lib/x86_64-linux-gnu/libproj*
+            /usr/lib/x86_64-linux-gnu/libgeos*
+            /usr/lib/x86_64-linux-gnu/libudunits*
+            /usr/include/gdal
+            /usr/include/proj
+            /usr/include/geos
+          key: syslibs-linux-${{ hashFiles('.github/workflows/R-CMD-check.yaml') }}-${{ steps.week.outputs.week }}
+          restore-keys: |
+            syslibs-linux-
+
+      - name: Cache macOS Homebrew dependencies
+        id: cache-macos-syslibs
         if: runner.os == 'macOS'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew
+            /opt/homebrew/Cellar/gdal
+            /opt/homebrew/Cellar/proj
+            /opt/homebrew/Cellar/udunits
+          key: syslibs-macos-${{ hashFiles('.github/workflows/R-CMD-check.yaml') }}-${{ steps.week.outputs.week }}
+          restore-keys: |
+            syslibs-macos-
+
+      - name: Install macOS specific dependencies for sf
+        if: runner.os == 'macOS' && steps.cache-macos-syslibs.outputs.cache-hit != 'true'
         run: brew install udunits gdal proj
 
       - name: Install Linux specific dependencies for sf
-        if: runner.os == 'Linux'
-        run: sudo apt-get install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
+        if: runner.os == 'Linux' && steps.cache-linux-syslibs.outputs.cache-hit != 'true'
+        run: sudo apt-get install -y --no-install-recommends libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
       - name: Install Dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
