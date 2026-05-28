@@ -17,5 +17,6 @@ _No epics in the backlog._
 
 ## Recently Shipped
 
+- **[Epic B] Code Style & Error Handling** (#23) — closed 2026-05-28
 - **[Epic D] Package Infrastructure & CRAN Readiness** (#25) — closed 2026-05-28
 - **[Epic A] Test Coverage & Quality** (#22) — closed 2026-05-28
