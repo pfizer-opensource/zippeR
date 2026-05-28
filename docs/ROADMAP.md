@@ -5,7 +5,7 @@ last_updated: "2026-05-28"
 
 ## Now (in progress)
 
-- **[Epic D] Package Infrastructure & CRAN Readiness** (#25) — 0/3 sub-issues closed + #32 CI caching
+_No epics in progress._
 
 ## Next (planned)
 
@@ -17,4 +17,5 @@ _No epics in the backlog._
 
 ## Recently Shipped
 
+- **[Epic D] Package Infrastructure & CRAN Readiness** (#25) — closed 2026-05-28
 - **[Epic A] Test Coverage & Quality** (#22) — closed 2026-05-28
