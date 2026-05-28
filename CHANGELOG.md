@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Set minimum R version to 4.1 in DESCRIPTION (#21)
+- Remove base packages (`datasets`, `stats`) from Imports (#10)
+- Add minimum version constraints for all dependencies (#15)
 - Enable R package dependency caching in lint and pkgdown CI workflows; bump `actions/checkout` v2 → v4 in pkgdown (#32)
 - Remove `== TRUE` / `== FALSE` anti-patterns across all R/ sources (#11)
 - Remove deprecated `context()` calls from all test files; adopt testthat 3rd edition (#8)
