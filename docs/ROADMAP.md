@@ -1,11 +1,11 @@
 ---
-last_updated: "2026-05-28"
+last_updated: "2026-05-29"
 ---
 # Roadmap — zippeR
 
 ## Now (in progress)
 
-_No epics in progress._
+- **[Epic C] Documentation Improvements** (#24) — 5/7 sub-issues closed; remaining: #20 (data provenance README), #26 (docs hub content)
 
 ## Next (planned)
 
