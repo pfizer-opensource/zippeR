@@ -15,7 +15,7 @@ A data frame with 31 rows and 2 variables:
 U.S. Census Bureau's TIGER/Line database
 }
 \usage{
-data(zi_mo_zcta3)
+zi_mo_zcta3
 }
 \description{
 A simple features data set containing the geometric data

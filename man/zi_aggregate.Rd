@@ -4,9 +4,17 @@
 \alias{zi_aggregate}
 \title{Aggregate ZCTAs to Three-digit ZCTAs}
 \usage{
-zi_aggregate(.data, year, extensive = NULL, intensive = NULL,
-    intensive_method = "mean", survey, output = "tidy", zcta = NULL,
-    key = NULL)
+zi_aggregate(
+  .data,
+  year,
+  extensive = NULL,
+  intensive = NULL,
+  intensive_method = "mean",
+  survey,
+  output = "tidy",
+  zcta = NULL,
+  key = NULL
+)
 }
 \arguments{
 \item{.data}{A tidy set of demographic data containing one or more variables
@@ -65,7 +73,8 @@ written to \code{.Renviron} by using \code{Sys.getenv("CENSUS_API_KEY")}.}
 }
 \value{
 A tibble containing all aggregated data requested in either
-    \code{"tidy"} or \code{"wide"} format.
+    \code{"tidy"} or \code{"wide"} format, or \code{NULL} if population
+    weight data cannot be downloaded from the Census Bureau API.
 }
 \description{
 This function takes input ZCTA data and aggregates it to three-digit

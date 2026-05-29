@@ -16,7 +16,7 @@ A data frame with 37 rows and 3 variables:
 U.S. Postal Service Facility Access and Shipment Tracking (FAST) Database
 }
 \usage{
-data(zi_mo_usps)
+zi_mo_usps
 }
 \description{
 A tibble containing the USPS Three-digit ZIP Code labels for

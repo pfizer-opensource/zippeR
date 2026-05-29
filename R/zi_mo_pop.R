@@ -7,7 +7,6 @@
 #'
 #' @docType data
 #'
-#' @usage data(zi_mo_pop)
 #'
 #' @format A data frame with 2664 rows and 4 variables:
 #' \describe{

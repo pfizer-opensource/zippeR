@@ -5,7 +5,6 @@
 #'
 #' @docType data
 #'
-#' @usage data(zi_mo_hud)
 #'
 #' @format A data frame with 1749 rows and 8 variables:
 #' \describe{

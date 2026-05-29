@@ -6,8 +6,6 @@
 #'    also optionally returns data on Sectional Center Facilities (SCFs) for
 #'    three-digit ZIP Codes.
 #'
-#' @usage zi_label(.data, input_var, label_source = "UDS", source_var,
-#'     type = "zip5", include_scf = FALSE, vintage = 2022)
 #'
 #' @param .data An "input object" that is data.frame or tibble that contains
 #'     ZIP Codes to be crosswalked.

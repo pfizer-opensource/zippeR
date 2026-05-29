@@ -4,8 +4,12 @@
 \alias{zi_load_labels}
 \title{Load Label Data}
 \usage{
-zi_load_labels(source = "UDS", type = "zip5", include_scf = FALSE,
-    vintage = 2022)
+zi_load_labels(
+  source = "UDS",
+  type = "zip5",
+  include_scf = FALSE,
+  vintage = 2022
+)
 }
 \arguments{
 \item{source}{A required character scalar; specifies the source of the label

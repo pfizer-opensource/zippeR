@@ -4,8 +4,14 @@
 \alias{zi_load_crosswalk}
 \title{Load Crosswalk Files}
 \usage{
-zi_load_crosswalk(zip_source = "UDS", year, qtr = NULL, target = NULL,
-    query = NULL, key = NULL)
+zi_load_crosswalk(
+  zip_source = "UDS",
+  year,
+  qtr = NULL,
+  target = NULL,
+  query = NULL,
+  key = NULL
+)
 }
 \arguments{
 \item{zip_source}{Required character scalar; specifies the source of ZIP Code

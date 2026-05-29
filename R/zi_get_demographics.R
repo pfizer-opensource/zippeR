@@ -4,8 +4,6 @@
 #'     Tabulation Areas (ZCTAs), which are rough approximations of many (but not
 #'     all) USPS ZIP codes.
 #'
-#' @usage zi_get_demographics(year, variables = NULL, table = NULL,
-#'     survey, output = "tidy", zcta = NULL, key = NULL)
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
 #'     supports data for from 2010 to 2022. Different \code{survey} products
@@ -39,7 +37,8 @@
 #'     written to \code{.Renviron} by using \code{Sys.getenv("CENSUS_API_KEY")}.
 #'
 #' @return A tibble containing all demographic data requested in either
-#'     \code{"tidy"} or \code{"wide"} format.
+#'     \code{"tidy"} or \code{"wide"} format, or \code{NULL} if the Census
+#'     Bureau API call fails.
 #'
 #' @examples
 #' \donttest{

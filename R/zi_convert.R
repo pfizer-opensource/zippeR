@@ -5,7 +5,6 @@
 #'     and corresponds to the sectional center facility (SCF) that processes mail
 #'     for a region.
 #'
-#' @usage zi_convert(.data, input_var, output_var)
 #'
 #' @param .data A data frame containing a column of five-digit ZIP Codes.
 #' @param input_var A character scalar specifying the column name with the five-digit
