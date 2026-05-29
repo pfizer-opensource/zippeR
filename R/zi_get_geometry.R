@@ -7,10 +7,6 @@
 #'     argument, and the processing power of your computer (if you select
 #'     specific counties).
 #'
-#' @usage zi_get_geometry (year, style = "zcta5", return = "id", class = "sf",
-#'     state = NULL, county = NULL, territory = NULL, cb = FALSE,
-#'     starts_with = NULL, includes = NULL, excludes = NULL, method,
-#'     shift_geo = FALSE)
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
 #'     supports data between 2010 and 2023
@@ -95,9 +91,11 @@
 #'     will be used as a base before identifying ZCTAs within counties using
 #'     either the \code{"intersect"} or \code{"centroid"} method described above.
 #'
-#' @return A \code{sf} object with ZCTAs matching the parameters specified above:
-#'     either a nationwide file, a specific state or states, or a specific
-#'     county or counties.
+#' @return A \code{sf} object (or \code{tibble} if \code{class = "tibble"})
+#'     with ZCTAs matching the parameters specified above: either a nationwide
+#'     file, a specific state or states, or a specific county or counties.
+#'     Returns \code{NULL} if the Census Bureau download fails or if state
+#'     validation yields no matching ZCTAs.
 #'
 #' @examples
 #' \donttest{

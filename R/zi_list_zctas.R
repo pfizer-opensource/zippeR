@@ -4,7 +4,6 @@
 #'     in and around states, depending on the method selected. The two methods
 #'     included described in Details below.
 #'
-#' @usage zi_list_zctas(year, state, method)
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
 #'     supports data between 2010 and 2021.

@@ -4,10 +4,21 @@
 \alias{zi_get_geometry}
 \title{Download and Optionally Geoprocess ZCTAs}
 \usage{
-zi_get_geometry (year, style = "zcta5", return = "id", class = "sf",
-    state = NULL, county = NULL, territory = NULL, cb = FALSE,
-    starts_with = NULL, includes = NULL, excludes = NULL, method,
-    shift_geo = FALSE)
+zi_get_geometry(
+  year,
+  style = "zcta5",
+  return = "id",
+  class = "sf",
+  state = NULL,
+  county = NULL,
+  territory = NULL,
+  cb = FALSE,
+  starts_with = NULL,
+  includes = NULL,
+  excludes = NULL,
+  method = NULL,
+  shift_geo = FALSE
+)
 }
 \arguments{
 \item{year}{A four-digit numeric scalar for year. \code{zippeR} currently
@@ -80,9 +91,11 @@ states are not listed for the \code{state} argument. It does not apply
 if \code{class = "tibble"}.}
 }
 \value{
-A \code{sf} object with ZCTAs matching the parameters specified above:
-    either a nationwide file, a specific state or states, or a specific
-    county or counties.
+A \code{sf} object (or \code{tibble} if \code{class = "tibble"})
+    with ZCTAs matching the parameters specified above: either a nationwide
+    file, a specific state or states, or a specific county or counties.
+    Returns \code{NULL} if the Census Bureau download fails or if state
+    validation yields no matching ZCTAs.
 }
 \description{
 This function returns geometric data for ZIP Code Tabulation

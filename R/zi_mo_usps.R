@@ -5,7 +5,6 @@
 #'
 #' @docType data
 #'
-#' @usage data(zi_mo_usps)
 #'
 #' @format A data frame with 37 rows and 3 variables:
 #' \describe{

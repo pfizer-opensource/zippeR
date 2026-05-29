@@ -10,8 +10,6 @@
 #'     which provide similar functionality for converting ZIP Codes to a variety
 #'     of geographies including counties.
 #'
-#' @usage zi_load_crosswalk(zip_source = "UDS", year, qtr = NULL, target = NULL,
-#'     query = NULL, key = NULL)
 #'
 #' @param zip_source Required character scalar; specifies the source of ZIP Code
 #'     crosswalk data. This can be one of either \code{"UDS"} (default) or

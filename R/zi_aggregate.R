@@ -4,9 +4,6 @@
 #'    areas, which are considerably larger. These regions are sometimes used in
 #'    American health care contexts for publishing geographic identifiers.
 #'
-#' @usage zi_aggregate(.data, year, extensive = NULL, intensive = NULL,
-#'     intensive_method = "mean", survey, output = "tidy", zcta = NULL,
-#'     key = NULL)
 #'
 #' @param .data A tidy set of demographic data containing one or more variables
 #'     that should be aggregated to three-digit ZCTAs. This data frame or tibble
@@ -55,7 +52,8 @@
 #'     written to \code{.Renviron} by using \code{Sys.getenv("CENSUS_API_KEY")}.
 #'
 #' @return A tibble containing all aggregated data requested in either
-#'     \code{"tidy"} or \code{"wide"} format.
+#'     \code{"tidy"} or \code{"wide"} format, or \code{NULL} if population
+#'     weight data cannot be downloaded from the Census Bureau API.
 #'
 #' @examples
 #' # load sample demographic data

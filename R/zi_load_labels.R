@@ -3,8 +3,6 @@
 #' @description This function loads a specific label data set that can be used to
 #'     label five or three-digit ZIP codes in a data frame.
 #'
-#' @usage zi_load_labels(source = "UDS", type = "zip5", include_scf = FALSE,
-#'     vintage = 2022)
 #'
 #' @param source A required character scalar; specifies the source of the label
 #'     data. The only supported sources are \code{'UDS'} (default) and

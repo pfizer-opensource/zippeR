@@ -26,7 +26,7 @@ U.S. Department of Housing and Urban Development's ZIP Code crosswalk
     files
 }
 \usage{
-data(zi_mo_hud)
+zi_mo_hud
 }
 \description{
 A tibble containing the HUD ZIP Code to County Crosswalk file

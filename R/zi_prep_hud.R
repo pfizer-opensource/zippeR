@@ -4,7 +4,6 @@
 #'     additional processing to be used in the \code{zi_crosswalk()} function.
 #'     This function prepares the HUD data for use in joins.
 #'
-#' @usage zi_prep_hud(.data, by, return_max = TRUE)
 #'
 #' @param .data The output from \code{zi_load_crosswalk()} with HUD data.
 #' @param by Character scalar; the column name to use for identifying the best

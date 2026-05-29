@@ -4,8 +4,15 @@
 \alias{zi_label}
 \title{Label ZIP Codes with Contextual Data}
 \usage{
-zi_label(.data, input_var, label_source = "UDS", source_var,
-    type = "zip5", include_scf = FALSE, vintage = 2022)
+zi_label(
+  .data,
+  input_var,
+  label_source = "UDS",
+  source_var,
+  type = "zip5",
+  include_scf = FALSE,
+  vintage = 2022
+)
 }
 \arguments{
 \item{.data}{An "input object" that is data.frame or tibble that contains

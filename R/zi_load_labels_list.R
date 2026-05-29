@@ -4,7 +4,6 @@
 #'    be used to label ZIP Codes. Currently, only three-digit ZIP Codes are
 #'    supported.
 #'
-#' @usage zi_load_labels_list(type = "zip3")
 #'
 #' @param type A character scalar specifying the type of label data to load. The
 #'   only supported type is  \code{'zip3'} (three-digit ZIP Codes).

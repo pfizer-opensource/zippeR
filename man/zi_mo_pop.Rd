@@ -18,7 +18,7 @@ A data frame with 2664 rows and 4 variables:
 U.S. Census Bureau American Community Survey
 }
 \usage{
-data(zi_mo_pop)
+zi_mo_pop
 }
 \description{
 A tibble containing the total population
