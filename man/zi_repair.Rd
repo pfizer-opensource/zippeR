@@ -17,7 +17,7 @@ A repaired vector of ZIP or ZCTA values.
 \description{
 This function repairs two of the four conditions identified
     in the validation checks with \code{zi_validate()}. For the other two
-    conditions, values are conveted \code{NA}. See Details below for the
+    conditions, values are converted \code{NA}. See Details below for the
     specific changes made.
 }
 \details{

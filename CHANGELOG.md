@@ -17,6 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove deprecated `context()` calls from all test files; adopt testthat 3rd edition (#8)
 
 ### Added
+- `BugReports` field in DESCRIPTION pointing to GitHub Issues (#14)
+- Spelling check CI workflow with `inst/WORDLIST` for domain-specific terms (#17)
+- `spelling` package added to Suggests (#17)
+- `Language: en-US` field in DESCRIPTION (#17)
 - EVGen workflow scaffolding vendored from pfizer-evgen/rwd-agent-skills
+
+### Fixed
+- Typo in `zi_mo_pop` documentation: "Communiy" → "Community" (#17)
+- Typo in `zi_repair` documentation: "conveted" → "converted" (#17)
 - Tests for `zi_convert`, `zi_label`, `zi_load_labels`, `zi_load_labels_list`, `zi_prep_hud` (#7)
 - Complete placeholder tests in `test_zi_crosswalk.R` and `test_zi_get_demographics.R` (#18)
