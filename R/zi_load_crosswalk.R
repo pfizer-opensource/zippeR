@@ -146,6 +146,19 @@ zi_load_uds <- function(year) {
   out <- readr::read_csv(paste0("https://raw.githubusercontent.com/chris-prener/uds-mapper/main/data/uds_crosswalk_", year, ".csv"),
                          col_types = readr::cols())
 
+  # normalize non-standard column names (the 2015 file uses a different schema)
+  col_renames <- c(zcta_use = "zcta", cityname = "po_name",
+                   stateabbr = "state", ziptype = "zip_type")
+  for (old_name in names(col_renames)) {
+    if (old_name %in% names(out) && !col_renames[[old_name]] %in% names(out)) {
+      names(out)[names(out) == old_name] <- col_renames[[old_name]]
+    }
+  }
+
+  # drop columns not present in the standard schema
+  standard_cols <- c("zip", "po_name", "state", "zip_type", "zcta", "zip_join_type")
+  out <- out[, intersect(names(out), standard_cols), drop = FALSE]
+
   out$zip <- stringr::str_pad(out$zip, width = 5, side = "left", pad = "0")
   out$zcta <- stringr::str_pad(out$zcta, width = 5, side = "left", pad = "0")
 

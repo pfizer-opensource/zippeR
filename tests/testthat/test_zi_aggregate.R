@@ -1,37 +1,29 @@
-# create test data ------------------------------------------------
+# fixture data (no API calls) ------------------------------------------------
 
-correct_year = 2010
-correct_survey = "acs5"
+correct_year <- 2010
+correct_survey <- "acs5"
 incorrect_year <- "ham"
 incorrect_year_2 <- 2009
 incorrect_survey <- c("sf1", "sf3")
 incorrect_survey_2 <- c("sf2")
 dec_year <- 2011
 
-# The test data setup requires a Census API key. Guard with tryCatch so
-# CI environments without the key skip gracefully instead of failing.
-age10 <- tryCatch(
- tidycensus::get_decennial(geography = "state",
-                       variables = "P013001",
-                       year = 2010),
-  error = function(e) NULL
+# Decennial-style fixture with extra NAME column (4 columns) — triggers the
+# "three columns" validation error for sf1 since sf1 expects exactly 3
+age10 <- tibble::tibble(
+  GEOID = rep(c("01", "02", "04"), each = 1),
+  NAME = c("Alabama", "Alaska", "Arizona"),
+  variable = rep("P013001", 3),
+  value = c(36.8, 33.8, 35.9)
 )
 
-if (is.null(age10)) {
-  test_that("skipping zi_aggregate tests (no Census API key)", {
-    skip("Census API key not available")
-  })
-  return(invisible())
-}
-
-age11 <- age10 %>% dplyr::rename(estimate = value, moe = NAME) %>% dplyr::select("GEOID", "variable", "estimate", "moe")
-
-
-vt <- tidycensus::get_acs(geography = "county",
-              variables = c(medincome = "B19013_001"),
-              state = "VT",
-              year = 2020) %>%
-  dplyr::select(-NAME)
+# ACS-style fixture (4 columns: GEOID, variable, estimate, moe)
+age11 <- tibble::tibble(
+  GEOID = rep(c("01", "02", "04"), each = 1),
+  variable = rep("P013001", 3),
+  estimate = c(36.8, 33.8, 35.9),
+  moe = c(0.1, 0.1, 0.1)
+)
 
 # test errors ------------------------------------------------
 
@@ -57,19 +49,50 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "`output` must be", fixed = TRUE)
   expect_error(zi_aggregate(year = correct_year, survey = "sf1", .data = age10),
                "Input data appear to be malformed - there should be three columns", fixed = TRUE)
+# age10 has 4 cols but wrong names for ACS (expects GEOID, variable, estimate, moe)
   expect_error(zi_aggregate(year = correct_year, survey = "acs1", .data = age10),
                "Input data appear to be malformed - there should be four columns", fixed = TRUE)
   expect_error(zi_aggregate(year = correct_year, survey = "acs1", zcta = 7613, .data = age11),
                "`zcta` contains invalid ZCTA values.", fixed = TRUE)
 })
 
-# test inputs ------------------------------------------------
+# test outputs (using package sample data) -----------------------------------
 
+test_that("zi_aggregate produces correct tidy output with extensive variable", {
+  result <- zi_aggregate(zi_mo_pop, year = 2020, extensive = "B01003_001",
+                         survey = "acs5", zcta = c("630", "631"))
+  expect_s3_class(result, "tbl_df")
+  expect_true(all(c("ZCTA3", "variable", "estimate", "moe") %in% names(result)))
+  expect_true(all(result$ZCTA3 %in% c("630", "631")))
+  expect_true("B01003_001" %in% result$variable)
+})
 
-# # giving error that object out not found
-# test_that("correctly specified functions execute without error", {
-#   expect_error(zi_aggregate(year= 2020, survey = correct_survey, .data = vt ), NA)
-#   expect_error(zi_aggregate(year= 2020, survey = correct_survey, zcta = c("056"), .data = vt), NA)
-# })
+test_that("zi_aggregate produces correct wide output", {
+  result <- zi_aggregate(zi_mo_pop, year = 2020,
+                         extensive = "B01003_001",
+                         survey = "acs5", zcta = c("630", "631"), output = "wide")
+  expect_s3_class(result, "tbl_df")
+  expect_true("ZCTA3" %in% names(result))
+  expect_false("variable" %in% names(result))
+})
 
-# test outputs ------------------------------------------------
+# integration tests (require Census API key) ---------------------------------
+
+test_that("zi_aggregate works with live Census data", {
+  skip_on_cran()
+  skip_if(Sys.getenv("CENSUS_API_KEY") == "",
+          "Census API key not available")
+
+  vt <- tidycensus::get_acs(
+    geography = "county",
+    variables = c(medincome = "B19013_001"),
+    state = "VT",
+    year = 2020
+  ) |> dplyr::select(-NAME)
+
+  expect_error(
+    zi_aggregate(year = 2020, survey = correct_survey,
+                 extensive = "medincome", .data = vt),
+    NA
+  )
+})
