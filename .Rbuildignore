@@ -26,3 +26,5 @@
 ^\.pfizer\.yml$
 ^LICENSE\.md$
 ^CHANGELOG\.md$
+^\.positai$
+^\.claude$

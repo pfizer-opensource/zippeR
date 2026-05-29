@@ -90,3 +90,4 @@ inst/doc
 # Agent-generated docs (owned by skills, not tracked)
 docs/WORKFLOW.md
 docs/README.md
+.positai
