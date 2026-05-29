@@ -37,8 +37,7 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
 
 test_that("correctly specified functions execute without error", {
   expect_no_error(zi_convert(.data = df_good, input_var = zip5))
-  expect_warning(zi_convert(.data = df_good, input_var = zip5, output_var = zip3),
-                 "already exists")
+  expect_no_error(zi_convert(.data = df_good, input_var = zip5, output_var = zip3))
 })
 
 # test outputs ------------------------------------------------
@@ -58,8 +57,15 @@ test_that("overwrite mode replaces column in place", {
   expect_equal(result$zip5, c("630", "631", "636"))
 })
 
+test_that("output_var creates a new column with the specified name", {
+  result <- zi_convert(.data = df_good, input_var = zip5, output_var = zip3)
+  expect_true("zip3" %in% names(result))
+  expect_equal(result$zip3, c("630", "631", "636"))
+  expect_equal(result$zip5, c("63005", "63139", "63636"))
+})
+
 test_that("output_var overwrites existing column with warning", {
-  df_conflict <- data.frame(id = c(1:3), zip5 = c("63005", "63139", "63636"))
+  df_conflict <- data.frame(id = c(1:3), zip5 = c("63005", "63139", "63636"), zip3 = c("a", "b", "c"))
   expect_warning(zi_convert(.data = df_conflict, input_var = zip5, output_var = zip3),
                  "already exists", fixed = TRUE)
 })

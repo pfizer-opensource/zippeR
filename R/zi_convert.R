@@ -61,7 +61,7 @@ zi_convert <- function(.data, input_var, output_var){
   }
 
   if (!missing(output_var)){
-    output_varQN <- as.character(substitute(input_var))
+    output_varQN <- as.character(substitute(output_var))
 
     if (output_varQN %in% names(.data)){
       cli::cli_warn(c(
