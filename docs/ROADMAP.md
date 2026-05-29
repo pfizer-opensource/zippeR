@@ -5,7 +5,7 @@ last_updated: "2026-05-29"
 
 ## Now (in progress)
 
-- **[Epic C] Documentation Improvements** (#24) — 5/7 sub-issues closed; remaining: #20 (data provenance README), #26 (docs hub content)
+_No epics in progress._
 
 ## Next (planned)
 
@@ -18,6 +18,7 @@ _No epics in the backlog._
 
 ## Recently Shipped
 
+- **[Epic C] Documentation Improvements** (#24) — closed 2026-05-29
 - **[Epic B] Code Style & Error Handling** (#23) — closed 2026-05-28
 - **[Epic D] Package Infrastructure & CRAN Readiness** (#25) — closed 2026-05-28
 - **[Epic A] Test Coverage & Quality** (#22) — closed 2026-05-28
