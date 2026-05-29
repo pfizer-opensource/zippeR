@@ -144,6 +144,13 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     ))
   }
 
+  if (!intensive_method %in% c("mean", "median")){
+    cli::cli_abort(c(
+      "{.arg intensive_method} must be {.val mean} or {.val median}.",
+      "i" = "You provided {.val {intensive_method}}."
+    ))
+  }
+
   if (!inherits(.data, what = "data.frame")){
     cli::cli_abort("{.arg .data} must be a data frame or data frame-like object.")
   }
@@ -300,13 +307,19 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     # optionally pivot
     if (output == "wide"){
 
-      ## prep names
-      out <- dplyr::rename(out, "E" = "estimate", "M" = "moe")
+      if (survey %in% c("sf1", "sf3")){
+        ## pivot decennial (single value column)
+        out <- tidyr::pivot_wider(out, id_cols = "ZCTA3", names_from = "variable",
+                                  values_from = "value")
+      } else {
+        ## prep names
+        out <- dplyr::rename(out, "E" = "estimate", "M" = "moe")
 
-      ## pivot
-      out <- tidyr::pivot_wider(out, id_cols = "ZCTA3", names_from = "variable",
-                                names_glue = "{variable}{.value}",
-                                values_from = c("E", "M"))
+        ## pivot
+        out <- tidyr::pivot_wider(out, id_cols = "ZCTA3", names_from = "variable",
+                                  names_glue = "{variable}{.value}",
+                                  values_from = c("E", "M"))
+      }
 
       ## re-order names alphabetically
       wide_names <- names(out)
@@ -344,10 +357,10 @@ zi_census_extensive <- function(.data){
 zi_census_intensive <- function(.data, weights, method){
 
   # global variables
-  ZCTA3 = variable = value = weight = NULL
+  ZCTA3 = GEOID = variable = value = weight = NULL
 
   ## join
-  .data <- dplyr::left_join(.data, weights, by = "ZCTA3")
+  .data <- dplyr::left_join(.data, weights, by = c("ZCTA3", "GEOID"))
 
   ## group_by
   .data <- dplyr::group_by(.data, ZCTA3, variable)
@@ -360,6 +373,11 @@ zi_census_intensive <- function(.data, weights, method){
       .data,
       value = spatstat.univar::weighted.median(value, weight)
     )
+  } else {
+    cli::cli_abort(c(
+      "{.arg intensive_method} must be {.val mean} or {.val median}.",
+      "i" = "You provided {.val {method}}."
+    ))
   }
 
   ## return output
@@ -395,7 +413,7 @@ zi_census_weights <- function(year, key){
     out <- dplyr::mutate(out, weight = value / total_pop)
 
     ## subset
-    out <- dplyr::select(out, ZCTA3, weight)
+    out <- dplyr::select(out, ZCTA3, GEOID, weight)
   }
 
   ## return output
@@ -430,10 +448,10 @@ zi_acs_extensive <- function(.data){
 zi_acs_intensive <- function(.data, weights, method){
 
   # global variables
-  ZCTA3 = variable = estimate = weight = moe = NULL
+  ZCTA3 = GEOID = variable = estimate = weight = moe = NULL
 
   ## join
-  .data <- dplyr::left_join(.data, weights, by = "ZCTA3")
+  .data <- dplyr::left_join(.data, weights, by = c("ZCTA3", "GEOID"))
 
   ## group_by
   .data <- dplyr::group_by(.data, ZCTA3, variable)
@@ -449,6 +467,11 @@ zi_acs_intensive <- function(.data, weights, method){
       estimate = spatstat.univar::weighted.median(estimate, weight),
       moe = spatstat.univar::weighted.median(moe, weight)
     )
+  } else {
+    cli::cli_abort(c(
+      "{.arg intensive_method} must be {.val mean} or {.val median}.",
+      "i" = "You provided {.val {method}}."
+    ))
   }
 
   ## return output
@@ -485,7 +508,7 @@ zi_acs_weights <- function(year, survey, key){
     out <- dplyr::mutate(out, weight = estimate / total_pop)
 
     ## subset
-    out <- dplyr::select(out, ZCTA3, weight)
+    out <- dplyr::select(out, ZCTA3, GEOID, weight)
   }
 
   ## return output

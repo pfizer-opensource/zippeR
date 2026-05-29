@@ -248,9 +248,9 @@ zi_repair <- function(x, style = "zcta5"){
 
     }
 
-    # convert characters to NA
+    # convert characters to NA (only for values that aren't purely digits)
     if (!valid$result[4]){
-      x <- as.character(suppressWarnings(as.numeric(x)))
+      x <- ifelse(grepl("^[0-9]+$", x), x, NA_character_)
     }
 
     # ensure padding

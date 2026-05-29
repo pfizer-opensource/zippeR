@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Source code quality analysis report (`docs/audits/2026-05-29-source-code-quality.md`) with 34 findings across 18 source files (#44)
 
 ### Fixed
+- Fix `zi_load_labels_list()` filter comparing `type` column to itself instead of the function argument (#52)
+- Fix `zi_load_labels()` USPS vintage filter using wrong column name (`vintage` → `date`) (#53)
+- Fix `zi_get_geometry()` county download failure path referencing undefined variable; now returns NULL gracefully (#54)
+- Add territory FIPS code normalization so numeric codes (60, 66, 69, 72, 78) are accepted as documented (#54)
+- Fix `zi_aggregate()` intensive weighting producing cartesian expansion by including GEOID in weights join (#55)
+- Add `intensive_method` validation with informative error message (#55)
+- Fix `zi_aggregate()` `output = "wide"` for decennial Census data which lacks `estimate`/`moe` columns (#55)
+- Fix `zi_load_crosswalk()` COUNTYSUB branch using wrong internal string (`COUNTY_SUB` → `COUNTYSUB`) (#56)
+- Fix `zi_repair()` stripping leading zeros via numeric coercion; now uses digit-only regex (#57)
 - Fix `zi_convert()` using `substitute(input_var)` instead of `substitute(output_var)` when `output_var` is specified, which caused the input column to be overwritten instead of creating a new output column (#33)
 - Replace live Census API calls in `test_zi_aggregate.R` with local fixtures so `R CMD check` passes on CRAN without a Census API key (#6)
 - Normalize non-standard column names in 2015 UDS crosswalk (`zcta_use` → `zcta`, etc.) so `zi_load_crosswalk(zip_source = "UDS", year = 2015)` no longer errors (#5)

@@ -209,12 +209,21 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
   }
 
   ## validate counties
-  if (!is.null(territory) & !any(territory %in% c("AS", "GU", "MP", "PR", "VI"))){
-    cli::cli_abort(c(
-      "{.arg territory} contains an invalid value.",
-      "i" = "Use one or more of {.val AS}, {.val GU}, {.val MP}, {.val PR}, or {.val VI}, or their equivalent FIPS codes."
-    ))
+  if (!is.null(territory)){
+    ## normalize FIPS codes to abbreviations
+    territory_fips <- c("60" = "AS", "66" = "GU", "69" = "MP", "72" = "PR", "78" = "VI")
+    territory <- sapply(territory, function(t) {
+      t_str <- as.character(t)
+      if (t_str %in% names(territory_fips)) territory_fips[[t_str]] else t
+    }, USE.NAMES = FALSE)
+
+    if (!all(territory %in% c("AS", "GU", "MP", "PR", "VI"))){
+      cli::cli_abort(c(
+        "{.arg territory} contains an invalid value.",
+        "i" = "Use one or more of {.val AS}, {.val GU}, {.val MP}, {.val PR}, or {.val VI}, or their equivalent FIPS codes."
+      ))
     }
+  }
 
   if (!is.null(starts_with)){
     valid <- zi_validate_starts(starts_with)
@@ -457,6 +466,8 @@ zi_process_county <- function(cb, state, county, year, zcta, method, style){
     } else if (style == "zcta3"){
       out <- intersect$ZCTA3
     }
+  } else {
+    out <- NULL
   }
 
   # return output
