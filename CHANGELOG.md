@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Data provenance README in `inst/build-data/` documenting build scripts, execution order, prerequisites, and outputs (#20)
+- Package architecture overview, domain glossary, objectives, and updated roadmap in `docs/` hub (#26)
 - `BugReports` field in DESCRIPTION pointing to GitHub Issues (#14)
 - Spelling check CI workflow with `inst/WORDLIST` for domain-specific terms (#17)
 - `spelling` package added to Suggests (#17)
