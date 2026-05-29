@@ -69,7 +69,7 @@ test_that("zi_aggregate produces correct tidy output with extensive variable", {
 
 test_that("zi_aggregate produces correct wide output", {
   result <- zi_aggregate(zi_mo_pop, year = 2020,
-                         extensive = "B01003_001", intensive = "B19013_001",
+                         extensive = "B01003_001",
                          survey = "acs5", zcta = c("630", "631"), output = "wide")
   expect_s3_class(result, "tbl_df")
   expect_true("ZCTA3" %in% names(result))
