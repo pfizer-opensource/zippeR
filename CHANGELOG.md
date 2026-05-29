@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Document NULL return values in `@return` tags for `zi_get_demographics()`, `zi_get_geometry()`, and `zi_aggregate()` (#12)
+- Remove all manual `@usage` roxygen2 tags; usage sections now auto-generated (#19)
 - Set minimum R version to 4.1 in DESCRIPTION (#21)
 - Remove base packages (`datasets`, `stats`) from Imports (#10)
 - Add minimum version constraints for all dependencies (#15)
