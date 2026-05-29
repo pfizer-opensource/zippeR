@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove deprecated `context()` calls from all test files; adopt testthat 3rd edition (#8)
 
 ### Added
+- Data provenance README in `inst/build-data/` documenting build scripts, execution order, prerequisites, and outputs (#20)
 - `BugReports` field in DESCRIPTION pointing to GitHub Issues (#14)
 - Spelling check CI workflow with `inst/WORDLIST` for domain-specific terms (#17)
 - `spelling` package added to Suggests (#17)
