@@ -9,7 +9,8 @@ last_updated: "2026-05-29"
 
 ## Next (planned)
 
-_No epics queued._
+- **[Epic E] Code & Test Quality Audit** (#48) — Systematic audit of test coverage and source code quality; 0/2 sub-issues closed
+- **[Epic F] New Features & Enhancements** (#49) — New user-facing features and data coverage expansion; 0/1 sub-issues closed
 
 ## Later (aspirational)
 
