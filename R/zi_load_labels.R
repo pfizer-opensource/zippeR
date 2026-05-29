@@ -100,7 +100,7 @@ zi_load_labels <- function(source = "UDS", type = "zip5", include_scf = FALSE,
 
     labels_list <- zi_load_labels_list(type = "zip3")
 
-    result <- subset(labels_list, vintage == vintage_chr)
+    result <- subset(labels_list, date == vintage_chr)
 
     if (nrow(result) != 1){
       cli::cli_abort(c(

@@ -31,7 +31,8 @@ zi_load_labels_list <- function(type = "zip3"){
   labels_list <- utils::read.csv(file = "https://raw.githubusercontent.com/chris-prener/usps-zip-ref/main/data/meta.csv")
 
   ## subset
-  out <- subset(labels_list, type == type)
+  type_val <- type
+  out <- subset(labels_list, type == type_val)
 
   ## convert to tibble
   out <- tibble::as_tibble(out)

@@ -266,7 +266,7 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
       type <- "?type=4&query="
     } else if (target == "CD"){
       type <- "?type=5&query="
-    } else if (target == "COUNTY_SUB"){
+    } else if (target == "COUNTYSUB"){
       type <- "?type=11&query="
     }
 
