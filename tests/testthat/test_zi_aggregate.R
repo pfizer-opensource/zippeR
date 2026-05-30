@@ -95,7 +95,7 @@ dec_fixture <- tibble::tibble(
 dec_weights <- tibble::tibble(
   ZCTA3 = c("630", "630", "630", "631", "631", "631"),
   GEOID = c("63001", "63002", "63003", "63101", "63102", "63103"),
-  weight = c(100/600, 200/600, 300/600, 150/750, 250/750, 350/750)
+  weight = c(100 / 600, 200 / 600, 300 / 600, 150 / 750, 250 / 750, 350 / 750)
 )
 
 test_that("zi_census_extensive sums values by ZCTA3 and variable", {
@@ -120,12 +120,12 @@ test_that("zi_census_intensive computes weighted mean correctly", {
   expect_true(all(c("ZCTA3", "variable", "value") %in% names(result)))
 
   # expected weighted mean for 630: (35.2*100 + 38.1*200 + 42.0*300) / 600
-  expected_630 <- stats::weighted.mean(c(35.2, 38.1, 42.0), c(100/600, 200/600, 300/600))
+  expected_630 <- stats::weighted.mean(c(35.2, 38.1, 42.0), c(100 / 600, 200 / 600, 300 / 600))
   r630 <- dplyr::filter(result, ZCTA3 == "630")
   expect_equal(r630$value, expected_630, tolerance = 1e-6)
 
   # expected weighted mean for 631: (29.5*150 + 33.7*250 + 40.1*350) / 750
-  expected_631 <- stats::weighted.mean(c(29.5, 33.7, 40.1), c(150/750, 250/750, 350/750))
+  expected_631 <- stats::weighted.mean(c(29.5, 33.7, 40.1), c(150 / 750, 250 / 750, 350 / 750))
   r631 <- dplyr::filter(result, ZCTA3 == "631")
   expect_equal(r631$value, expected_631, tolerance = 1e-6)
 })
@@ -139,7 +139,7 @@ test_that("zi_census_intensive computes weighted median correctly", {
 
   # weighted median for 630
   expected_630 <- spatstat.univar::weighted.median(
-    c(35.2, 38.1, 42.0), c(100/600, 200/600, 300/600)
+    c(35.2, 38.1, 42.0), c(100 / 600, 200 / 600, 300 / 600)
   )
   r630 <- dplyr::filter(result, ZCTA3 == "630")
   expect_equal(r630$value, expected_630, tolerance = 1e-6)
@@ -170,7 +170,7 @@ acs_fixture <- tibble::tibble(
 acs_weights <- tibble::tibble(
   ZCTA3 = c("630", "630", "630", "631", "631", "631"),
   GEOID = c("63001", "63002", "63003", "63101", "63102", "63103"),
-  weight = c(1000/6000, 2000/6000, 3000/6000, 1500/7500, 2500/7500, 3500/7500)
+  weight = c(1000 / 6000, 2000 / 6000, 3000 / 6000, 1500 / 7500, 2500 / 7500, 3500 / 7500)
 )
 
 test_that("zi_acs_extensive sums estimates and propagates MOE correctly", {
@@ -198,7 +198,7 @@ test_that("zi_acs_intensive computes weighted mean for estimate and moe", {
   expect_true(all(c("ZCTA3", "variable", "estimate", "moe") %in% names(result)))
 
   # expected weighted mean estimate for 630
-  w630 <- c(1000/6000, 2000/6000, 3000/6000)
+  w630 <- c(1000 / 6000, 2000 / 6000, 3000 / 6000)
   expected_est_630 <- stats::weighted.mean(c(55000, 62000, 48000), w630)
   expected_moe_630 <- stats::weighted.mean(c(5000, 6000, 4500), w630)
 
@@ -215,7 +215,7 @@ test_that("zi_acs_intensive computes weighted median for estimate and moe", {
   expect_true(all(c("ZCTA3", "variable", "estimate", "moe") %in% names(result)))
 
   # expected weighted median estimate for 630
-  w630 <- c(1000/6000, 2000/6000, 3000/6000)
+  w630 <- c(1000 / 6000, 2000 / 6000, 3000 / 6000)
   expected_est_630 <- spatstat.univar::weighted.median(c(55000, 62000, 48000), w630)
   expected_moe_630 <- spatstat.univar::weighted.median(c(5000, 6000, 4500), w630)
 
