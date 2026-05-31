@@ -19,8 +19,9 @@ zi_label(
 ZIP Codes to be crosswalked.}
 
 \item{input_var}{The column in the input data that contains five-digit ZIP
-Codes. If the input is numeric, it will be transformed to character data
-and leading zeros will be added.}
+Codes, specified as a bare (unquoted) column name. Input must be character
+data with proper leading zeros; use \code{\link{zi_repair}} to fix
+numeric inputs first.}
 
 \item{label_source}{Required character scalar or data frame; specifies the
 source of the label data. This could be either \code{'UDS'} (default) or
