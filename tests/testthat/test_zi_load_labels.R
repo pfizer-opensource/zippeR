@@ -16,8 +16,7 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
 })
 
 test_that("include_scf with zip5 produces a warning", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   expect_warning(zi_load_labels(source = "UDS", type = "zip5", include_scf = TRUE, vintage = 2022),
                  "include_scf", fixed = TRUE)
 })
@@ -25,8 +24,7 @@ test_that("include_scf with zip5 produces a warning", {
 # test positive-path assertions ------------------------------------------------
 
 test_that("UDS zip5 returns expected schema", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_load_labels(source = "UDS", type = "zip5", vintage = 2022)
   expect_s3_class(result, "tbl_df")
   expect_true(all(c("zip5", "label_city", "label_state") %in% names(result)))
@@ -38,8 +36,7 @@ test_that("UDS zip5 returns expected schema", {
 })
 
 test_that("USPS zip3 returns expected schema", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_load_labels(source = "USPS", type = "zip3", vintage = 202408)
   expect_s3_class(result, "tbl_df")
   expect_true(all(c("zip3", "label_area", "label_state") %in% names(result)))
@@ -51,8 +48,7 @@ test_that("USPS zip3 returns expected schema", {
 })
 
 test_that("USPS zip3 with include_scf adds SCF columns", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_load_labels(source = "USPS", type = "zip3", vintage = 202408,
                            include_scf = TRUE)
   expect_s3_class(result, "tbl_df")

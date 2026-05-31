@@ -86,8 +86,7 @@ test_that("UDS year out of range triggers appropriate error", {
 # test UDS crosswalk loading (requires network) ------------------------------
 
 test_that("2015 UDS crosswalk loads successfully with normalized columns", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
 
   result <- zi_load_crosswalk(zip_source = "UDS", year = 2015)
   expect_s3_class(result, "tbl_df")

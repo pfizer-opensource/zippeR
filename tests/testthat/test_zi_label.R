@@ -79,8 +79,7 @@ test_that("custom dictionary produces expected output", {
 # test positive-path assertions for UDS/USPS sources ------------------------------------------------
 
 test_that("UDS zip5 label lookup returns expected schema", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_label(df_zip5, input_var = zip5, label_source = "UDS",
                      type = "zip5", vintage = 2022)
   expect_s3_class(result, "tbl_df")
@@ -91,8 +90,7 @@ test_that("UDS zip5 label lookup returns expected schema", {
 })
 
 test_that("USPS zip3 label lookup returns expected schema", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_label(df_zip3, input_var = zip3, label_source = "USPS",
                      type = "zip3", vintage = 202408)
   expect_s3_class(result, "tbl_df")
@@ -103,8 +101,7 @@ test_that("USPS zip3 label lookup returns expected schema", {
 })
 
 test_that("USPS zip3 with include_scf returns SCF columns", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_label(df_zip3, input_var = zip3, label_source = "USPS",
                      type = "zip3", vintage = 202408, include_scf = TRUE)
   expect_s3_class(result, "tbl_df")

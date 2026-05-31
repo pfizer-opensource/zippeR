@@ -208,8 +208,7 @@ test_that("deprecated input_zip produces warning and works", {
 })
 
 test_that("deprecated dict with 'SOURCE YEAR' string produces warning and works", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   expect_warning(
     result <- zi_crosswalk(df_data_good, input_var = good_zip,
                            dict = "UDS 2020"),

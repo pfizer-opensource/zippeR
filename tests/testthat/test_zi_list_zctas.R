@@ -30,18 +30,21 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
 # test inputs ------------------------------------------------
 
 test_that("correctly specified functions execute without error", {
+  skip_if_no_integration()
   expect_error(zi_list_zctas(year = correct_year, method = correct_method, state = states), NA)
 })
 
 # test outputs ------------------------------------------------
 
-t <- zi_list_zctas(year = correct_year, method = correct_method, state = states)
-r <- strsplit(t[1], "")
-
 test_that("correctly specified functions produce expected classes", {
+  skip_if_no_integration()
+  t <- zi_list_zctas(year = correct_year, method = correct_method, state = states)
   expect_type(t, "character")
 })
 
 test_that("correctly specified functions produce expected result length", {
+  skip_if_no_integration()
+  t <- zi_list_zctas(year = correct_year, method = correct_method, state = states)
+  r <- strsplit(t[1], "")
   expect_length(r[[1]], 5)
 })
