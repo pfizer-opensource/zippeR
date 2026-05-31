@@ -9,11 +9,11 @@ zi_convert(.data, input_var, output_var)
 \arguments{
 \item{.data}{A data frame containing a column of five-digit ZIP Codes.}
 
-\item{input_var}{A character scalar specifying the column name with the five-digit
-ZIP Codes in the data frame.}
+\item{input_var}{The column in the data frame containing five-digit ZIP Codes,
+specified as a bare (unquoted) column name (uses non-standard evaluation).}
 
-\item{output_var}{Optional; A character scalar specifying the column name to
-store the three-digit ZIP Codes in the data frame.}
+\item{output_var}{Optional; a bare (unquoted) column name to store the
+three-digit ZIP Codes. If omitted, the input column is overwritten.}
 }
 \value{
 A tibble containing the original data frame with a new column of

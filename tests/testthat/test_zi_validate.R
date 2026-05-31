@@ -28,6 +28,10 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "`style` must be", fixed = TRUE)
   expect_error(zi_validate(correct_zips_1, verbose = "ham"),
                "`verbose` must be", fixed = TRUE)
+  expect_error(zi_validate(correct_zips_1, style = c("zcta5", "zcta3")),
+               "`style` must be a single value", fixed = TRUE)
+  expect_error(zi_validate(correct_zips_1, verbose = c(TRUE, FALSE)),
+               "`verbose` must be a single value", fixed = TRUE)
 })
 
 # test inputs ------------------------------------------------

@@ -17,7 +17,9 @@ zi_crosswalk(
   by = NULL,
   return_max = NULL,
   key = NULL,
-  return = "id"
+  return = "id",
+  input_zip,
+  dict = NULL
 )
 }
 \arguments{
@@ -25,8 +27,9 @@ zi_crosswalk(
 ZIP Codes to be crosswalked.}
 
 \item{input_var}{The column in the input data that contains five-digit ZIP
-Codes. If the input is numeric, it will be transformed to character data
-and leading zeros will be added.}
+Codes, specified as a bare (unquoted) column name. Input must be character
+data with proper leading zeros; use \code{\link{zi_repair}} to fix
+numeric inputs first.}
 
 \item{zip_source}{Required character scalar or data frame; specifies the
 source of ZIP Code crosswalk data. This can be one of either \code{"UDS"}
@@ -76,6 +79,12 @@ stored in your \code{.RProfile} as \code{hud_key}.}
 one of \code{"id"} (default), which appends only the crosswalked value,
 or \code{"all"}, which returns the entire crosswalk file appended to
 the source data.}
+
+\item{input_zip}{\strong{[Deprecated]} Use \code{input_var}
+instead. Will be removed in early 2027.}
+
+\item{dict}{\strong{[Deprecated]} Use \code{zip_source} and
+\code{year} instead. Will be removed in early 2027.}
 }
 \value{
 A \code{tibble} with crosswalk values (or optionally, the full

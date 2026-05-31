@@ -268,7 +268,7 @@ test_that("zi_aggregate decennial wide output pivots correctly", {
 # test zi_aggregate: ACS mixed extensive + intensive (requires API) -----------
 
 test_that("zi_aggregate works with mixed extensive + intensive variables", {
-  skip_on_cran()
+  skip_if_no_integration()
   skip_if(Sys.getenv("CENSUS_API_KEY") == "",
           "Census API key not available")
 
@@ -285,7 +285,7 @@ test_that("zi_aggregate works with mixed extensive + intensive variables", {
 })
 
 test_that("zi_aggregate works with intensive only and method mean", {
-  skip_on_cran()
+  skip_if_no_integration()
   skip_if(Sys.getenv("CENSUS_API_KEY") == "",
           "Census API key not available")
 
@@ -300,7 +300,7 @@ test_that("zi_aggregate works with intensive only and method mean", {
 })
 
 test_that("zi_aggregate works with intensive only and method median", {
-  skip_on_cran()
+  skip_if_no_integration()
   skip_if(Sys.getenv("CENSUS_API_KEY") == "",
           "Census API key not available")
 
@@ -315,7 +315,7 @@ test_that("zi_aggregate works with intensive only and method median", {
 })
 
 test_that("zi_aggregate mixed output in wide format has correct columns", {
-  skip_on_cran()
+  skip_if_no_integration()
   skip_if(Sys.getenv("CENSUS_API_KEY") == "",
           "Census API key not available")
 
@@ -336,7 +336,7 @@ test_that("zi_aggregate mixed output in wide format has correct columns", {
 # integration tests (require Census API key) ---------------------------------
 
 test_that("zi_aggregate works with live Census data", {
-  skip_on_cran()
+  skip_if_no_integration()
   skip_if(Sys.getenv("CENSUS_API_KEY") == "",
           "Census API key not available")
 

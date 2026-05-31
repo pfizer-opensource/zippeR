@@ -16,6 +16,8 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "must be", fixed = TRUE)
   expect_error(zi_prep_hud(mo_xwalk, by = "residential", return_max = "yes"),
                "must be", fixed = TRUE)
+  expect_error(zi_prep_hud(data.frame(a = 1), by = "residential"),
+               "missing required columns", fixed = TRUE)
 })
 
 # test inputs ------------------------------------------------

@@ -192,3 +192,41 @@ test_that("zi_crosswalk with return_max = FALSE produces multiple rows for bound
 
   expect_gt(nrow(result), 1)
 })
+
+# test deprecated parameters ------------------------------------------------
+
+test_that("deprecated input_zip produces warning and works", {
+  expect_warning(
+    result <- zi_crosswalk(df_data_good, input_zip = good_zip,
+                           zip_source = hud_dict, source_var = zip5,
+                           source_result = geoid),
+    "input_zip.*deprecated.*removed in early 2027"
+  )
+  expect_s3_class(result, "tbl_df")
+  expect_true("source_geoid" %in% names(result))
+  expect_equal(nrow(result), nrow(df_data_good))
+})
+
+test_that("deprecated dict with 'SOURCE YEAR' string produces warning and works", {
+  skip_if_no_integration()
+  expect_warning(
+    result <- zi_crosswalk(df_data_good, input_var = good_zip,
+                           dict = "UDS 2020"),
+    "dict.*deprecated.*removed in early 2027"
+  )
+  expect_s3_class(result, "tbl_df")
+  expect_true("source_zcta" %in% names(result))
+  expect_equal(nrow(result), nrow(df_data_good))
+})
+
+test_that("deprecated dict with data frame produces warning and works", {
+  expect_warning(
+    result <- zi_crosswalk(df_data_good, input_var = good_zip,
+                           dict = hud_dict, source_var = zip5,
+                           source_result = geoid),
+    "dict.*deprecated.*removed in early 2027"
+  )
+  expect_s3_class(result, "tbl_df")
+  expect_true("source_geoid" %in% names(result))
+  expect_equal(nrow(result), nrow(df_data_good))
+})

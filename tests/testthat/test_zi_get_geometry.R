@@ -35,6 +35,10 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "`territory` contains an invalid value", fixed = TRUE)
   expect_error(zi_get_geometry(year = correct_year, method = "centroid", starts_with = 63),
                "`starts_with` must be a character vector of two-digit values.", fixed = TRUE)
+  expect_error(zi_get_geometry(year = correct_year, method = "centroid", starts_with = "A1"),
+               "`starts_with` must be a character vector of two-digit values.", fixed = TRUE)
+  expect_error(zi_get_geometry(year = correct_year, class = "dataframe", method = "centroid"),
+               "`class` must be", fixed = TRUE)
   expect_error(zi_get_geometry(year = correct_year, method = "intersect", includes = 10603),
                "`includes` contains invalid ZCTA values.", fixed = TRUE)
   expect_error(zi_get_geometry(year = correct_year, method = "centroid", excludes = "ham"),
@@ -45,8 +49,7 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
 # test successful execution ------------------------------------------------
 
 test_that("zcta5 centroid returns expected schema", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_get_geometry(year = 2020, style = "zcta5", method = "centroid")
   expect_s3_class(result, "sf")
   expect_true("GEOID20" %in% names(result) || "GEOID" %in% names(result))
@@ -55,8 +58,7 @@ test_that("zcta5 centroid returns expected schema", {
 })
 
 test_that("zcta5 with state filter returns subset", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_get_geometry(year = 2020, style = "zcta5", state = "MO",
                             method = "intersect")
   expect_s3_class(result, "sf")
@@ -66,8 +68,7 @@ test_that("zcta5 with state filter returns subset", {
 })
 
 test_that("zcta5 with starts_with filters correctly", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_get_geometry(year = 2020, style = "zcta5", method = "centroid",
                             starts_with = "63")
   expect_s3_class(result, "sf")
@@ -77,8 +78,7 @@ test_that("zcta5 with starts_with filters correctly", {
 })
 
 test_that("zcta5 return='full' includes all TIGER columns", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_get_geometry(year = 2020, style = "zcta5", method = "centroid",
                             return = "full")
   expect_s3_class(result, "sf")
@@ -86,8 +86,7 @@ test_that("zcta5 return='full' includes all TIGER columns", {
 })
 
 test_that("zcta3 returns three-digit geometries", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_get_geometry(year = 2020, style = "zcta3", method = "centroid",
                             shift_geo = TRUE)
   expect_s3_class(result, "sf")
@@ -98,8 +97,7 @@ test_that("zcta3 returns three-digit geometries", {
 })
 
 test_that("zcta5 includes/excludes filters work", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_if_no_integration()
   result <- zi_get_geometry(year = 2020, style = "zcta5", method = "centroid",
                             includes = c("63005", "63139"))
   expect_s3_class(result, "sf")

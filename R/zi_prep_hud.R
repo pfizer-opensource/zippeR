@@ -53,6 +53,17 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
     ))
   }
 
+  # validate .data schema
+  required_cols <- c("zip", "geoid", "state", "res_ratio", "bus_ratio", "tot_ratio")
+  data_cols <- tolower(names(.data))
+  missing_cols <- setdiff(required_cols, data_cols)
+  if (length(missing_cols) > 0){
+    cli::cli_abort(c(
+      "{.arg .data} is missing required columns: {.val {missing_cols}}.",
+      "i" = "Expected HUD crosswalk output from {.fn zi_load_crosswalk}."
+    ))
+  }
+
   ## tidy
   hud <- dplyr::rename_with(.data, tolower)
 
@@ -64,11 +75,10 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
     hud <- dplyr::select(hud, zip5 = zip, geoid, state, ratio = tot_ratio)
   }
 
-  # convert state_fips
-  state_df <- tigris::states(year = 2022, cb = TRUE, resolution = "20m")
-  state_df <- sf::st_set_geometry(state_df, value = NULL)
-  state_df <- dplyr::select(state_df, state = STUSPS, state_fips = STATEFP)
-  state_df <- dplyr::filter(state_df, as.numeric(state_fips) < 60)
+  # convert state_fips using static lookup (avoids network download)
+  state_df <- states_lookup[as.numeric(states_lookup$fips) < 60, c("abb", "fips")]
+  names(state_df) <- c("state", "state_fips")
+  state_df$state <- toupper(state_df$state)
 
   out <- dplyr::left_join(hud, state_df, by = "state")
   out <- dplyr::select(out, zip5, geoid, state, state_fips, ratio)
@@ -79,6 +89,7 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
 
   if (return_max){
     out <- dplyr::arrange(out, geoid)
+    out <- dplyr::filter(out, !is.na(ratio))
     out <- dplyr::filter(out, ratio == max(ratio, na.rm = TRUE))
     out <- dplyr::slice(out, 1)
   } else if (!return_max){

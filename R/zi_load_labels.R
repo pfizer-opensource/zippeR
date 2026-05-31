@@ -149,12 +149,20 @@ zi_load_labels_usps <- function(type, include_scf, vintage){
   if (type == "zip3"){
 
     ## read from GitHub
-    out <- readr::read_csv(
-      paste0("https://raw.githubusercontent.com/chris-prener/usps-zip-ref/main/data/zip3_", vintage, ".csv"),
-      col_types = readr::cols(
-        zip3 = readr::col_character(),
-        scf_id = readr::col_character()
-      )
+    out <- tryCatch(
+      readr::read_csv(
+        paste0("https://raw.githubusercontent.com/chris-prener/usps-zip-ref/main/data/zip3_", vintage, ".csv"),
+        col_types = readr::cols(
+          zip3 = readr::col_character(),
+          scf_id = readr::col_character()
+        )
+      ),
+      error = function(e) {
+        cli::cli_abort(c(
+          "x" = "Failed to download USPS label data from GitHub.",
+          "i" = "Original error: {conditionMessage(e)}"
+        ))
+      }
     )
 
     ## rename cols

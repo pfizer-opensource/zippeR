@@ -71,8 +71,10 @@
 #'   #   method = "intersect")
 #'
 #' # aggregate a single variable
+#' \donttest{
 #' zi_aggregate(mo22_demos, year = 2020, extensive = "B01003_001", survey = "acs5",
 #'   zcta = mo22_zcta3$ZCTA3)
+#' }
 #'
 #' \donttest{
 #' # aggregate multiple variables, outputting wide data
@@ -190,6 +192,27 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
 
   if (is.null(extensive) & is.null(intensive)){
     cli::cli_abort("At least one of {.arg extensive} or {.arg intensive} must be provided.")
+  }
+
+  # verify requested variables exist in the data
+  data_vars <- unique(.data$variable)
+  if (!is.null(extensive)){
+    missing_ext <- setdiff(extensive, data_vars)
+    if (length(missing_ext) > 0){
+      cli::cli_abort(c(
+        "{.arg extensive} contains variable names not found in {.arg .data}: {.val {missing_ext}}.",
+        "i" = "Available variables: {.val {data_vars}}."
+      ))
+    }
+  }
+  if (!is.null(intensive)){
+    missing_int <- setdiff(intensive, data_vars)
+    if (length(missing_int) > 0){
+      cli::cli_abort(c(
+        "{.arg intensive} contains variable names not found in {.arg .data}: {.val {missing_int}}.",
+        "i" = "Available variables: {.val {data_vars}}."
+      ))
+    }
   }
 
   # set additional arguments
@@ -327,7 +350,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
       wide_names <- c("ZCTA3", sort(wide_names))
 
       ## re-order columns alphabetically
-      out <- dplyr::select(out, wide_names)
+      out <- dplyr::select(out, dplyr::all_of(wide_names))
 
     }
   }

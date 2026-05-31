@@ -148,6 +148,13 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
     ))
   }
 
+  if (!(class %in% c("sf", "tibble"))){
+    cli::cli_abort(c(
+      "{.arg class} must be {.val sf} or {.val tibble}.",
+      "i" = "You provided {.val {class}}."
+    ))
+  }
+
   if (!(return %in% c("id", "full"))){
     cli::cli_abort(c(
       "{.arg return} must be {.val id} or {.val full}.",
@@ -257,6 +264,10 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
 
   # check year
   if (year == 2011){
+    cli::cli_inform(c(
+      "i" = "{.arg year} {.val 2011} is not available; using {.val 2010} data instead.",
+      "i" = "The Census Bureau did not publish separate 2011 ZCTA boundaries."
+    ))
     year <- 2010
   }
 
@@ -486,7 +497,18 @@ zi_get_zcta3 <- function(year, state, county, territory, cb, starts_with,
   val <- paste0("zcta3_", year)
 
   # download geometry
-  out <- sf::st_read(zcta3_url[[val]], quiet = TRUE)
+  out <- tryCatch(
+    sf::st_read(zcta3_url[[val]], quiet = TRUE),
+    error = function(e) {
+      cli::cli_inform(message = c(
+        "x" = "Failed to download ZCTA3 geometry data. Returning {.code NULL} instead.",
+        "i" = "Original error: {conditionMessage(e)}"
+      ))
+      NULL
+    }
+  )
+
+  if (is.null(out)) return(NULL)
 
   # process geometry
   if (!is.null(state) & is.null(county)) {
@@ -598,6 +620,13 @@ zi_validate_starts <- function(x){
     chr_out <- TRUE
   }
 
+  # ensure all values are numeric digits only
+  if (any(!grepl("^[0-9]+$", x))){
+    num_out <- FALSE
+  } else {
+    num_out <- TRUE
+  }
+
   # ensure length and padding
   chr_len <- unique(nchar(x))
   chr_len <- chr_len[!is.na(chr_len)]
@@ -617,7 +646,7 @@ zi_validate_starts <- function(x){
   }
 
   # result
-  out <- all(chr_out, len_out1, len_out2)
+  out <- all(chr_out, num_out, len_out1, len_out2)
 
   # return result
   return(out)

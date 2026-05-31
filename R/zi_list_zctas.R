@@ -27,6 +27,7 @@
 #' @return A vector of GEOIDs representing ZCTAs in and around the state selected.
 #'
 #' @examples
+#' \donttest{
 #' # Missouri ZCTAs, intersect method
 #' ## return list
 #' mo_zctas <- zi_list_zctas(year = 2021, state = "MO", method = "intersect")
@@ -40,6 +41,7 @@
 #'
 #' ## preview ZCTAs
 #' mo_zctas[1:10]
+#' }
 #'
 #' @export
 zi_list_zctas <- function(year, state, method){
@@ -85,6 +87,13 @@ zi_list_zctas <- function(year, state, method){
   # validate
   ## validate state (using tigris workflow)
   statez <- unlist(sapply(statez, validate_state, USE.NAMES = FALSE))
+
+  if (is.null(statez) || length(statez) == 0){
+    cli::cli_abort(c(
+      "No valid states found in {.arg state}.",
+      "i" = "Provide valid state abbreviations or FIPS codes."
+    ))
+  }
 
   # subset based on method
   if (method == "centroid"){
