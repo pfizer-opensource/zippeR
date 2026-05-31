@@ -44,7 +44,66 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
 
 # test successful execution ------------------------------------------------
 
-test_that("incorrectly specified parameters trigger appropriate errors", {
+test_that("zcta5 centroid returns expected schema", {
   skip_on_cran()
-  expect_error(zi_get_geometry(year = 2020, method = "centroid"), NA)
+  skip_if_offline()
+  result <- zi_get_geometry(year = 2020, style = "zcta5", method = "centroid")
+  expect_s3_class(result, "sf")
+  expect_true("GEOID20" %in% names(result) || "GEOID" %in% names(result))
+  expect_true("geometry" %in% names(result))
+  expect_gt(nrow(result), 30000)
+})
+
+test_that("zcta5 with state filter returns subset", {
+  skip_on_cran()
+  skip_if_offline()
+  result <- zi_get_geometry(year = 2020, style = "zcta5", state = "MO",
+                            method = "intersect")
+  expect_s3_class(result, "sf")
+  expect_true("GEOID20" %in% names(result) || "GEOID" %in% names(result))
+  expect_gt(nrow(result), 500)
+  expect_lt(nrow(result), 2000)
+})
+
+test_that("zcta5 with starts_with filters correctly", {
+  skip_on_cran()
+  skip_if_offline()
+  result <- zi_get_geometry(year = 2020, style = "zcta5", method = "centroid",
+                            starts_with = "63")
+  expect_s3_class(result, "sf")
+  geoid_col <- if ("GEOID20" %in% names(result)) "GEOID20" else "GEOID"
+  expect_true(all(substr(result[[geoid_col]], 1, 2) == "63"))
+  expect_gt(nrow(result), 0)
+})
+
+test_that("zcta5 return='full' includes all TIGER columns", {
+  skip_on_cran()
+  skip_if_offline()
+  result <- zi_get_geometry(year = 2020, style = "zcta5", method = "centroid",
+                            return = "full")
+  expect_s3_class(result, "sf")
+  expect_gt(ncol(result), 3)
+})
+
+test_that("zcta3 returns three-digit geometries", {
+  skip_on_cran()
+  skip_if_offline()
+  result <- zi_get_geometry(year = 2020, style = "zcta3", method = "centroid",
+                            shift_geo = TRUE)
+  expect_s3_class(result, "sf")
+  expect_true("GEOID" %in% names(result) || "ZCTA3" %in% names(result))
+  geoid_col <- intersect(names(result), c("GEOID", "ZCTA3"))[1]
+  expect_true(all(nchar(result[[geoid_col]]) == 3))
+  expect_gt(nrow(result), 800)
+})
+
+test_that("zcta5 includes/excludes filters work", {
+  skip_on_cran()
+  skip_if_offline()
+  result <- zi_get_geometry(year = 2020, style = "zcta5", method = "centroid",
+                            includes = c("63005", "63139"))
+  expect_s3_class(result, "sf")
+  geoid_col <- if ("GEOID20" %in% names(result)) "GEOID20" else "GEOID"
+  expect_true("63005" %in% result[[geoid_col]])
+  expect_true("63139" %in% result[[geoid_col]])
 })

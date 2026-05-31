@@ -75,3 +75,39 @@ test_that("custom dictionary produces expected output", {
   expect_true("label_state" %in% names(result))
   expect_equal(nrow(result), 3)
 })
+
+# test positive-path assertions for UDS/USPS sources ------------------------------------------------
+
+test_that("UDS zip5 label lookup returns expected schema", {
+  skip_on_cran()
+  skip_if_offline()
+  result <- zi_label(df_zip5, input_var = zip5, label_source = "UDS",
+                     type = "zip5", vintage = 2022)
+  expect_s3_class(result, "tbl_df")
+  expect_true(all(c("id", "zip5", "label_city", "label_state") %in% names(result)))
+  expect_equal(nrow(result), 3)
+  expect_type(result$label_city, "character")
+  expect_type(result$label_state, "character")
+})
+
+test_that("USPS zip3 label lookup returns expected schema", {
+  skip_on_cran()
+  skip_if_offline()
+  result <- zi_label(df_zip3, input_var = zip3, label_source = "USPS",
+                     type = "zip3", vintage = 202408)
+  expect_s3_class(result, "tbl_df")
+  expect_true(all(c("id", "zip3", "label_area", "label_state") %in% names(result)))
+  expect_equal(nrow(result), 3)
+  expect_type(result$label_area, "character")
+  expect_type(result$label_state, "character")
+})
+
+test_that("USPS zip3 with include_scf returns SCF columns", {
+  skip_on_cran()
+  skip_if_offline()
+  result <- zi_label(df_zip3, input_var = zip3, label_source = "USPS",
+                     type = "zip3", vintage = 202408, include_scf = TRUE)
+  expect_s3_class(result, "tbl_df")
+  expect_true(all(c("scf_name", "scf_state", "scf_id") %in% names(result)))
+  expect_equal(nrow(result), 3)
+})
