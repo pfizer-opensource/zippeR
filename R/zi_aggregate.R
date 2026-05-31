@@ -71,8 +71,10 @@
 #'   #   method = "intersect")
 #'
 #' # aggregate a single variable
+#' \donttest{
 #' zi_aggregate(mo22_demos, year = 2020, extensive = "B01003_001", survey = "acs5",
 #'   zcta = mo22_zcta3$ZCTA3)
+#' }
 #'
 #' \donttest{
 #' # aggregate multiple variables, outputting wide data
