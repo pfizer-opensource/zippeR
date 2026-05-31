@@ -50,6 +50,11 @@
 #'     or \code{"all"}, which returns the entire crosswalk file appended to
 #'     the source data.
 #'
+#' @param input_zip \lifecycle{deprecated} Use \code{input_var} instead.
+#'     Will be removed in early 2027.
+#' @param dict \lifecycle{deprecated} Use \code{zip_source} and \code{year}
+#'     instead. Will be removed in early 2027.
+#'
 #' @return A \code{tibble} with crosswalk values (or optionally, the full
 #'     crosswalk file) appended based on the \code{return} argument.
 #'
@@ -87,7 +92,34 @@
 zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
                          source_result, year = NULL, qtr = NULL,
                          target = NULL, query = NULL, by = NULL, return_max = NULL,
-                         key = NULL, return = "id"){
+                         key = NULL, return = "id",
+                         input_zip, dict = NULL){
+
+  # handle deprecated arguments
+  if (!is.null(dict)){
+    cli::cli_warn(c(
+      "{.arg dict} is deprecated and will be removed in early 2027.",
+      "i" = "Use {.arg zip_source} and {.arg year} instead."
+    ))
+    if (inherits(dict, "data.frame")){
+      zip_source <- dict
+    } else if (is.character(dict)){
+      parts <- strsplit(dict, " ")[[1]]
+      if (length(parts) == 2){
+        zip_source <- parts[1]
+        if (is.null(year)) year <- as.numeric(parts[2])
+      } else {
+        zip_source <- dict
+      }
+    }
+  }
+
+  if (!missing(input_zip)){
+    cli::cli_warn(c(
+      "{.arg input_zip} is deprecated and will be removed in early 2027.",
+      "i" = "Use {.arg input_var} instead."
+    ))
+  }
 
   # check inputs
   ## determine workflow
@@ -107,11 +139,14 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
     cli::cli_abort("{.arg .data} must be a data frame.")
   }
 
-  if (missing(input_var)){
+  # resolve input_var (handle deprecated input_zip)
+  if (!missing(input_zip)){
+    input_varQN <- as.character(substitute(input_zip))
+  } else if (missing(input_var)){
     cli::cli_abort("{.arg input_var} is required. Provide the column in {.arg .data} that contains ZIP Code values.")
+  } else {
+    input_varQN <- as.character(substitute(input_var))
   }
-
-  input_varQN <- as.character(substitute(input_var))
 
   if (!(input_varQN %in% names(.data))){
     cli::cli_abort(c(
