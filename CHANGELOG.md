@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Positive-path integration tests for `zi_get_geometry()`, `zi_get_demographics()`, `zi_label()`, and `zi_load_labels()` asserting on output schemas, column types, and row counts (#62)
 - Test coverage gap analysis report (`docs/audits/2026-05-29-test-coverage-gaps.md`) mapping all 13 exported and 18 internal functions to coverage status (#43)
 - Source code quality analysis report (`docs/audits/2026-05-29-source-code-quality.md`) with 34 findings across 18 source files (#44)
 - Test coverage for HUD crosswalk/loading paths: input validation for `zi_load_crosswalk()`, `zi_crosswalk()`, and internal `zi_load_hud()` helper; end-to-end custom dictionary tests (#58)
