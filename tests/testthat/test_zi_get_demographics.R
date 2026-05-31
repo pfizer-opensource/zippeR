@@ -46,3 +46,53 @@ test_that("correctly specified functions execute without error", {
   skip_if(nchar(Sys.getenv("CENSUS_API_KEY")) == 0, "Census API key not available")
   expect_no_error(zi_get_demographics(year = 2012, survey = "acs5", variables = c(pop = "B01003_001")))
 })
+
+# test positive-path assertions ------------------------------------------------
+
+test_that("acs5 variables returns tidy output with expected schema", {
+  skip_on_cran()
+  skip_if_offline()
+  skip_if(nchar(Sys.getenv("CENSUS_API_KEY")) == 0, "Census API key not available")
+  result <- zi_get_demographics(year = 2012, survey = "acs5",
+                                variables = c(pop = "B01003_001"))
+  expect_s3_class(result, "tbl_df")
+  expect_true(all(c("GEOID", "variable", "estimate", "moe") %in% names(result)))
+  expect_gt(nrow(result), 30000)
+  expect_type(result$estimate, "double")
+})
+
+test_that("acs5 wide output returns one row per ZCTA", {
+  skip_on_cran()
+  skip_if_offline()
+  skip_if(nchar(Sys.getenv("CENSUS_API_KEY")) == 0, "Census API key not available")
+  result <- zi_get_demographics(year = 2012, survey = "acs5",
+                                variables = c(pop = "B01003_001"),
+                                output = "wide")
+  expect_s3_class(result, "tbl_df")
+  expect_true("GEOID" %in% names(result))
+  expect_true("popE" %in% names(result) || "pop" %in% names(result))
+  expect_gt(nrow(result), 30000)
+})
+
+test_that("acs5 table returns tidy output", {
+  skip_on_cran()
+  skip_if_offline()
+  skip_if(nchar(Sys.getenv("CENSUS_API_KEY")) == 0, "Census API key not available")
+  result <- zi_get_demographics(year = 2012, survey = "acs5",
+                                table = "B01003")
+  expect_s3_class(result, "tbl_df")
+  expect_true(all(c("GEOID", "variable", "estimate", "moe") %in% names(result)))
+  expect_gt(nrow(result), 0)
+})
+
+test_that("zcta filter limits results", {
+  skip_on_cran()
+  skip_if_offline()
+  skip_if(nchar(Sys.getenv("CENSUS_API_KEY")) == 0, "Census API key not available")
+  result <- zi_get_demographics(year = 2012, survey = "acs5",
+                                variables = c(pop = "B01003_001"),
+                                zcta = c("63005", "63139"))
+  expect_s3_class(result, "tbl_df")
+  expect_lte(nrow(result), 4)
+  expect_true(all(result$GEOID %in% c("63005", "63139")))
+})
