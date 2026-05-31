@@ -80,11 +80,11 @@ one of \code{"id"} (default), which appends only the crosswalked value,
 or \code{"all"}, which returns the entire crosswalk file appended to
 the source data.}
 
-\item{input_zip}{\lifecycle{deprecated} Use \code{input_var} instead.
-Will be removed in early 2027.}
-
-\item{dict}{\lifecycle{deprecated} Use \code{zip_source} and \code{year}
+\item{input_zip}{\strong{[Deprecated]} Use \code{input_var}
 instead. Will be removed in early 2027.}
+
+\item{dict}{\strong{[Deprecated]} Use \code{zip_source} and
+\code{year} instead. Will be removed in early 2027.}
 }
 \value{
 A \code{tibble} with crosswalk values (or optionally, the full

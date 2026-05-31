@@ -50,10 +50,10 @@
 #'     or \code{"all"}, which returns the entire crosswalk file appended to
 #'     the source data.
 #'
-#' @param input_zip \lifecycle{deprecated} Use \code{input_var} instead.
-#'     Will be removed in early 2027.
-#' @param dict \lifecycle{deprecated} Use \code{zip_source} and \code{year}
+#' @param input_zip \strong{[Deprecated]} Use \code{input_var}
 #'     instead. Will be removed in early 2027.
+#' @param dict \strong{[Deprecated]} Use \code{zip_source} and
+#'     \code{year} instead. Will be removed in early 2027.
 #'
 #' @return A \code{tibble} with crosswalk values (or optionally, the full
 #'     crosswalk file) appended based on the \code{return} argument.
