@@ -22,6 +22,8 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "`year` must be between", fixed = TRUE)
   expect_error(zi_list_zctas(method = incorrect_method, year = correct_year, state = states),
                "`method` must be", fixed = TRUE)
+  expect_error(zi_list_zctas(year = correct_year, method = correct_method, state = "ZZ"),
+               "No valid states found", fixed = TRUE)
 })
 
 

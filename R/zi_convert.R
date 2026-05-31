@@ -7,10 +7,10 @@
 #'
 #'
 #' @param .data A data frame containing a column of five-digit ZIP Codes.
-#' @param input_var A character scalar specifying the column name with the five-digit
-#'    ZIP Codes in the data frame.
-#' @param output_var Optional; A character scalar specifying the column name to
-#'    store the three-digit ZIP Codes in the data frame.
+#' @param input_var The column in the data frame containing five-digit ZIP Codes,
+#'    specified as a bare (unquoted) column name (uses non-standard evaluation).
+#' @param output_var Optional; a bare (unquoted) column name to store the
+#'    three-digit ZIP Codes. If omitted, the input column is overwritten.
 #'
 #' @return A tibble containing the original data frame with a new column of
 #'   three-digit ZIP Codes.

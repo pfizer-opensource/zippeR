@@ -128,6 +128,10 @@ zi_get_demographics <- function(year, variables = NULL,
     }
   }
 
+  if (is.null(variables) & is.null(table)){
+    cli::cli_abort("Either {.arg variables} or {.arg table} must be provided.")
+  }
+
   # call underlying tidycensus data
   if (survey %in% c("sf1", "sf3")){
 

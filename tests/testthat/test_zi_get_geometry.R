@@ -35,6 +35,10 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "`territory` contains an invalid value", fixed = TRUE)
   expect_error(zi_get_geometry(year = correct_year, method = "centroid", starts_with = 63),
                "`starts_with` must be a character vector of two-digit values.", fixed = TRUE)
+  expect_error(zi_get_geometry(year = correct_year, method = "centroid", starts_with = "A1"),
+               "`starts_with` must be a character vector of two-digit values.", fixed = TRUE)
+  expect_error(zi_get_geometry(year = correct_year, class = "dataframe", method = "centroid"),
+               "`class` must be", fixed = TRUE)
   expect_error(zi_get_geometry(year = correct_year, method = "intersect", includes = 10603),
                "`includes` contains invalid ZCTA values.", fixed = TRUE)
   expect_error(zi_get_geometry(year = correct_year, method = "centroid", excludes = "ham"),

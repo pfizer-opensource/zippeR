@@ -143,8 +143,16 @@ zi_load_crosswalk <- function(zip_source = "UDS", year, qtr = NULL, target = NUL
 
 zi_load_uds <- function(year) {
   # Read and bind all CSV files into a single dataframe
-  out <- readr::read_csv(paste0("https://raw.githubusercontent.com/chris-prener/uds-mapper/main/data/uds_crosswalk_", year, ".csv"),
-                         col_types = readr::cols())
+  out <- tryCatch(
+    readr::read_csv(paste0("https://raw.githubusercontent.com/chris-prener/uds-mapper/main/data/uds_crosswalk_", year, ".csv"),
+                    col_types = readr::cols()),
+    error = function(e) {
+      cli::cli_abort(c(
+        "x" = "Failed to download UDS crosswalk data for year {.val {year}}.",
+        "i" = "Original error: {conditionMessage(e)}"
+      ))
+    }
+  )
 
   # normalize non-standard column names (the 2015 file uses a different schema)
   col_renames <- c(zcta_use = "zcta", cityname = "po_name",
@@ -272,6 +280,15 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
 
     # get data and format
     request <- httr::GET(paste0(url, type, query, "&year=", year, "&quarter=", qtr), httr::add_headers(Authorization = paste("Bearer", key, sep = " ")))
+
+    # validate HTTP status
+    if (httr::http_error(request)){
+      cli::cli_abort(c(
+        "x" = "HUD API request failed with status {.val {httr::status_code(request)}}.",
+        "i" = "Check your API key and query parameters (year={year}, qtr={qtr}, query={query})."
+      ))
+    }
+
     content <- httr::content(request, "text", encoding = "UTF-8")
     json <- jsonlite::fromJSON(content)
     list <- lapply(json, "[[", 5)

@@ -192,6 +192,27 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     cli::cli_abort("At least one of {.arg extensive} or {.arg intensive} must be provided.")
   }
 
+  # verify requested variables exist in the data
+  data_vars <- unique(.data$variable)
+  if (!is.null(extensive)){
+    missing_ext <- setdiff(extensive, data_vars)
+    if (length(missing_ext) > 0){
+      cli::cli_abort(c(
+        "{.arg extensive} contains variable names not found in {.arg .data}: {.val {missing_ext}}.",
+        "i" = "Available variables: {.val {data_vars}}."
+      ))
+    }
+  }
+  if (!is.null(intensive)){
+    missing_int <- setdiff(intensive, data_vars)
+    if (length(missing_int) > 0){
+      cli::cli_abort(c(
+        "{.arg intensive} contains variable names not found in {.arg .data}: {.val {missing_int}}.",
+        "i" = "Available variables: {.val {data_vars}}."
+      ))
+    }
+  }
+
   # set additional arguments
   ## call type
   if (!is.null(extensive)){

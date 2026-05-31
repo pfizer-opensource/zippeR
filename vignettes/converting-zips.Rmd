@@ -43,27 +43,18 @@ They can be used with `zi_crosswalk()` to convert given ZIP codes to ZCTAs:
 
 ```r
 > zips <- data.frame(id = c(1:3), ZIP = c("63139", "63108", "00501"))
-> zi_crosswalk(zips, input_zip = ZIP, dict = "UDS 2021") 
+> zi_crosswalk(zips, input_var = ZIP, zip_source = "UDS", year = 2021) 
 # A tibble: 3 × 3                                                                                                                                                                                      
-     id ZIP   ZCTA 
+     id ZIP   source_zcta 
   <int> <chr> <chr>
 1     1 63139 63139
 2     2 63108 63108
 3     3 00501 11742
 ```
 
-If `"UDS 2021"` (or any other year between 2009 and 2023) is given for `dict`, `zi_crosswalk()` will automatically download the corresponding UDS crosswalk file. A custom crosswalk can also be supplied for `dict` in lieu of using the UDS data, including a crosswalk created from `zi_load_crosswalk()` using HUD data. In that case, `dict_zip` and `dict_zcta` should be updated to correctly match input variable names. `style` can also be used if the custom dictionary contains three digit ZCTAs instead. If no custom dictionary is supplied, `zi_crosswalk()` will try to convert the dictionary's five-digit ZCTAs to three-digits:
+If `"UDS"` is given for `zip_source` with a `year` between 2009 and 2022, `zi_crosswalk()` will automatically download the corresponding UDS crosswalk file. A custom crosswalk can also be supplied as a data frame for `zip_source` in lieu of using the UDS data, including a crosswalk created from `zi_load_crosswalk()` using HUD data. In that case, `source_var` and `source_result` should be specified to correctly match input variable names.
 
-```r
-> zi_crosswalk(zips, input_zip = ZIP, dict = "UDS 2021", style = "zcta3") 
-Dictionary five-digit ZCTAs converted to three-digit ZCTAs.                                                                                                                                            
-# A tibble: 3 × 3
-     id ZIP   ZCTA3
-  <int> <chr> <chr>
-1     1 63139 631  
-2     2 63108 631  
-3     3 00501 117  
-```
+> **Note:** The legacy parameter names `input_zip` and `dict` are still accepted for backwards compatibility but are deprecated in favor of `input_var` and `zip_source`/`year`.
 
 ## HUD's ZIP Code to Census Geography Crosswalks
 

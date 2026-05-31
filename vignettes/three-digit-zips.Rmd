@@ -69,7 +69,7 @@ mo_zcta3 <- zi_get_geometry(year = 2020, style = "zcta3", state = "MO", territor
 
 The `zi_get_geometry()` function downloads pre-made geometric data from the Census Bureau's TIGER/Line Shapefiles, which were created by downloading the ZCTA data, grouping features by the first three digits of the ZCTA, and then summarizing the features to dissolve them. Finally, `sf::st_simplify(out, preserveTopology = TRUE, dTolerance = 20)` was used to simplify the features and reduce the size of each file.
 
-Data are available from 2010 through 2023, excluding 2011. If a specific state or county is requested using those optional arguments, included ZCTAs are defined using either `method = "intersect"` or `method = "centroid"`. The `"intersect"` approach includes any ZCTA that touches a given state or county with an area greater than `0`, while the `"centroid"` approach includes any ZCTA whose geographic midpoint lies within the requested state or county.
+Data are available from 2010 through 2023. Note that 2011 boundaries are not separately published by the Census Bureau, so requesting `year = 2011` will use 2010 data (a message is displayed). If a specific state or county is requested using those optional arguments, included ZCTAs are defined using either `method = "intersect"` or `method = "centroid"`. The `"intersect"` approach includes any ZCTA that touches a given state or county with an area greater than `0`, while the `"centroid"` approach includes any ZCTA whose geographic midpoint lies within the requested state or county.
 
 ## Creating Demographic Estimates for Three-digit ZCTAs
 

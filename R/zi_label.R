@@ -10,8 +10,9 @@
 #' @param .data An "input object" that is data.frame or tibble that contains
 #'     ZIP Codes to be crosswalked.
 #' @param input_var The column in the input data that contains five-digit ZIP
-#'     Codes. If the input is numeric, it will be transformed to character data
-#'     and leading zeros will be added.
+#'     Codes, specified as a bare (unquoted) column name. Input must be character
+#'     data with proper leading zeros; use \code{\link{zi_repair}} to fix
+#'     numeric inputs first.
 #' @param label_source Required character scalar or data frame; specifies the
 #'     source of the label data. This could be either \code{'UDS'} (default) or
 #'     \code{'USPS'}, or a data frame containing a custom dictionary.
@@ -241,7 +242,8 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
   }
 
   ## join with input data
-  out <- merge(x = .data, y = dict, by.x = input_varQN, by.y = source_varQN, all.x = TRUE, all.y = FALSE)
+  join_by <- stats::setNames(source_varQN, input_varQN)
+  out <- dplyr::left_join(.data, dict, by = join_by)
 
   ## create tibble
   out <- tibble::as_tibble(out)

@@ -34,6 +34,8 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "`variables` and `table` cannot be used together", fixed = TRUE)
   expect_error(zi_get_demographics(year = correct_year, survey = "acs1", zcta = 7613),
                "`zcta` contains invalid ZCTA values.", fixed = TRUE)
+  expect_error(zi_get_demographics(year = correct_year, survey = correct_survey),
+               "Either `variables` or `table` must be provided", fixed = TRUE)
 })
 
 

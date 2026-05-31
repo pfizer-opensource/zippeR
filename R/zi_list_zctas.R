@@ -86,6 +86,13 @@ zi_list_zctas <- function(year, state, method){
   ## validate state (using tigris workflow)
   statez <- unlist(sapply(statez, validate_state, USE.NAMES = FALSE))
 
+  if (is.null(statez) || length(statez) == 0){
+    cli::cli_abort(c(
+      "No valid states found in {.arg state}.",
+      "i" = "Provide valid state abbreviations or FIPS codes."
+    ))
+  }
+
   # subset based on method
   if (method == "centroid"){
     sub <- dplyr::filter(reference_centroids, fips %in% statez & year == yearz)

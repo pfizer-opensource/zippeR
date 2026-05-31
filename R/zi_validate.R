@@ -60,11 +60,19 @@ zi_validate <- function(x, style = "zcta5", verbose = FALSE){
     cli::cli_abort("Please provide a vector of data, instead of a data frame, for validation.")
   }
 
+  if (length(style) != 1){
+    cli::cli_abort("{.arg style} must be a single value.")
+  }
+
   if (!(style %in% c("zcta5", "zcta3"))){
     cli::cli_abort(c(
       "{.arg style} must be {.val zcta5} or {.val zcta3}.",
       "i" = "You provided {.val {style}}."
     ))
+  }
+
+  if (length(verbose) != 1){
+    cli::cli_abort("{.arg verbose} must be a single value.")
   }
 
   if (!is.logical(verbose)){
