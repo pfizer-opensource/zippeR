@@ -350,7 +350,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
       wide_names <- c("ZCTA3", sort(wide_names))
 
       ## re-order columns alphabetically
-      out <- dplyr::select(out, wide_names)
+      out <- dplyr::select(out, dplyr::all_of(wide_names))
 
     }
   }

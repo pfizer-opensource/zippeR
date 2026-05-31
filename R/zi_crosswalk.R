@@ -323,7 +323,7 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
 
   if (return == "all"){
     dict_names <- names(dict)[names(dict) != source_varQN]
-    dict <- dplyr::rename_with(dict, .fn = ~paste0("source_", .x), .cols = dict_names)
+    dict <- dplyr::rename_with(dict, .fn = ~paste0("source_", .x), .cols = dplyr::all_of(dict_names))
   }
 
   # create output
