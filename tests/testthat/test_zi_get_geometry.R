@@ -2,6 +2,7 @@
 
 chr_year <- "2010"
 incorrect_year <- 2009
+out_of_range_year <- 2025
 correct_year <- 2011
 
 # test errors ------------------------------------------------
@@ -10,6 +11,8 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
   expect_error(zi_get_geometry(year = chr_year, method = "centroid"),
                "`year` must be numeric", fixed = TRUE)
   expect_error(zi_get_geometry(year = incorrect_year, method = "centroid"),
+               "`year` must be between", fixed = TRUE)
+  expect_error(zi_get_geometry(year = out_of_range_year, method = "centroid"),
                "`year` must be between", fixed = TRUE)
   expect_error(zi_get_geometry(year = correct_year, style = "zcta", method = "centroid"),
                "`style` must be", fixed = TRUE)

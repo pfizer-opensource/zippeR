@@ -6,7 +6,7 @@
 #'
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
-#'     supports data between 2010 and 2021.
+#'     supports data between 2010 and 2024.
 #' @param state A scalar or vector with state abbreviations (e.x. \code{"MO"})
 #'     or FIPS codes (e.x. \code{29}).
 #' @param method A character scalar - either \code{"intersect"} or \code{"centroid"}.
@@ -46,7 +46,7 @@ zi_list_zctas <- function(year, state, method){
 
   # check inputs
   if (missing(year)){
-    cli::cli_abort("{.arg year} is required. Please provide a numeric value between {.val 2010} and {.val 2023}.")
+    cli::cli_abort("{.arg year} is required. Please provide a numeric value between {.val 2010} and {.val 2024}.")
   }
 
   if (!is.numeric(year)){
@@ -56,9 +56,9 @@ zi_list_zctas <- function(year, state, method){
     ))
   }
 
-  if (!(year %in% c(2010:2023))){
+  if (!(year %in% c(2010:2024))){
     cli::cli_abort(c(
-      "{.arg year} must be between {.val 2010} and {.val 2023}.",
+      "{.arg year} must be between {.val 2010} and {.val 2024}.",
       "i" = "You provided {.val {year}}."
     ))
   }
