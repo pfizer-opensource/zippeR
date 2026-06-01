@@ -28,13 +28,15 @@ relevant to health services research.
 
 **Key Results:**
 
-- KR1: ZCTA geometries available for all TIGER/Line vintages 2010–2023 —
-  _achieved_
-- KR2: HUD and UDS crosswalk loading supported — _achieved_
+- KR1: ZCTA geometries available for all TIGER/Line vintages 2010–2024 —
+  _partial_ (`zi_get_geometry()` supports 2024; `zi_list_zctas()` guarded pending
+  `sysdata.rda` rebuild — #45 follow-up)
+- KR2: HUD and UDS crosswalk loading supported — _achieved_ (UDS crosswalk now
+  bundled in `inst/extdata/`, eliminating runtime network dependency — #41)
 - KR3: 3-digit ZCTA aggregation supports both extensive and intensive variables
   — _achieved_
 
-_Last check-in: 2026-05-29_
+_Last check-in: 2026-06-01_
 
 ## Retired Objectives
 
