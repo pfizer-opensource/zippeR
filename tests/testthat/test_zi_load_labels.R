@@ -16,7 +16,6 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
 })
 
 test_that("include_scf with zip5 produces a warning", {
-  skip_if_no_integration()
   expect_warning(zi_load_labels(source = "UDS", type = "zip5", include_scf = TRUE, vintage = 2022),
                  "include_scf", fixed = TRUE)
 })
@@ -24,7 +23,6 @@ test_that("include_scf with zip5 produces a warning", {
 # test positive-path assertions ------------------------------------------------
 
 test_that("UDS zip5 returns expected schema", {
-  skip_if_no_integration()
   result <- zi_load_labels(source = "UDS", type = "zip5", vintage = 2022)
   expect_s3_class(result, "tbl_df")
   expect_true(all(c("zip5", "label_city", "label_state") %in% names(result)))

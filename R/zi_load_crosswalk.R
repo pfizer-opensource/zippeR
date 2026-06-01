@@ -15,7 +15,7 @@
 #'     crosswalk data. This can be one of either \code{"UDS"} (default) or
 #'     \code{"HUD"}.
 #' @param year Required four-digit numeric scalar for year; varies based on source.
-#'     For \code{"UDS"}, years 2009 through 2023 are available. For \code{"HUD"},
+#'     For \code{"UDS"}, years 2009 through 2022 are available. For \code{"HUD"},
 #'     years 2010 through 2024 are available.
 #' @param qtr Numeric scalar, required when \code{zip_code} is \code{"HUD"}.
 #'     Integer value between 1 and 4, representing the quarter of the year.
@@ -138,57 +138,19 @@ zi_load_crosswalk <- function(zip_source = "UDS", year, qtr = NULL, target = NUL
 #
 
 zi_load_uds <- function(year) {
-  # Read and bind all CSV files into a single dataframe
-  out <- tryCatch(
-    readr::read_csv(paste0("https://raw.githubusercontent.com/chris-prener/uds-mapper/main/data/uds_crosswalk_", year, ".csv"),
-                    col_types = readr::cols()),
-    error = function(e) {
-      cli::cli_abort(c(
-        "x" = "Failed to download UDS crosswalk data for year {.val {year}}.",
-        "i" = "Original error: {conditionMessage(e)}"
-      ))
-    }
-  )
+  # Load the bundled crosswalk and filter to the requested year
+  crosswalk_path <- system.file("extdata", "uds_crosswalk.rds", package = "zippeR")
 
-  # normalize non-standard column names (the 2015 file uses a different schema)
-  col_renames <- c(zcta_use = "zcta", cityname = "po_name",
-                   stateabbr = "state", ziptype = "zip_type")
-  for (old_name in names(col_renames)) {
-    if (old_name %in% names(out) && !col_renames[[old_name]] %in% names(out)) {
-      names(out)[names(out) == old_name] <- col_renames[[old_name]]
-    }
+  if (crosswalk_path == "") {
+    cli::cli_abort(c(
+      "x" = "Bundled UDS crosswalk data not found in the package installation.",
+      "i" = "Re-installing {.pkg zippeR} should resolve this."
+    ))
   }
 
-  # drop columns not present in the standard schema
-  standard_cols <- c("zip", "po_name", "state", "zip_type", "zcta", "zip_join_type")
-  out <- out[, intersect(names(out), standard_cols), drop = FALSE]
-
-  out$zip <- stringr::str_pad(out$zip, width = 5, side = "left", pad = "0")
-  out$zcta <- stringr::str_pad(out$zcta, width = 5, side = "left", pad = "0")
-
-  # Remove military zip if 'zip_type' column exists
-  if ("zip_type" %in% names(out)) {
-    out <- dplyr::filter(out, !grepl("^M", zip_type))
-  }
-
-  # Convert 'po_name' to title case if it exists
-  if ("po_name" %in% names(out)) {
-    out <- dplyr::mutate(out, po_name = stringr::str_to_title(po_name))
-  }
-
-  # Remove N/A zcta if 'zcta' column exists
-  if ("zcta" %in% names(out)) {
-    out <- dplyr::filter(out, !(zcta %in% c("N/A", NA)))
-  }
-
-  ## remove non-ZCTA geometries
-  out <- dplyr::filter(out, !zcta %in% "No ZCTA")
-
-  # re-order output
-  out <- dplyr::arrange(out, zip)
-
-  # convert to tibble
-  out <- tibble::as_tibble(out)
+  all_data <- readRDS(crosswalk_path)
+  out <- dplyr::filter(all_data, .data$year == .env$year)
+  out$year <- NULL
 
   # check validation
   valid_zip <- zi_validate(out$zip)
@@ -210,7 +172,6 @@ zi_load_uds <- function(year) {
   }
 
   names(out) <- toupper(names(out))
-  # return output
   return(out)
 }
 
