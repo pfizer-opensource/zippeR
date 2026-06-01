@@ -265,9 +265,9 @@ zi_repair <- function(x, style = "zcta5"){
     if (!valid$result[2]){
 
       if (style == "zcta5"){
-        x <- stringr::str_pad(x, 5, pad = "0")
+        x <- ifelse(!is.na(x), formatC(as.integer(x), width = 5, flag = "0"), NA_character_)
       } else if (style == "zcta3"){
-        x <- stringr::str_pad(x, 3, pad = "0")
+        x <- ifelse(!is.na(x), formatC(as.integer(x), width = 3, flag = "0"), NA_character_)
       }
 
     }

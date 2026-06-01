@@ -1,5 +1,14 @@
-zi_get_tigris <- function(.f, year, state, cb){
+# Internal weighted median helper (replaces spatstat.univar::weighted.median)
+# Computes the weighted median of x using weights w.
+weighted_median <- function(x, w) {
+  ord <- order(x)
+  x <- x[ord]
+  w <- w[ord]
+  cum_w <- cumsum(w) / sum(w)
+  x[which(cum_w >= 0.5)[1]]
+}
 
+zi_get_tigris <- function(.f, year, state, cb){
   ## resolve function from tigris namespace
   tigris_fn <- tryCatch(
     getExportedValue("tigris", .f),
@@ -86,7 +95,7 @@ validate_state <- function(state, .msg=interactive()) {
   # original tigris function
   if (is.null(state)) return(NULL)
 
-  state <- tolower(stringr::str_trim(state)) # forgive white space
+  state <- tolower(trimws(state)) # forgive white space
 
   if (grepl("^[[:digit:]]+$", state)) { # we prbly have FIPS
 

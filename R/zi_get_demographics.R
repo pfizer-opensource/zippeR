@@ -147,7 +147,7 @@ zi_get_demographics <- function(year, variables = NULL,
 
     ## prep data
     if (!is.null(out)){
-      out <- dplyr::mutate(out, GEOID = stringr::word(NAME, 2))
+      out <- dplyr::mutate(out, GEOID = sub("^\\S+ ", "", NAME))
     }
 
   }
