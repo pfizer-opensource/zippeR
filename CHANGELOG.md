@@ -63,6 +63,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove `== TRUE` / `== FALSE` anti-patterns across all R/ sources (#11)
 - Remove deprecated `context()` calls from all test files; adopt testthat 3rd edition (#8)
 
+### Removed
+- Drop `purrr` from `Imports`; replace `purrr::map_dfr()` in `zi_load_hud()` with `do.call(rbind, lapply())` (#80)
+- Drop `spatstat.univar` from `Imports`; replace `weighted.median()` calls with an internal `weighted_median()` base-R helper in `R/zi_utils.R` (#81)
+- Drop `stringr` from `Imports`; replace `str_pad()`, `str_trim()`, and `word()` calls with base-R equivalents (`formatC`, `trimws`, `sub`) across `R/zi_aggregate.R`, `R/zi_get_demographics.R`, `R/zi_utils.R`, and `R/zi_validate.R` (#82)
+
 ### Added
 - Data provenance README in `inst/build-data/` documenting build scripts, execution order, prerequisites, and outputs (#20)
 - Package architecture overview, domain glossary, objectives, and updated roadmap in `docs/` hub (#26)
