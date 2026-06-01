@@ -63,6 +63,13 @@ zi_list_zctas <- function(year, state, method){
     ))
   }
 
+  if (year == 2024){
+    cli::cli_abort(c(
+      "{.arg year} {.val 2024} is not yet available for {.fn zi_list_zctas}.",
+      "i" = "Use {.val 2023} or earlier. Support for {.val 2024} will be added in a future release."
+    ))
+  }
+
   if (missing(state)){
     cli::cli_abort("{.arg state} is required.")
   }
