@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Extended TIGRIS year availability from 2023 to 2024 in `zi_get_geometry()`; `zi_list_zctas()` accepts 2024 in the valid range but aborts with an informative message until `sysdata.rda` is rebuilt (#45)
+- Updated `inst/build-data/build_vectors.R` to download and process 2024 ZCTA data, enabling future `sysdata.rda` rebuild (#45)
 - Bundled UDS Mapper crosswalk data (2009–2022, all 14 years) as `inst/extdata/uds_crosswalk.rds` (~400 KB, xz-compressed), eliminating the runtime network dependency on `chris-prener/uds-mapper` (#41)
 - `data-raw/build_uds_crosswalk.R` script documenting provenance and reproducing the bundled crosswalk file (#41)
 - Positive-path integration tests for `zi_get_geometry()`, `zi_get_demographics()`, `zi_label()`, and `zi_load_labels()` asserting on output schemas, column types, and row counts (#62)
