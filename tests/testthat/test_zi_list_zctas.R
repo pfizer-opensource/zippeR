@@ -2,6 +2,8 @@
 
 incorrect_year_str <- "2010"
 incorrect_year_num <- 2009
+out_of_range_year <- 2025
+unavailable_year <- 2024
 incorrect_method <- "ham"
 
 correct_year <- 2010
@@ -20,6 +22,10 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "`year` must be numeric", fixed = TRUE)
   expect_error(zi_list_zctas(year = incorrect_year_num, method = correct_method, state = states),
                "`year` must be between", fixed = TRUE)
+  expect_error(zi_list_zctas(year = out_of_range_year, method = correct_method, state = states),
+               "`year` must be between", fixed = TRUE)
+  expect_error(zi_list_zctas(year = unavailable_year, method = correct_method, state = states),
+               "is not yet available", fixed = TRUE)
   expect_error(zi_list_zctas(method = incorrect_method, year = correct_year, state = states),
                "`method` must be", fixed = TRUE)
   expect_warning(

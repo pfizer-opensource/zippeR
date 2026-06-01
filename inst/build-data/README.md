@@ -15,7 +15,7 @@ must be run first.
 **What it does:**
 
 1. Downloads US state boundaries from the Census Bureau (via `tigris::states()`).
-2. Downloads ZCTA shapefiles for every available year (2010, 2012–2023) from the
+2. Downloads ZCTA shapefiles for every available year (2010, 2012–2024) from the
    Census Bureau (via `tigris::zctas()`).
 3. Intersects ZCTAs with state boundaries using two methods (geometric
    intersection and centroid containment) to produce per-state ZCTA vectors for

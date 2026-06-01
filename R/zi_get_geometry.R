@@ -9,7 +9,7 @@
 #'
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
-#'     supports data between 2010 and 2023
+#'     supports data between 2010 and 2024
 #' @param style A character scalar - either \code{"zcta5"} or \code{"zcta3"}.
 #'     See Details below.
 #' @param return A character scalar; if \code{"id"} (default), only the five-digit
@@ -132,9 +132,9 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
     ))
   }
 
-  if (!(year %in% c(2010:2023))){
+  if (!(year %in% c(2010:2024))){
     cli::cli_abort(c(
-      "{.arg year} must be between {.val 2010} and {.val 2023}.",
+      "{.arg year} must be between {.val 2010} and {.val 2024}.",
       "i" = "You provided {.val {year}}."
     ))
   }

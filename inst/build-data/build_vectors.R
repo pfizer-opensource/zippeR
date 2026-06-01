@@ -165,6 +165,13 @@ st_geometry(states_lookup) <- NULL
 # Process ZCTA Data, Intersects ####
 if (style == FALSE){
 
+  zctas <- zctas(year = 2024, class = "sf")
+  zcta2024 <- create_year(year = 2024, zcta = zctas, intersect_by = states_abbrev)
+  save(zcta2024, file = "inst/data-raw/zcta2024.rda")
+
+  zcta2024 <- create_year(year = 2024, zcta = zctas, intersect_by = states_abbrev, method = "centroid")
+  save(zcta2024, file = "inst/data-raw/zcta2024_centroid.rda")
+
   zctas <- zctas(year = 2023, class = "sf")
   zcta2023 <- create_year(year = 2023, zcta = zctas, intersect_by = states_abbrev)
   save(zcta2023, file = "inst/data-raw/zcta2023.rda")
@@ -260,7 +267,7 @@ if (style == FALSE){
 
 # Compare ZCTA Data, Intersects ####
 ## Load ZCTA Data ####
-c(2010,2012:2023) %>%
+c(2010,2012:2024) %>%
   unlist() %>%
   map(~load(file = paste0("inst/data-raw/zcta", .x, ".rda"), envir = .GlobalEnv))
 
@@ -304,25 +311,28 @@ changes2022 <- id_changes(year1 = zcta2021, year2 = zcta2022,
 changes2023 <- id_changes(year1 = zcta2022, year2 = zcta2023,
                           name = states_abbrev, year = 2023)
 
+changes2024 <- id_changes(year1 = zcta2023, year2 = zcta2024,
+                          name = states_abbrev, year = 2024)
+
 
 ### combine comparisons
 changes <- c(zcta2010, changes2012, changes2013, changes2014, changes2015,
              changes2016, changes2017, changes2018, changes2019, changes2020,
-             changes2021, changes2022, changes2023)
+             changes2021, changes2022, changes2023, changes2024)
 changes <- changes[order(names(changes))]
 
 ### clean-up
 rm(zcta2010, zcta2012, zcta2013, zcta2014, zcta2015, zcta2016, zcta2017,
-   zcta2018, zcta2019, zcta2020, zcta2021, zcta2022, zcta2023)
+   zcta2018, zcta2019, zcta2020, zcta2021, zcta2022, zcta2023, zcta2024)
 rm(changes2012, changes2013, changes2014, changes2015, changes2016,
    changes2017, changes2018, changes2019, changes2020, changes2021,
-   changes2022, changes2023)
+   changes2022, changes2023, changes2024)
 
 # Create Reference Table Data, Intersects ####
 ## reference data
 reference <- data.frame(
-  state = sort(rep(states_abbrev$STUSPS, length(2010:2023))),
-  year = rep(2010:2023, length(states_abbrev$STUSPS))
+  state = sort(rep(states_abbrev$STUSPS, length(2010:2024))),
+  year = rep(2010:2024, length(states_abbrev$STUSPS))
 )
 
 reference <- left_join(reference, states_lookup, by = c("state" = "abb")) %>%
@@ -346,7 +356,7 @@ rm(states)
 
 # Compare ZCTA Data, Centroids ####
 ## Load ZCTA Data ####
-c(2010,2012:2023) %>%
+c(2010,2012:2024) %>%
   unlist() %>%
   map(~load(file = paste0("inst/data-raw/zcta", .x, "_centroid.rda"), envir = .GlobalEnv))
 
@@ -390,26 +400,29 @@ changes2022 <- id_changes(year1 = zcta2021, year2 = zcta2022,
 changes2023 <- id_changes(year1 = zcta2022, year2 = zcta2023,
                           name = states_abbrev, year = 2023)
 
+changes2024 <- id_changes(year1 = zcta2023, year2 = zcta2024,
+                          name = states_abbrev, year = 2024)
+
 ### combine comparisons
 changes <- c(zcta2010, changes2012, changes2013, changes2014, changes2015,
              changes2016, changes2017, changes2018, changes2019, changes2020,
-             changes2021)
+             changes2021, changes2022, changes2023, changes2024)
 changes <- c(changes, AS12 = "96799")
 changes <- changes[order(names(changes))]
 
 ### clean-up
 rm(zcta2010, zcta2012, zcta2013, zcta2014, zcta2015, zcta2016, zcta2017,
-   zcta2018, zcta2019, zcta2020, zcta2021, zcta2022, zcta2023)
+   zcta2018, zcta2019, zcta2020, zcta2021, zcta2022, zcta2023, zcta2024)
 rm(changes2012, changes2013, changes2014, changes2015, changes2016,
    changes2017, changes2018, changes2019, changes2020, changes2021,
-   changes2022, changes2023)
+   changes2022, changes2023, changes2024)
 rm(compare_years, id_changes, pull_changes, update_names)
 
 # Create Reference Table Data, Centroids ####
 ## reference data
 reference <- data.frame(
-  state = sort(rep(states_abbrev$STUSPS, length(2010:2023))),
-  year = rep(2010:2023, length(states_abbrev$STUSPS))
+  state = sort(rep(states_abbrev$STUSPS, length(2010:2024))),
+  year = rep(2010:2024, length(states_abbrev$STUSPS))
 )
 
 reference <- left_join(reference, states_lookup, by = c("state" = "abb")) %>%
@@ -452,7 +465,8 @@ zcta3_url <- list(
   zcta3_2020 = "https://raw.githubusercontent.com/chris-prener/zcta3/main/data/zcta3_2020.geojson",
   zcta3_2021 = "https://raw.githubusercontent.com/chris-prener/zcta3/main/data/zcta3_2021.geojson",
   zcta3_2022 = "https://raw.githubusercontent.com/chris-prener/zcta3/main/data/zcta3_2022.geojson",
-  zcta3_2023 = "https://raw.githubusercontent.com/chris-prener/zcta3/main/data/zcta3_2023.geojson"
+  zcta3_2023 = "https://raw.githubusercontent.com/chris-prener/zcta3/main/data/zcta3_2023.geojson",
+  zcta3_2024 = "https://raw.githubusercontent.com/chris-prener/zcta3/main/data/zcta3_2024.geojson"
 )
 
 # Create American Samoa Bounding Box ####
