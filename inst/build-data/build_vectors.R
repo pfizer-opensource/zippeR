@@ -308,6 +308,9 @@ changes2021 <- id_changes(year1 = zcta2020, year2 = zcta2021,
 changes2022 <- id_changes(year1 = zcta2021, year2 = zcta2022,
                           name = states_abbrev, year = 2022)
 
+changes2023 <- id_changes(year1 = zcta2022, year2 = zcta2023,
+                          name = states_abbrev, year = 2023)
+
 changes2024 <- id_changes(year1 = zcta2023, year2 = zcta2024,
                           name = states_abbrev, year = 2024)
 
