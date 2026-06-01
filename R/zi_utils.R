@@ -1,6 +1,11 @@
 # Internal weighted median helper (replaces spatstat.univar::weighted.median)
 # Computes the weighted median of x using weights w.
+# NA values in x or w are silently dropped (consistent with na.rm = TRUE in
+# the weighted.mean path used for method = "mean").
 weighted_median <- function(x, w) {
+  ok <- !is.na(x) & !is.na(w)
+  x <- x[ok]
+  w <- w[ok]
   ord <- order(x)
   x <- x[ord]
   w <- w[ord]
