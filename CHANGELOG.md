@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Normalize non-standard column names in 2015 UDS crosswalk (`zcta_use` → `zcta`, etc.) so `zi_load_crosswalk(zip_source = "UDS", year = 2015)` no longer errors (#5)
 
 ### Changed
+- Replace `\donttest{}` / `\dontrun{}` wrappers in roxygen2 examples with `@examplesIf interactive()` (network-dependent examples) and `@examplesIf nzchar(Sys.getenv("hud_key"))` (HUD API key examples) across all 9 affected source files (#77)
 - Document NULL return values in `@return` tags for `zi_get_demographics()`, `zi_get_geometry()`, and `zi_aggregate()` (#12)
 - Remove all manual `@usage` roxygen2 tags; usage sections now auto-generated (#19)
 - Set minimum R version to 4.1 in DESCRIPTION (#21)
