@@ -10,10 +10,8 @@
 #'
 #' @return A tibble containing date values that can be used with \code{zi_load_labels}.
 #'
-#' @examples
-#' \donttest{
+#' @examplesIf interactive()
 #'   zi_load_labels_list(type = "zip3")
-#' }
 #'
 #' @export
 zi_load_labels_list <- function(type = "zip3"){

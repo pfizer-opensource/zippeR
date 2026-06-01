@@ -40,8 +40,7 @@
 #'     \code{"tidy"} or \code{"wide"} format, or \code{NULL} if the Census
 #'     Bureau API call fails.
 #'
-#' @examples
-#' \donttest{
+#' @examplesIf interactive()
 #'   # download all ZCTAs
 #'   zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5")
 #'
@@ -52,7 +51,6 @@
 #'   ## download demographic data
 #'   zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5",
 #'       zcta = mo20$GEOID)
-#' }
 #'
 #' @export
 zi_get_demographics <- function(year, variables = NULL,

@@ -52,25 +52,22 @@ Spatial data on USPS ZIP Codes are not published by the U.S.
     of geographies including counties.
 }
 \examples{
-\donttest{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
  # former UDS mapper crosswalks
  zi_load_crosswalk(zip_source = "UDS", year = 2020)
-}
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (nzchar(Sys.getenv("hud_key"))) withAutoprint(\{ # examplesIf}
  # HUD crosswalks
- # you will need to replace INSERT_HUD_KEY with your own key
  ## ZIP Code to CBSA crosswalk for all ZIP Codes
  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "CBSA",
-     query = "all", key = INSERT_HUD_KEY)
+     query = "all", key = Sys.getenv("hud_key"))
 
  ## ZIP Code to County crosswalk for all ZIP Codes in Missouri
  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "COUNTY",
-     query = "MO", key = INSERT_HUD_KEY)
+     query = "MO", key = Sys.getenv("hud_key"))
 
  ## ZIP Code to Tract crosswalk for ZIP Code 63139 in St. Louis City
  zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "TRACT",
-     query = 63139, key = INSERT_HUD_KEY)
-}
-
+     query = 63139, key = Sys.getenv("hud_key"))
+\dontshow{\}) # examplesIf}
 }

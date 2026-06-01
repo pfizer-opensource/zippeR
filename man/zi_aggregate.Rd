@@ -82,6 +82,7 @@ This function takes input ZCTA data and aggregates it to three-digit
    American health care contexts for publishing geographic identifiers.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # load sample demographic data
 mo22_demos <- zi_mo_pop
 
@@ -97,16 +98,12 @@ mo22_zcta3 <- zi_mo_zcta3
   #   method = "intersect")
 
 # aggregate a single variable
-\donttest{
 zi_aggregate(mo22_demos, year = 2020, extensive = "B01003_001", survey = "acs5",
   zcta = mo22_zcta3$ZCTA3)
-}
 
-\donttest{
 # aggregate multiple variables, outputting wide data
 zi_aggregate(mo22_demos, year = 2020,
   extensive = "B01003_001", intensive = "B19013_001", survey = "acs5",
   zcta = mo22_zcta3$ZCTA3, output = "wide")
-}
-
+\dontshow{\}) # examplesIf}
 }

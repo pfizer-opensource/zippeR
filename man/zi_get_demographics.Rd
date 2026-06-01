@@ -63,7 +63,7 @@ This function returns demographic data for five-digit ZIP Code
     all) USPS ZIP codes.
 }
 \examples{
-\donttest{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   # download all ZCTAs
   zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5")
 
@@ -74,6 +74,5 @@ This function returns demographic data for five-digit ZIP Code
   ## download demographic data
   zi_get_demographics(year = 2012, variables = "B01003_001", survey = "acs5",
       zcta = mo20$GEOID)
-}
-
+\dontshow{\}) # examplesIf}
 }

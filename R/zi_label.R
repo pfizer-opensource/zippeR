@@ -55,17 +55,15 @@
 #'   zip3 = c("630", "631", "636")
 #' )
 #'
+#' @examplesIf interactive()
 #' # UDS crosswalk
-#' \donttest{
-#'   zi_label(df, input_var = zip5, label_source = "UDS", vintage = 2022)
-#' }
+#' zi_label(df, input_var = zip5, label_source = "UDS", vintage = 2022)
 #'
 #' # USPS crosswalk
-#' \donttest{
-#'   zi_label(df, input_var = zip3, label_source = "USPS", type = "zip3",
-#'     vintage = 202408)
-#' }
+#' zi_label(df, input_var = zip3, label_source = "USPS", type = "zip3",
+#'   vintage = 202408)
 #'
+#' @examples
 #' # custom dictionary
 #' ## load sample ZIP3 label data to simulate custom dictionary
 #' mo_label <- zi_mo_usps

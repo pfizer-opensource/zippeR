@@ -32,14 +32,12 @@
 #'     For example, the three digit ZIP Code \code{010} covers Western Massachusetts
 #'     in practice, but is assigned to the state of Connecticut.
 #'
-#' @examples
-#' \donttest{
+#' @examplesIf interactive()
 #'   # zip5 labels via UDS
 #'   zi_load_labels(source = "UDS", type = "zip5", vintage = 2022)
 #'
 #'   # zip3 labels via USPS
 #'   zi_load_labels(source = "USPS", type = "zip3", vintage = 202408)
-#' }
 #'
 #' @export
 zi_load_labels <- function(source = "UDS", type = "zip5", include_scf = FALSE,
