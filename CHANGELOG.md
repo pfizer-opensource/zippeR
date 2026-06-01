@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Bundled UDS Mapper crosswalk data (2009–2022, all 14 years) as `inst/extdata/uds_crosswalk.rds` (~400 KB, xz-compressed), eliminating the runtime network dependency on `chris-prener/uds-mapper` (#41)
+- `data-raw/build_uds_crosswalk.R` script documenting provenance and reproducing the bundled crosswalk file (#41)
 - Positive-path integration tests for `zi_get_geometry()`, `zi_get_demographics()`, `zi_label()`, and `zi_load_labels()` asserting on output schemas, column types, and row counts (#62)
 - Deprecated parameter aliases `input_zip` and `dict` in `zi_crosswalk()` for backwards compatibility; emit deprecation warning noting removal in early 2027 (#64)
 - Test coverage gap analysis report (`docs/audits/2026-05-29-test-coverage-gaps.md`) mapping all 13 exported and 18 internal functions to coverage status (#43)
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Test coverage for HUD crosswalk/loading paths: input validation for `zi_load_crosswalk()`, `zi_crosswalk()`, and internal `zi_load_hud()` helper; end-to-end custom dictionary tests (#58)
 
 ### Fixed
+- Fix N/A ZCTA rows in 2009 UDS data being incorrectly zero-padded to `"00N/A"` instead of being filtered out; normalization now removes N/A ZCTAs before zero-padding (#41)
 - Replace `eval(parse(text = ...))` dispatch in `zi_utils.R` with safer `getExportedValue()` (#60)
 - Replace `tigris::states()` network download in `zi_prep_hud()` with static `states_lookup` for faster, offline-capable execution (#60)
 - Replace `merge()` with `dplyr::left_join()` in `zi_crosswalk()` and `zi_label()` to preserve row order (#60)

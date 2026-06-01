@@ -83,11 +83,9 @@ test_that("UDS year out of range triggers appropriate error", {
   )
 })
 
-# test UDS crosswalk loading (requires network) ------------------------------
+# test UDS crosswalk loading (no network required — uses bundled data) ---------
 
 test_that("2015 UDS crosswalk loads successfully with normalized columns", {
-  skip_if_no_integration()
-
   result <- zi_load_crosswalk(zip_source = "UDS", year = 2015)
   expect_s3_class(result, "tbl_df")
   expect_true("ZIP" %in% names(result))
@@ -95,4 +93,14 @@ test_that("2015 UDS crosswalk loads successfully with normalized columns", {
   expect_true(nrow(result) > 0)
   expect_true(all(nchar(result$ZIP) == 5))
   expect_true(all(nchar(result$ZCTA) == 5))
+})
+
+test_that("first and last UDS years load from bundled data", {
+  first <- zi_load_crosswalk(zip_source = "UDS", year = 2009)
+  expect_s3_class(first, "tbl_df")
+  expect_gt(nrow(first), 0)
+
+  last <- zi_load_crosswalk(zip_source = "UDS", year = 2022)
+  expect_s3_class(last, "tbl_df")
+  expect_gt(nrow(last), 0)
 })

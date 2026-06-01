@@ -79,7 +79,6 @@ test_that("custom dictionary produces expected output", {
 # test positive-path assertions for UDS/USPS sources ------------------------------------------------
 
 test_that("UDS zip5 label lookup returns expected schema", {
-  skip_if_no_integration()
   result <- zi_label(df_zip5, input_var = zip5, label_source = "UDS",
                      type = "zip5", vintage = 2022)
   expect_s3_class(result, "tbl_df")
