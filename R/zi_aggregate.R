@@ -390,7 +390,7 @@ zi_census_intensive <- function(.data, weights, method){
   } else if (method == "median"){
     .data <- dplyr::summarise(
       .data,
-      value = spatstat.univar::weighted.median(value, weight)
+      value = weighted_median(value, weight)
     )
   } else {
     cli::cli_abort(c(
@@ -481,10 +481,9 @@ zi_acs_intensive <- function(.data, weights, method){
                               estimate = stats::weighted.mean(estimate, weight, na.rm = TRUE),
                               moe = stats::weighted.mean(moe, weight, na.rm = TRUE))
   } else if (method == "median"){
-    .data <- dplyr::summarise(
-      .data,
-      estimate = spatstat.univar::weighted.median(estimate, weight),
-      moe = spatstat.univar::weighted.median(moe, weight)
+    .data <- dplyr::summarise(.data,
+                              estimate = weighted_median(estimate, weight),
+                              moe = weighted_median(moe, weight)
     )
   } else {
     cli::cli_abort(c(
@@ -511,7 +510,7 @@ zi_acs_weights <- function(year, survey, key){
 
   if (!is.null(out)){
     ## prep data
-    out <- dplyr::mutate(out, GEOID = stringr::word(NAME, 2))
+    out <- dplyr::mutate(out, GEOID = sub("^\\S+ ", "", NAME))
     out <- dplyr::mutate(out, ZCTA3 = substr(GEOID, 1, 3), .before = GEOID)
     out <- dplyr::select(out, -NAME)
     out <- dplyr::arrange(out, ZCTA3)

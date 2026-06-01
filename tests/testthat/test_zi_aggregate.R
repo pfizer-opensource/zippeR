@@ -137,10 +137,10 @@ test_that("zi_census_intensive computes weighted median correctly", {
   expect_s3_class(result, "tbl_df")
   expect_true(all(c("ZCTA3", "variable", "value") %in% names(result)))
 
-  # weighted median for 630
-  expected_630 <- spatstat.univar::weighted.median(
-    c(35.2, 38.1, 42.0), c(100 / 600, 200 / 600, 300 / 600)
-  )
+  # weighted median for 630:
+  # sorted x = c(35.2, 38.1, 42.0), cumsum(w)/sum(w) = c(1/6, 1/2, 1)
+  # first index where cumsum >= 0.5 is index 2 → value 38.1
+  expected_630 <- 38.1
   r630 <- dplyr::filter(result, ZCTA3 == "630")
   expect_equal(r630$value, expected_630, tolerance = 1e-6)
 })
@@ -214,10 +214,12 @@ test_that("zi_acs_intensive computes weighted median for estimate and moe", {
   expect_s3_class(result, "tbl_df")
   expect_true(all(c("ZCTA3", "variable", "estimate", "moe") %in% names(result)))
 
-  # expected weighted median estimate for 630
-  w630 <- c(1000 / 6000, 2000 / 6000, 3000 / 6000)
-  expected_est_630 <- spatstat.univar::weighted.median(c(55000, 62000, 48000), w630)
-  expected_moe_630 <- spatstat.univar::weighted.median(c(5000, 6000, 4500), w630)
+  # expected weighted median estimate for 630:
+  # sorted est = c(48000, 55000, 62000), sorted w = c(3/6, 1/6, 2/6),
+  # cumsum/sum = c(0.5, 0.667, 1.0) → first >= 0.5 is index 1 → 48000
+  # sorted moe = c(4500, 5000, 6000), same w sort → first >= 0.5 is index 1 → 4500
+  expected_est_630 <- 48000
+  expected_moe_630 <- 4500
 
   r630 <- dplyr::filter(result, ZCTA3 == "630")
   expect_equal(r630$estimate, expected_est_630, tolerance = 1e-6)

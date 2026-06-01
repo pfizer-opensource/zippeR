@@ -187,8 +187,8 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
 
   url <- "https://www.huduser.gov/hudapi/public/usps"
 
-  # Loop over queries using map_dfr
-  result <- purrr::map_dfr(queries, function(query) {
+  # Loop over queries using base-R lapply + rbind
+  result <- dplyr::as_tibble(do.call(rbind, lapply(queries, function(query) {
 
     if (year <= 2020 & query %in% c(datasets::state.abb, "VI", "PR", "ALL")){
       cli::cli_abort(c(
@@ -259,6 +259,6 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
     #return output
     return(out)
 
-  })
+  })))
 
 }
