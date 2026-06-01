@@ -19,8 +19,7 @@ This function loads a list of available label data sets that can
    supported.
 }
 \examples{
-\donttest{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   zi_load_labels_list(type = "zip3")
-}
-
+\dontshow{\}) # examplesIf}
 }

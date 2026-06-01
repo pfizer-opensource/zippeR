@@ -133,7 +133,7 @@ This function contains options for both the type of ZCTA and,
     either the \code{"intersect"} or \code{"centroid"} method described above.
 }
 \examples{
-\donttest{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   # five-digit ZCTAs
   ## download all ZCTAs for 2020 including territories
   zi_get_geometry(year = 2020, territory = c("AS", "GU", "MP", "PR", "VI"),
@@ -153,6 +153,5 @@ This function contains options for both the type of ZCTA and,
   ## download all ZCTAs for 2018 including territories
   zi_get_geometry(year = 2018, territory = c("AS", "GU", "MP", "PR", "VI"),
       shift_geo = TRUE)
-}
-
+\dontshow{\}) # examplesIf}
 }

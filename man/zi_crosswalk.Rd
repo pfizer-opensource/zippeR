@@ -99,19 +99,16 @@ This function compares input data containing ZIP Codes with
 # create sample data
 df <- data.frame(id = c(1:3), zip5 = c("63005", "63139", "63636"))
 
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # UDS crosswalk
-\donttest{
-  zi_crosswalk(df, input_var = zip5, zip_source = "UDS", year = 2022)
-}
-
+zi_crosswalk(df, input_var = zip5, zip_source = "UDS", year = 2022)
+\dontshow{\}) # examplesIf}
+\dontshow{if (nzchar(Sys.getenv("hud_key"))) withAutoprint(\{ # examplesIf}
 # HUD crosswalk
-# you will need to replace INSERT_HUD_KEY with your own key
-\dontrun{
-  zi_crosswalk(df, input_var = zip5, zip_source = "HUD", year = 2023,
-    qtr = 1, target = "COUNTY", query = "MO", by = "residential",
-    return_max = TRUE, key = INSERT_HUD_KEY)
-}
-
+zi_crosswalk(df, input_var = zip5, zip_source = "HUD", year = 2023,
+  qtr = 1, target = "COUNTY", query = "MO", by = "residential",
+  return_max = TRUE, key = Sys.getenv("hud_key"))
+\dontshow{\}) # examplesIf}
 # custom dictionary
 ## load sample crosswalk data to simulate custom dictionary
 mo_xwalk <- zi_mo_hud

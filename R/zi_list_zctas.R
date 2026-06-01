@@ -26,8 +26,7 @@
 #'
 #' @return A vector of GEOIDs representing ZCTAs in and around the state selected.
 #'
-#' @examples
-#' \donttest{
+#' @examplesIf interactive()
 #' # Missouri ZCTAs, intersect method
 #' ## return list
 #' mo_zctas <- zi_list_zctas(year = 2021, state = "MO", method = "intersect")
@@ -41,7 +40,6 @@
 #'
 #' ## preview ZCTAs
 #' mo_zctas[1:10]
-#' }
 #'
 #' @export
 zi_list_zctas <- function(year, state, method){

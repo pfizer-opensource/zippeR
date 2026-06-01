@@ -55,7 +55,7 @@
 #'     \code{"tidy"} or \code{"wide"} format, or \code{NULL} if population
 #'     weight data cannot be downloaded from the Census Bureau API.
 #'
-#' @examples
+#' @examplesIf interactive()
 #' # load sample demographic data
 #' mo22_demos <- zi_mo_pop
 #'
@@ -71,17 +71,13 @@
 #'   #   method = "intersect")
 #'
 #' # aggregate a single variable
-#' \donttest{
 #' zi_aggregate(mo22_demos, year = 2020, extensive = "B01003_001", survey = "acs5",
 #'   zcta = mo22_zcta3$ZCTA3)
-#' }
 #'
-#' \donttest{
 #' # aggregate multiple variables, outputting wide data
 #' zi_aggregate(mo22_demos, year = 2020,
 #'   extensive = "B01003_001", intensive = "B19013_001", survey = "acs5",
 #'   zcta = mo22_zcta3$ZCTA3, output = "wide")
-#' }
 #'
 #' @export
 zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,

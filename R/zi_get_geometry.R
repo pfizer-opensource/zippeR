@@ -97,8 +97,7 @@
 #'     Returns \code{NULL} if the Census Bureau download fails or if state
 #'     validation yields no matching ZCTAs.
 #'
-#' @examples
-#' \donttest{
+#' @examplesIf interactive()
 #'   # five-digit ZCTAs
 #'   ## download all ZCTAs for 2020 including territories
 #'   zi_get_geometry(year = 2020, territory = c("AS", "GU", "MP", "PR", "VI"),
@@ -118,7 +117,6 @@
 #'   ## download all ZCTAs for 2018 including territories
 #'   zi_get_geometry(year = 2018, territory = c("AS", "GU", "MP", "PR", "VI"),
 #'       shift_geo = TRUE)
-#' }
 #'
 #' @export
 zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",

@@ -62,19 +62,17 @@
 #' # create sample data
 #' df <- data.frame(id = c(1:3), zip5 = c("63005", "63139", "63636"))
 #'
+#' @examplesIf interactive()
 #' # UDS crosswalk
-#' \donttest{
-#'   zi_crosswalk(df, input_var = zip5, zip_source = "UDS", year = 2022)
-#' }
+#' zi_crosswalk(df, input_var = zip5, zip_source = "UDS", year = 2022)
 #'
+#' @examplesIf nzchar(Sys.getenv("hud_key"))
 #' # HUD crosswalk
-#' # you will need to replace INSERT_HUD_KEY with your own key
-#' \dontrun{
-#'   zi_crosswalk(df, input_var = zip5, zip_source = "HUD", year = 2023,
-#'     qtr = 1, target = "COUNTY", query = "MO", by = "residential",
-#'     return_max = TRUE, key = INSERT_HUD_KEY)
-#' }
+#' zi_crosswalk(df, input_var = zip5, zip_source = "HUD", year = 2023,
+#'   qtr = 1, target = "COUNTY", query = "MO", by = "residential",
+#'   return_max = TRUE, key = Sys.getenv("hud_key"))
 #'
+#' @examples
 #' # custom dictionary
 #' ## load sample crosswalk data to simulate custom dictionary
 #' mo_xwalk <- zi_mo_hud
