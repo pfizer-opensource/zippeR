@@ -15,7 +15,7 @@
 #'     crosswalk data. This can be one of either \code{"UDS"} (default) or
 #'     \code{"HUD"}.
 #' @param year Required four-digit numeric scalar for year; varies based on source.
-#'     For \code{"UDS"}, years 2009 through 2023 are available. For \code{"HUD"},
+#'     For \code{"UDS"}, years 2009 through 2022 are available. For \code{"HUD"},
 #'     years 2010 through 2024 are available.
 #' @param qtr Numeric scalar, required when \code{zip_code} is \code{"HUD"}.
 #'     Integer value between 1 and 4, representing the quarter of the year.
