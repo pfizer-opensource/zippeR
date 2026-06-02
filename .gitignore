@@ -92,3 +92,6 @@ docs/WORKFLOW.md
 docs/README.md
 .positai
 .github/audit-reports/
+
+# pkgdown build output
+_site/
