@@ -30,13 +30,11 @@ Config/testthat/edition: 3
 Imports:
     cli (>= 3.0.0),
     dplyr (>= 1.0.0),
-    httr (>= 1.4.0),
+    httr2 (>= 1.0.0),
     jsonlite (>= 1.7.0),
-    readr (>= 2.0.0),
     sf (>= 1.0-0),
     tibble (>= 3.0.0),
     tidycensus (>= 1.0),
-    tidyr (>= 1.0.0),
     tigris (>= 1.0)
 Suggests:
     knitr,
