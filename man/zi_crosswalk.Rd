@@ -44,7 +44,7 @@ data frame containing a custom dictionary; specifies the column name in
 the dictionary object that contains ZCTAs, GEOIDs, or other values.}
 
 \item{year}{Optional four-digit numeric scalar for year; varies based on source.
-For \code{"UDS"}, years 2009 through 2023 are available. For \code{"HUD"},
+For \code{"UDS"}, years 2009 through 2022 are available. For \code{"HUD"},
 years 2010 through 2024 are available. Does not need to be specified when
 a custom dictionary is used.}
 
