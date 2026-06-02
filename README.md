@@ -39,13 +39,33 @@ The development version of `zippeR` can be accessed from GitHub with
 remotes::install_github("pfizer-opensource/zippeR")
 ```
 
+## What’s New in v0.2.0
+
+- **Bundled UDS crosswalk data** — The UDS Mapper ZIP-to-ZCTA crosswalk
+  files (2009–2022) are now included directly in the package, so
+  `zi_load_crosswalk()` no longer requires a network connection for UDS
+  lookups.
+- **Lighter dependency footprint** — Six packages (`purrr`,
+  `spatstat.univar`, `stringr`, `httr`, `readr`, and `tidyr`) have been
+  dropped from Imports, replaced with base-R equivalents or `httr2`.
+- **Bug fix and input validation sweep** — A code quality audit
+  identified and resolved a broad set of issues including incorrect
+  column references, unsafe dispatch patterns, and missing input guards
+  across nearly all major functions.
+- **Partial 2024 TIGRIS year support** — `zi_list_zctas()` and
+  `zi_get_geometry()` now accept 2024 as a valid year; full geometry
+  data for 2024 will be available in a future release.
+
+See `NEWS.md` for the full list of changes.
+
 ## Usage
 
 `zippeR` contains functions that support the following tasks: \*
 Labeling five-digit and three-digit ZIP Codes \* Converting ZIP Codes to
 ZCTAs, counties, and other Census geographies \* Downloading ZCTA
 geometries for both five-digit and three-digit areas \* Aggregating
-demographic data from five-digit ZCTAs to three-digit ZCTAs
+demographic data from five-digit ZCTAs to three-digit ZCTAs \* Accessing
+bundled, offline UDS Mapper ZIP-to-ZCTA crosswalk data (2009–2022)
 
 While a quick overview of the the core functionality is below, see the
 vignettes and our package website for more information on how to use
@@ -75,10 +95,10 @@ data frame with ZIP Codes and their corresponding ZCTAs.
 # … with 41,086 more rows
 ```
 
-Likewise, users can use the `zip_load_crosswalk()` function combined
-with a HUD API key to access the HUD USPS ZIP Code Crosswalk. This
-function returns a data frame with ZIP Codes and their corresponding
-Census geographies:
+Likewise, users can use the `zi_load_crosswalk()` function combined with
+a HUD API key to access the HUD USPS ZIP Code Crosswalk. This function
+returns a data frame with ZIP Codes and their corresponding Census
+geographies:
 
 ``` r
 zi_load_crosswalk(zip_source = "HUD", year = 2023, qtr = 1, target = "COUNTY",
