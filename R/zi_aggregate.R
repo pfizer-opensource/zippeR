@@ -328,16 +328,24 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
 
       if (survey %in% c("sf1", "sf3")){
         ## pivot decennial (single value column)
-        out <- tidyr::pivot_wider(out, id_cols = "ZCTA3", names_from = "variable",
-                                  values_from = "value")
+        out <- stats::reshape(as.data.frame(out), idvar = "ZCTA3", timevar = "variable",
+                              direction = "wide", v.names = "value")
+        names(out) <- sub("^value\\.", "", names(out))
+        rownames(out) <- NULL
+        out <- tibble::as_tibble(out)
       } else {
         ## prep names
         out <- dplyr::rename(out, "E" = "estimate", "M" = "moe")
 
-        ## pivot
-        out <- tidyr::pivot_wider(out, id_cols = "ZCTA3", names_from = "variable",
-                                  names_glue = "{variable}{.value}",
-                                  values_from = c("E", "M"))
+        ## pivot ACS (estimate + moe columns)
+        out <- stats::reshape(as.data.frame(out), idvar = "ZCTA3", timevar = "variable",
+                              direction = "wide", v.names = c("E", "M"))
+        nms <- names(out)
+        nms <- sub("^E\\.(.+)$", "\\1E", nms)
+        nms <- sub("^M\\.(.+)$", "\\1M", nms)
+        names(out) <- nms
+        rownames(out) <- NULL
+        out <- tibble::as_tibble(out)
       }
 
       ## re-order names alphabetically
