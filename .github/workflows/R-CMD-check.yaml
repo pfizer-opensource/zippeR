@@ -93,7 +93,7 @@ jobs:
         with:
           cache: TRUE
           install-pandoc: TRUE
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::spelling
           needs: check
 
       - name: Session Info
@@ -111,3 +111,15 @@ jobs:
           args: 'c("--no-manual", "--as-cran")'
         env:
           _R_CHECK_DONTTEST_EXAMPLES_: false
+
+      - name: Spell check
+        if: matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
+        run: |
+          if (requireNamespace("spelling", quietly = TRUE)) {
+            results <- spelling::spell_check_package()
+            if (nrow(results) > 0) {
+              print(results)
+              stop("Spelling errors found. Update inst/WORDLIST if terms are correct.")
+            }
+          }
+        shell: Rscript {0}
