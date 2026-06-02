@@ -1,5 +1,7 @@
 url: https://pfizer-opensource.github.io/zippeR/
 
+destination: _site
+
 template:
   bootstrap: 5
 

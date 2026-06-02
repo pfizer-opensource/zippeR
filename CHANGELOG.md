@@ -53,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `.data` and `.env` to `zi_load_uds` `globalVariables()` to resolve R CMD check NOTE on no visible binding (#97)
 - Add `^data-raw$` to `.Rbuildignore` to suppress CRAN NOTE on top-level `data-raw/` directory (#96)
 - Wrap HUD portal URLs in backticks in `vignettes/converting-zips.Rmd` to suppress CRAN WARNING from HTTP 202 responses (#95)
+- Fix pkgdown CI build failure caused by non-empty `docs/` directory conflict; pkgdown now builds to `_site/` (#70)
+- Replace `JamesIves/github-pages-deploy-action` with first-party OIDC-based `actions/upload-pages-artifact` + `actions/deploy-pages` to resolve GitHub Pages deployment permission error (#74)
 
 ### Changed
 - Bump version to 0.2.0 (#75)
