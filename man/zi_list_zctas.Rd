@@ -8,7 +8,7 @@ zi_list_zctas(year, state, method)
 }
 \arguments{
 \item{year}{A four-digit numeric scalar for year. \code{zippeR} currently
-supports data between 2010 and 2021.}
+supports data between 2010 and 2024.}
 
 \item{state}{A scalar or vector with state abbreviations (e.x. \code{"MO"})
 or FIPS codes (e.x. \code{29}).}

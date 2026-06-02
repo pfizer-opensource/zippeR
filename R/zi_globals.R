@@ -17,7 +17,7 @@ utils::globalVariables(c("PO_NAME", "STATE", "ZIP_TYPE", "destination_area",
                          "destination_state", "scf_id", "scf_name", "scf_state"))
 
 ## zi_load_uds
-utils::globalVariables(c("po_name", "zcta", "zip", "zip_type"))
+utils::globalVariables(c(".data", ".env", "po_name", "zcta", "zip", "zip_type"))
 
 ## zi_prep_hud
 utils::globalVariables(c("STATEFP", "STUSPS", "bus_ratio", "fips", "geoid",

@@ -1,7 +1,5 @@
 ## Release summary
-This version of `zippeR` is a patch for CRAN. The package has been updated to address the following issues:
-
-* The package was failing CRAN tests earlier this month due to the U.S. Census Bureau's servers being taken offline. If this were to happen in the future, the demographic functions now fail informatively.
+This is a minor release of `zippeR` (0.2.0) for CRAN.
 
 ## Test environments
 * local macOS install: R 4.4.3

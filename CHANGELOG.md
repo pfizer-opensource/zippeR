@@ -50,10 +50,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix `zi_convert()` using `substitute(input_var)` instead of `substitute(output_var)` when `output_var` is specified, which caused the input column to be overwritten instead of creating a new output column (#33)
 - Replace live Census API calls in `test_zi_aggregate.R` with local fixtures so `R CMD check` passes on CRAN without a Census API key (#6)
 - Normalize non-standard column names in 2015 UDS crosswalk (`zcta_use` → `zcta`, etc.) so `zi_load_crosswalk(zip_source = "UDS", year = 2015)` no longer errors (#5)
+- Add `.data` and `.env` to `zi_load_uds` `globalVariables()` to resolve R CMD check NOTE on no visible binding (#97)
+- Add `^data-raw$` to `.Rbuildignore` to suppress CRAN NOTE on top-level `data-raw/` directory (#96)
+- Wrap HUD portal URLs in backticks in `vignettes/converting-zips.Rmd` to suppress CRAN WARNING from HTTP 202 responses (#95)
 - Fix pkgdown CI build failure caused by non-empty `docs/` directory conflict; pkgdown now builds to `_site/` (#70)
 - Replace `JamesIves/github-pages-deploy-action` with first-party OIDC-based `actions/upload-pages-artifact` + `actions/deploy-pages` to resolve GitHub Pages deployment permission error (#74)
 
 ### Changed
+- Bump version to 0.2.0 (#75)
 - Replace `\donttest{}` / `\dontrun{}` wrappers in roxygen2 examples with `@examplesIf interactive()` (network-dependent examples) and `@examplesIf nzchar(Sys.getenv("hud_key"))` (HUD API key examples) across all 9 affected source files (#77)
 - Document NULL return values in `@return` tags for `zi_get_demographics()`, `zi_get_geometry()`, and `zi_aggregate()` (#12)
 - Remove all manual `@usage` roxygen2 tags; usage sections now auto-generated (#19)
