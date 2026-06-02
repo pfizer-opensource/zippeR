@@ -14,12 +14,12 @@ package structure.
 
 - KR1: All exported functions have complete roxygen2 documentation (`@param`,
   `@return`, `@examples`) — _achieved (Epic C)_
-- KR2: R CMD check passes with 0 errors, 0 warnings, 0 notes — _in progress_
+- KR2: R CMD check passes with 0 errors, 0 warnings, 0 notes — _achieved (Epic G)_
 - KR3: Test coverage ≥ 80% for all exported functions — _achieved (Epic A)_
 - KR4: `DESCRIPTION` fields complete (URL, BugReports, Language) — _achieved
   (Epic D)_
 
-_Last check-in: 2026-05-29_
+_Last check-in: 2026-06-02_
 
 ### O2: Comprehensive geographic coverage
 

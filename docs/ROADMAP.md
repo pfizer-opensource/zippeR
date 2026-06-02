@@ -1,5 +1,5 @@
 ---
-last_updated: "2026-06-01"
+last_updated: "2026-06-02"
 ---
 # Roadmap — zippeR
 
@@ -17,6 +17,7 @@ _No epics in the backlog._
 
 ## Recently Shipped
 
+- **[Epic G] CRAN Release Preparation** (#79) — closed 2026-06-02
 - **[Epic F] New Features & Enhancements** (#49) — closed 2026-06-01
 - **[Epic C] Documentation Improvements** (#24) — closed 2026-05-29
 - **[Epic B] Code Style & Error Handling** (#23) — closed 2026-05-28
