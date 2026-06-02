@@ -67,6 +67,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drop `purrr` from `Imports`; replace `purrr::map_dfr()` in `zi_load_hud()` with `do.call(rbind, lapply())` (#80)
 - Drop `spatstat.univar` from `Imports`; replace `weighted.median()` calls with an internal `weighted_median()` base-R helper in `R/zi_utils.R` (#81)
 - Drop `stringr` from `Imports`; replace `str_pad()`, `str_trim()`, and `word()` calls with base-R equivalents (`formatC`, `trimws`, `sub`) across `R/zi_aggregate.R`, `R/zi_get_demographics.R`, `R/zi_utils.R`, and `R/zi_validate.R` (#82)
+- Drop `httr` from `Imports`; replace `httr::GET()` / `httr::content()` / `httr::http_error()` with `httr2::request() |> httr2::req_perform()` / `httr2::resp_body_string()` / `httr2_http_error` condition handler in `R/zi_load_crosswalk.R`; add `httr2 (>= 1.0.0)` to `Imports` (#83)
+- Drop `readr` from `Imports`; replace `readr::read_csv()` with `utils::read.csv()` (using `colClasses` for character-type enforcement) in `R/zi_load_labels.R` (#84)
+- Drop `tidyr` from `Imports`; replace `tidyr::pivot_wider()` with `stats::reshape()` for both the decennial (single-value) and ACS (estimate+moe) wide-output paths in `R/zi_aggregate.R` (#85)
 
 ### Added
 - Data provenance README in `inst/build-data/` documenting build scripts, execution order, prerequisites, and outputs (#20)
