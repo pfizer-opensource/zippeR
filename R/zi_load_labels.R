@@ -148,12 +148,10 @@ zi_load_labels_usps <- function(type, include_scf, vintage){
 
     ## read from GitHub
     out <- tryCatch(
-      readr::read_csv(
+      utils::read.csv(
         paste0("https://raw.githubusercontent.com/chris-prener/usps-zip-ref/main/data/zip3_", vintage, ".csv"),
-        col_types = readr::cols(
-          zip3 = readr::col_character(),
-          scf_id = readr::col_character()
-        )
+        colClasses = c(zip3 = "character", scf_id = "character"),
+        stringsAsFactors = FALSE
       ),
       error = function(e) {
         cli::cli_abort(c(
@@ -162,6 +160,7 @@ zi_load_labels_usps <- function(type, include_scf, vintage){
         ))
       }
     )
+    out <- tibble::as_tibble(out)
 
     ## rename cols
     out <- dplyr::rename(out, label_area = destination_area, label_state = destination_state)
