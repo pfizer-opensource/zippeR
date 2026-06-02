@@ -236,17 +236,19 @@ zi_load_hud <- function(year, qtr, target, queries, key = NULL){
     }
 
     # get data and format
-    request <- httr::GET(paste0(url, type, query, "&year=", year, "&quarter=", qtr), httr::add_headers(Authorization = paste("Bearer", key, sep = " ")))
+    request <- tryCatch(
+      httr2::request(paste0(url, type, query, "&year=", year, "&quarter=", qtr)) |>
+        httr2::req_headers(Authorization = paste("Bearer", key)) |>
+        httr2::req_perform(),
+      httr2_http_error = function(e) {
+        cli::cli_abort(c(
+          "x" = "HUD API request failed with status {.val {httr2::resp_status(e$resp)}}.",
+          "i" = "Check your API key and query parameters (year={year}, qtr={qtr}, query={query})."
+        ))
+      }
+    )
 
-    # validate HTTP status
-    if (httr::http_error(request)){
-      cli::cli_abort(c(
-        "x" = "HUD API request failed with status {.val {httr::status_code(request)}}.",
-        "i" = "Check your API key and query parameters (year={year}, qtr={qtr}, query={query})."
-      ))
-    }
-
-    content <- httr::content(request, "text", encoding = "UTF-8")
+    content <- httr2::resp_body_string(request)
     json <- jsonlite::fromJSON(content)
     list <- lapply(json, "[[", 5)
 
