@@ -1,3 +1,7 @@
+# zippeR 0.2.0
+
+* Bump version for next CRAN release
+
 # zippeR 0.1.2
 
 * Address issues with Census Bureau API being offline
