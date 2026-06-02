@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Updated `NEWS.md`, `README.md`/`README.Rmd`, and `cran-comments.md` with full 0.2.0 release notes, a "What's New" section, and expanded CRAN reviewer summary (#73)
+
 ### Added
 - Extended TIGRIS year availability from 2023 to 2024 in `zi_get_geometry()`; `zi_list_zctas()` accepts 2024 in the valid range but aborts with an informative message until `sysdata.rda` is rebuilt (#45)
 - Updated `inst/build-data/build_vectors.R` to download and process 2024 ZCTA data, enabling future `sysdata.rda` rebuild (#45)
