@@ -24,9 +24,9 @@ plan to use for aggregating data. See Details below for formatting
 requirements.}
 
 \item{year}{A four-digit numeric scalar for year. \code{zippeR} currently
-supports data for from 2010 to 2022. Different \code{survey} products
-are available for different years. See the \code{survey} parameter
-for more details.}
+supports data for \code{"acs1"} and \code{"acs5"} from 2010 to 2024.
+Different \code{survey} products are available for different years.
+See the \code{survey} parameter for more details.}
 
 \item{extensive}{A character scalar or vector listing all extensive (i.e.
 count data) variables you wish to aggregate. These will be summed. For

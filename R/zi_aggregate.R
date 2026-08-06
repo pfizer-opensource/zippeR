@@ -11,9 +11,9 @@
 #'     plan to use for aggregating data. See Details below for formatting
 #'     requirements.
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
-#'     supports data for from 2010 to 2022. Different \code{survey} products
-#'     are available for different years. See the \code{survey} parameter
-#'     for more details.
+#'     supports data for \code{"acs1"} and \code{"acs5"} from 2010 to 2024.
+#'     Different \code{survey} products are available for different years.
+#'     See the \code{survey} parameter for more details.
 #' @param extensive A character scalar or vector listing all extensive (i.e.
 #'     count data) variables you wish to aggregate. These will be summed. For
 #'     American Community Survey data, the margin of error will be calculated by
@@ -90,7 +90,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
   # }
 
   if (missing(year)){
-    cli::cli_abort("{.arg year} is required. Please provide a numeric value between {.val 2010} and {.val 2022}.")
+    cli::cli_abort("{.arg year} is required. Please provide a numeric value between {.val 2010} and {.val 2024}.")
   }
 
   if (!is.numeric(year)){
@@ -121,9 +121,9 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     ))
   }
 
-  if (survey %in% c("acs1", "acs5") & !(year %in% c(2010:2022))){
+  if (survey %in% c("acs1", "acs5") & !(year %in% c(2010:2024))){
     cli::cli_abort(c(
-      "{.arg year} must be between {.val 2010} and {.val 2022} for {.arg survey} values {.val acs1} and {.val acs5}.",
+      "{.arg year} must be between {.val 2010} and {.val 2024} for {.arg survey} values {.val acs1} and {.val acs5}.",
       "i" = "You requested {.val {survey}} for {.val {year}}."
     ))
   }

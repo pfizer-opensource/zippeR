@@ -16,9 +16,12 @@ zi_get_demographics(
 }
 \arguments{
 \item{year}{A four-digit numeric scalar for year. \code{zippeR} currently
-supports data for from 2010 to 2022. Different \code{survey} products
-are available for different years. See the \code{survey} parameter
-for more details}
+supports data for \code{"acs1"} and \code{"acs5"} from 2010 to 2024.
+Different \code{survey} products are available for different years.
+See the \code{survey} parameter for more details. Note that
+\code{zi_get_geometry()} and \code{zi_list_zctas()} currently only
+support ZCTA geometry data through 2023; 2024 geometry support is
+pending a future release.}
 
 \item{variables}{A character scalar or vector of variable IDs.}
 

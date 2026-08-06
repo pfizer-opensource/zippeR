@@ -10,6 +10,7 @@
 
 ## Bug fixes
 
+* `zi_get_demographics()` and `zi_aggregate()` now accept `year` values through 2024 for `survey` values `"acs1"` and `"acs5"` (previously capped at 2022), bringing them in line with `zi_get_geometry()`'s currently-working 2023 support. Note that `zi_get_geometry()`/`zi_list_zctas()` still only support ZCTA geometry through 2023; full 2024 geometry support is tracked in a follow-up issue pending an internal data rebuild
 * Resolved several input validation gaps across `zi_aggregate()`, `zi_crosswalk()`, `zi_convert()`, `zi_get_geometry()`, `zi_get_demographics()`, `zi_load_crosswalk()`, `zi_load_labels()`, `zi_load_labels_list()`, `zi_prep_hud()`, `zi_repair()`, and `zi_validate()`
 * Fixed a number of incorrect column references, variable scoping errors, and unsafe dispatch patterns identified during a code quality audit
 * Replaced live Census API calls in tests with local fixtures so `R CMD check` passes on CRAN without a Census API key
