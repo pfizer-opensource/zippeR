@@ -1,5 +1,3 @@
-# Set Style
-style <- usethis::ui_yeah("Do you want to use the local ZCTA data?")
 
 # Dependencies ####
 ## Packages
@@ -9,70 +7,68 @@ library(sf)
 library(purrr)
 
 ## Functions
-if (style == FALSE){
 
-  create_vector <- function(.data, state){
+create_vector <- function(.data, state){
 
-    ## subset and sort
-    out <- filter(.data, STUSPS == state)
-    out <- sort(out$GEOID)
+  ## subset and sort
+  out <- filter(.data, STUSPS == state)
+  out <- sort(out$GEOID)
 
-    ## return output
-    return(out)
-
-  }
-
-  create_year <- function(year, zcta, intersect_by, method = "intersects"){
-
-    ## download data
-    if (missing(zcta) == TRUE){
-      zcta <- zctas(year = year, class = "sf")
-    }
-
-    ## ensure correct projection
-    zcta <- st_transform(zcta, crs = 3857)
-
-    ## subset
-    if (year >= 2020){
-      zcta <- select(zcta, GEOID = GEOID20)
-    } else if (year >= 2010 & year < 2020){
-      zcta <- select(zcta, GEOID = GEOID10)
-    }
-
-    ## fix topology issue
-    if (year %in% c(2010,2011,2012,2013,2014)){
-      zcta <- st_make_valid(zcta)
-    }
-
-    ## create vector for processing
-    processing_vector <- sort(intersect_by$STUSPS)
-
-    ## geoprocess
-    if (method == "centroid"){
-      zcta <- st_centroid(zcta)
-    }
-
-    intersect_df <- st_intersection(zcta, intersect_by)
-
-    if (method == "intersects"){
-      intersect_df <- mutate(intersect_df, area = as.numeric(st_area(geometry)))
-      intersect_df <- filter(intersect_df, area > 0)
-      intersect_df <- select(intersect_df, -area)
-    }
-
-    st_geometry(intersect_df) <- NULL
-
-    ## create named list for output
-    processing_vector %>%
-      set_names() %>%
-      map(~create_vector(intersect_df, state = .x)) -> out
-
-    ## return output
-    return(out)
-
-  }
+  ## return output
+  return(out)
 
 }
+
+create_year <- function(year, zcta, intersect_by, method = "intersects"){
+
+  ## download data
+  if (missing(zcta) == TRUE){
+    zcta <- zctas(year = year, class = "sf")
+  }
+
+  ## ensure correct projection
+  zcta <- st_transform(zcta, crs = 3857)
+
+  ## subset
+  if (year >= 2020){
+    zcta <- select(zcta, GEOID = GEOID20)
+  } else if (year >= 2010 & year < 2020){
+    zcta <- select(zcta, GEOID = GEOID10)
+  }
+
+  ## fix topology issue
+  if (year %in% c(2010,2011,2012,2013,2014)){
+    zcta <- st_make_valid(zcta)
+  }
+
+  ## create vector for processing
+  processing_vector <- sort(intersect_by$STUSPS)
+
+  ## geoprocess
+  if (method == "centroid"){
+    zcta <- st_centroid(zcta)
+  }
+
+  intersect_df <- st_intersection(zcta, intersect_by)
+
+  if (method == "intersects"){
+    intersect_df <- mutate(intersect_df, area = as.numeric(st_area(geometry)))
+    intersect_df <- filter(intersect_df, area > 0)
+    intersect_df <- select(intersect_df, -area)
+  }
+
+  st_geometry(intersect_df) <- NULL
+
+  ## create named list for output
+  processing_vector %>%
+    set_names() %>%
+    map(~create_vector(intersect_df, state = .x)) -> out
+
+  ## return output
+  return(out)
+
+}
+
 
 compare_years <- function(year1, year2, name){
 
@@ -163,49 +159,46 @@ states_lookup <- select(states, fips = GEOID, abb = STUSPS, name = NAME)
 st_geometry(states_lookup) <- NULL
 
 # Process ZCTA Data, Intersects ####
-if (style == FALSE){
 
-  ## years for which cached inst/data-raw/ vectors may already exist
-  available_years <- c(2010, 2012:2024)
+## years for which cached inst/data-raw/ vectors may already exist
+available_years <- c(2010, 2012:2024)
 
-  ## fetch + process only years whose cached .rda files are missing;
-  ## years with both intersect and centroid caches present are skipped
-  ## entirely (no re-download, no re-processing), enabling partial
-  ## rebuilds (e.g. adding only a new year) without re-running the full
-  ## nationwide TIGER/Line download for every prior year.
-  for (yr in sort(available_years, decreasing = TRUE)){
+## fetch + process only years whose cached .rda files are missing;
+## years with both intersect and centroid caches present are skipped
+## entirely (no re-download, no re-processing), enabling partial
+## rebuilds (e.g. adding only a new year) without re-running the full
+## nationwide TIGER/Line download for every prior year.
+for (yr in sort(available_years, decreasing = TRUE)){
 
-    intersect_path <- paste0("inst/data-raw/zcta", yr, ".rda")
-    centroid_path <- paste0("inst/data-raw/zcta", yr, "_centroid.rda")
+  intersect_path <- paste0("inst/data-raw/zcta", yr, ".rda")
+  centroid_path <- paste0("inst/data-raw/zcta", yr, "_centroid.rda")
 
-    if (file.exists(intersect_path) & file.exists(centroid_path)){
-      message("Skipping ", yr, " - cached .rda files already exist.")
-      next
-    }
-
-    message("Building ", yr, " - downloading and processing ZCTA data.")
-
-    zctas_yr <- zctas(year = yr, class = "sf")
-
-    if (!file.exists(intersect_path)){
-      zcta_out <- create_year(year = yr, zcta = zctas_yr, intersect_by = states_abbrev)
-      assign(paste0("zcta", yr), zcta_out)
-      save(list = paste0("zcta", yr), file = intersect_path)
-    }
-
-    if (!file.exists(centroid_path)){
-      zcta_out <- create_year(year = yr, zcta = zctas_yr, intersect_by = states_abbrev, method = "centroid")
-      assign(paste0("zcta", yr), zcta_out)
-      save(list = paste0("zcta", yr), file = centroid_path)
-    }
-
+  if (file.exists(intersect_path) & file.exists(centroid_path)){
+    message("Skipping ", yr, " - cached .rda files already exist.")
+    next
   }
 
-  rm(yr, intersect_path, centroid_path, available_years)
-  if (exists("zctas_yr")) rm(zctas_yr)
-  if (exists("zcta_out")) rm(zcta_out)
+  message("Building ", yr, " - downloading and processing ZCTA data.")
+
+  zctas_yr <- zctas(year = yr, class = "sf")
+
+  if (!file.exists(intersect_path)){
+    zcta_out <- create_year(year = yr, zcta = zctas_yr, intersect_by = states_abbrev)
+    assign(paste0("zcta", yr), zcta_out)
+    save(list = paste0("zcta", yr), file = intersect_path)
+  }
+
+  if (!file.exists(centroid_path)){
+    zcta_out <- create_year(year = yr, zcta = zctas_yr, intersect_by = states_abbrev, method = "centroid")
+    assign(paste0("zcta", yr), zcta_out)
+    save(list = paste0("zcta", yr), file = centroid_path)
+  }
 
 }
+
+rm(yr, intersect_path, centroid_path, available_years)
+if (exists("zctas_yr")) rm(zctas_yr)
+if (exists("zcta_out")) rm(zcta_out)
 
 # Compare ZCTA Data, Intersects ####
 ## Load ZCTA Data ####
@@ -390,7 +383,6 @@ changes_centroids <- changes
 rm(obj, reference, changes)
 rm(find_element)
 rm(states_abbrev)
-rm(style)
 
 # ZCTA3 URLS ####
 

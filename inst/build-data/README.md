@@ -84,7 +84,6 @@ Scripts must be run in this order:
 | Package | Purpose |
 |---------|---------|
 | `devtools` | Load in-development package (`build_sample.R`) |
-| `usethis` | Interactive prompts (`build_vectors.R`) |
 | `dplyr` | Data manipulation |
 | `tigris` | Download Census TIGER/Line shapefiles |
 | `sf` | Spatial operations (intersection, centroid, transform) |
@@ -110,9 +109,10 @@ Scripts must be run in this order:
 
 ## Notes
 
-- `build_vectors.R` prompts interactively whether to use local ZCTA data
-  (previously cached in `inst/data-raw/`) or to re-download from the Census
-  Bureau. Downloading fresh data requires substantial time and bandwidth.
+- `build_vectors.R` no longer prompts interactively. It always runs the
+  fetch/process step, but automatically skips any year whose cached `.rda`
+  files already exist in `inst/data-raw/` (see "Partial rebuilds" above), so
+  re-running it is cheap unless new years are missing.
 - The `inst/data-raw/` directory contains cached intermediate `.rda` files from
   `build_vectors.R`. These are not shipped to end users but are preserved for
   incremental rebuilds.
