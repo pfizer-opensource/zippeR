@@ -76,6 +76,13 @@ test_that("zi_aggregate produces correct wide output", {
   expect_false("variable" %in% names(result))
 })
 
+test_that("zi_aggregate accepts the extended 2023/2024 acs5 year range", {
+  expect_no_error(zi_aggregate(zi_mo_pop, year = 2023, extensive = "B01003_001",
+                               survey = "acs5", zcta = c("630", "631")))
+  expect_no_error(zi_aggregate(zi_mo_pop, year = 2024, extensive = "B01003_001",
+                               survey = "acs5", zcta = c("630", "631")))
+})
+
 # test internal helpers: decennial extensive ----------------------------------
 
 # Decennial fixture: 6 ZCTAs across 2 ZCTA3s, 2 variables (one extensive, one intensive)
