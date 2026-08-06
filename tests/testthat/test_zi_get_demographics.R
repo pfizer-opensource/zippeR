@@ -48,6 +48,13 @@ test_that("correctly specified functions execute without error", {
   expect_no_error(zi_get_demographics(year = 2012, survey = "acs5", variables = c(pop = "B01003_001")))
 })
 
+test_that("acs5 supports the extended 2023/2024 year range", {
+  skip_if_no_integration()
+  skip_if(nchar(Sys.getenv("CENSUS_API_KEY")) == 0, "Census API key not available")
+  expect_no_error(zi_get_demographics(year = 2023, survey = "acs5", variables = "B19083_001"))
+  expect_no_error(zi_get_demographics(year = 2024, survey = "acs5", variables = "B19083_001"))
+})
+
 # test positive-path assertions ------------------------------------------------
 
 test_that("acs5 variables returns tidy output with expected schema", {

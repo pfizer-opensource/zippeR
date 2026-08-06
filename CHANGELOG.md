@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Test coverage for HUD crosswalk/loading paths: input validation for `zi_load_crosswalk()`, `zi_crosswalk()`, and internal `zi_load_hud()` helper; end-to-end custom dictionary tests (#58)
 
 ### Fixed
+- Extended `zi_get_demographics()` and `zi_aggregate()` `acs1`/`acs5` year-range validation from 2010-2022 to 2010-2024, bringing them in line with `zi_get_geometry()`'s currently-working 2023 support; live-verified against the Census API for both 2023 and 2024 ACS5 vintages (#103)
 - Fix N/A ZCTA rows in 2009 UDS data being incorrectly zero-padded to `"00N/A"` instead of being filtered out; normalization now removes N/A ZCTAs before zero-padding (#41)
 - Replace `eval(parse(text = ...))` dispatch in `zi_utils.R` with safer `getExportedValue()` (#60)
 - Replace `tigris::states()` network download in `zi_prep_hud()` with static `states_lookup` for faster, offline-capable execution (#60)
