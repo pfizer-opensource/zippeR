@@ -3,7 +3,7 @@
 ## New features and improvements
 
 * UDS Mapper crosswalk data (2009–2022) is now bundled with the package, eliminating the runtime network dependency on an external GitHub repository
-* Partial support for 2024 TIGRIS year: `zi_list_zctas()` and `zi_get_geometry()` both currently abort with an informative message for `year = 2024`. The `inst/build-data/build_vectors.R` pipeline has been audited and confirmed staged/ready to rebuild the internal 2024 data, but that rebuild (a heavy nationwide TIGER/Line download) has not yet been run; full 2024 support is tracked in [#104](https://github.com/pfizer-opensource/zippeR/issues/104). 2010-2023 continue to work as before (regression-tested)
+* Partial support for 2024 TIGRIS year: `zi_list_zctas()` accepts 2024 in its valid range. Nationwide `zi_get_geometry()` requests (no `state`/`county`) for 2024 already work, served directly from `tigris`; state- or county-scoped `zi_get_geometry()`/`zi_list_zctas()` requests for 2024 abort with an informative message. The `inst/build-data/build_vectors.R` pipeline has been audited and confirmed staged/ready to rebuild the internal 2024 data, but that rebuild (a heavy nationwide TIGER/Line download) has not yet been run; full 2024 support for state/county-scoped requests is tracked in [#104](https://github.com/pfizer-opensource/zippeR/issues/104). 2010-2023 continue to work as before (regression-tested)
 * Deprecated parameter aliases `input_zip` and `dict` in `zi_crosswalk()` with backwards-compatible support until early 2027
 * `@examplesIf` guards replace `\donttest{}`/`\dontrun{}` wrappers in all network-dependent and API-key-dependent examples
 * Minimum R version set to 4.1

@@ -121,3 +121,21 @@ test_that("2022 and 2023 continue to return valid zcta5 geometry with a state fi
                                  method = "intersect", class = "tibble")
   expect_gt(nrow(result_2023), 500)
 })
+
+# test 2024 partial support -------------------------------------------------
+
+test_that("2024 nationwide request succeeds without a state/county filter", {
+  skip_if_no_integration()
+  result_2024 <- zi_get_geometry(year = 2024, style = "zcta5", cb = FALSE,
+                                 class = "tibble")
+  expect_gt(nrow(result_2024), 30000)
+})
+
+test_that("2024 state-scoped request aborts with an informative message", {
+  skip_if_no_integration()
+  expect_error(
+    zi_get_geometry(year = 2024, style = "zcta5", state = "MO",
+                    method = "intersect", class = "tibble"),
+    regexp = "2024"
+  )
+})
