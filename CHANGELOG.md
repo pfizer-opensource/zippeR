@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated `NEWS.md`, `README.md`/`README.Rmd`, and `cran-comments.md` with full 0.2.0 release notes, a "What's New" section, and expanded CRAN reviewer summary (#73)
+- Corrected `zi_get_geometry()`/`zi_list_zctas()` documentation and `NEWS.md` wording to accurately describe 2024 geometry support: nationwide requests (no `state`/`county`) already work today, while state- or county-scoped requests abort until internal lookup data is rebuilt; refined the `zi_list_zctas()` 2024 abort message to reference #104; added live-verified regression tests confirming 2020-2023 continue to work correctly (#104)
 
 ### Added
 - Extended TIGRIS year availability from 2023 to 2024 in `zi_get_geometry()`; `zi_list_zctas()` accepts 2024 in the valid range but aborts with an informative message until `sysdata.rda` is rebuilt (#45)

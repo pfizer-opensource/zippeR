@@ -57,3 +57,13 @@ test_that("correctly specified functions produce expected result length", {
   r <- strsplit(t[1], "")
   expect_length(r[[1]], 5)
 })
+
+# test 2022/2023 year regression ------------------------------------------------
+
+test_that("2022 and 2023 continue to work for both centroid and intersect methods", {
+  skip_if_no_integration()
+  expect_no_error(zi_list_zctas(year = 2022, method = "centroid", state = "MO"))
+  expect_no_error(zi_list_zctas(year = 2022, method = "intersect", state = "MO"))
+  expect_no_error(zi_list_zctas(year = 2023, method = "centroid", state = "MO"))
+  expect_no_error(zi_list_zctas(year = 2023, method = "intersect", state = "MO"))
+})

@@ -108,3 +108,34 @@ test_that("zcta5 includes/excludes filters work", {
   expect_true("63005" %in% result[[geoid_col]])
   expect_true("63139" %in% result[[geoid_col]])
 })
+
+# test 2022/2023 year regression ------------------------------------------------
+
+test_that("2022 and 2023 continue to return valid zcta5 geometry with a state filter", {
+  skip_if_no_integration()
+  result_2022 <- zi_get_geometry(year = 2022, style = "zcta5", state = "MO",
+                                 method = "intersect", class = "tibble")
+  expect_gt(nrow(result_2022), 500)
+
+  result_2023 <- zi_get_geometry(year = 2023, style = "zcta5", state = "MO",
+                                 method = "intersect", class = "tibble")
+  expect_gt(nrow(result_2023), 500)
+})
+
+# test 2024 partial support -------------------------------------------------
+
+test_that("2024 nationwide request succeeds without a state/county filter", {
+  skip_if_no_integration()
+  result_2024 <- zi_get_geometry(year = 2024, style = "zcta5", cb = FALSE,
+                                 class = "tibble")
+  expect_gt(nrow(result_2024), 30000)
+})
+
+test_that("2024 state-scoped request aborts with an informative message", {
+  skip_if_no_integration()
+  expect_error(
+    zi_get_geometry(year = 2024, style = "zcta5", state = "MO",
+                    method = "intersect", class = "tibble"),
+    regexp = "2024"
+  )
+})

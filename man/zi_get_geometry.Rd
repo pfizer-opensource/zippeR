@@ -22,7 +22,16 @@ zi_get_geometry(
 }
 \arguments{
 \item{year}{A four-digit numeric scalar for year. \code{zippeR} currently
-supports data between 2010 and 2024}
+supports data between 2010 and 2024. Note that 2024 support is
+currently partial: nationwide requests (i.e. \code{state} and
+\code{county} both \code{NULL}) already work today because they are
+served directly by \code{tigris} without depending on \code{zippeR}'s
+internal lookup data. State- or county-scoped requests for 2024 will
+abort with an informative message because the internal lookup data
+pipeline has been staged (see \code{inst/build-data/build_vectors.R})
+but the rebuilt internal data have not yet been generated/committed
+(tracked in
+\url{https://github.com/pfizer-opensource/zippeR/issues/104}).}
 
 \item{style}{A character scalar - either \code{"zcta5"} or \code{"zcta3"}.
 See Details below.}
