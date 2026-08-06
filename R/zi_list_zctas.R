@@ -6,7 +6,12 @@
 #'
 #'
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
-#'     supports data between 2010 and 2024.
+#'     supports data between 2010 and 2023. The internal data pipeline for
+#'     2024 has been staged (see \code{inst/build-data/build_vectors.R}) but
+#'     the rebuilt internal data have not yet been generated/committed, so
+#'     2024 will abort with an informative message until that rebuild is
+#'     completed (tracked in
+#'     \url{https://github.com/pfizer-opensource/zippeR/issues/104}).
 #' @param state A scalar or vector with state abbreviations (e.x. \code{"MO"})
 #'     or FIPS codes (e.x. \code{29}).
 #' @param method A character scalar - either \code{"intersect"} or \code{"centroid"}.
@@ -66,7 +71,7 @@ zi_list_zctas <- function(year, state, method){
   if (year == 2024){
     cli::cli_abort(c(
       "{.arg year} {.val 2024} is not yet available for {.fn zi_list_zctas}.",
-      "i" = "Use {.val 2023} or earlier. Support for {.val 2024} will be added in a future release."
+      "i" = "Use {.val 2023} or earlier. The 2024 build pipeline is staged but the internal data have not yet been rebuilt; see {.url https://github.com/pfizer-opensource/zippeR/issues/104} for status."
     ))
   }
 

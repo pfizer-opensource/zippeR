@@ -108,3 +108,16 @@ test_that("zcta5 includes/excludes filters work", {
   expect_true("63005" %in% result[[geoid_col]])
   expect_true("63139" %in% result[[geoid_col]])
 })
+
+# test 2022/2023 year regression ------------------------------------------------
+
+test_that("2022 and 2023 continue to return valid zcta5 geometry with a state filter", {
+  skip_if_no_integration()
+  result_2022 <- zi_get_geometry(year = 2022, style = "zcta5", state = "MO",
+                                 method = "intersect", class = "tibble")
+  expect_gt(nrow(result_2022), 500)
+
+  result_2023 <- zi_get_geometry(year = 2023, style = "zcta5", state = "MO",
+                                 method = "intersect", class = "tibble")
+  expect_gt(nrow(result_2023), 500)
+})
