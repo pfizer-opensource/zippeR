@@ -8,12 +8,7 @@ zi_list_zctas(year, state, method)
 }
 \arguments{
 \item{year}{A four-digit numeric scalar for year. \code{zippeR} currently
-supports data between 2010 and 2023. The internal data pipeline for
-2024 has been staged (see \code{inst/build-data/build_vectors.R}) but
-the rebuilt internal data have not yet been generated/committed, so
-2024 will abort with an informative message until that rebuild is
-completed (tracked in
-\url{https://github.com/pfizer-opensource/zippeR/issues/104}).}
+supports data between 2010 and 2024.}
 
 \item{state}{A scalar or vector with state abbreviations (e.x. \code{"MO"})
 or FIPS codes (e.x. \code{29}).}

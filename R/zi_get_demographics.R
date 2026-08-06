@@ -8,11 +8,7 @@
 #' @param year A four-digit numeric scalar for year. \code{zippeR} currently
 #'     supports data for \code{"acs1"} and \code{"acs5"} from 2010 to 2024.
 #'     Different \code{survey} products are available for different years.
-#'     See the \code{survey} parameter for more details. Note that
-#'     state- or county-scoped \code{zi_get_geometry()} and
-#'     \code{zi_list_zctas()} requests currently only support ZCTA geometry
-#'     data through 2023; full 2024 geometry support for those cases is
-#'     tracked in a follow-up issue (#104).
+#'     See the \code{survey} parameter for more details.
 #' @param variables A character scalar or vector of variable IDs.
 #' @param table A character scalar of a table ID (only one table may be
 #'     requested per call).

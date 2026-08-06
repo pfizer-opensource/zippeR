@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Rebuilt `R/sysdata.rda` with full 2024 ZCTA geometry data (intersect and centroid vectors, reference tables); state- and county-scoped `zi_get_geometry()`/`zi_list_zctas()` requests for year 2024 now work end-to-end, matching nationwide support added previously (#91)
+
 ### Changed
+- Refactored `inst/build-data/build_vectors.R` to support partial/incremental rebuilds: per-year cached `.rda` files in `inst/data-raw/` are now checked and skipped if already present, so adding a new year no longer requires re-downloading and re-processing all prior years (#91)
+- Removed the obsolete interactive `usethis::ui_yeah()` style prompt from `build_vectors.R`; the script now always runs its cache-aware fetch/process step (#91)
+- Removed the `zi_list_zctas()` guard that aborted state-/county-scoped 2024 requests; 2024 is now fully supported across all `zippeR` geometry functions (#91)
 - Updated `NEWS.md`, `README.md`/`README.Rmd`, and `cran-comments.md` with full 0.2.0 release notes, a "What's New" section, and expanded CRAN reviewer summary (#73)
 - Corrected `zi_get_geometry()`/`zi_list_zctas()` documentation and `NEWS.md` wording to accurately describe 2024 geometry support: nationwide requests (no `state`/`county`) already work today, while state- or county-scoped requests abort until internal lookup data is rebuilt; refined the `zi_list_zctas()` 2024 abort message to reference #104; added live-verified regression tests confirming 2020-2023 continue to work correctly (#104)
 

@@ -3,7 +3,6 @@
 incorrect_year_str <- "2010"
 incorrect_year_num <- 2009
 out_of_range_year <- 2025
-unavailable_year <- 2024
 incorrect_method <- "ham"
 
 correct_year <- 2010
@@ -24,8 +23,6 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
                "`year` must be between", fixed = TRUE)
   expect_error(zi_list_zctas(year = out_of_range_year, method = correct_method, state = states),
                "`year` must be between", fixed = TRUE)
-  expect_error(zi_list_zctas(year = unavailable_year, method = correct_method, state = states),
-               "is not yet available", fixed = TRUE)
   expect_error(zi_list_zctas(method = incorrect_method, year = correct_year, state = states),
                "`method` must be", fixed = TRUE)
   expect_warning(
@@ -66,4 +63,12 @@ test_that("2022 and 2023 continue to work for both centroid and intersect method
   expect_no_error(zi_list_zctas(year = 2022, method = "intersect", state = "MO"))
   expect_no_error(zi_list_zctas(year = 2023, method = "centroid", state = "MO"))
   expect_no_error(zi_list_zctas(year = 2023, method = "intersect", state = "MO"))
+})
+
+# test 2024 year support ------------------------------------------------
+
+test_that("2024 works for both centroid and intersect methods", {
+  skip_if_no_integration()
+  expect_no_error(zi_list_zctas(year = 2024, method = "centroid", state = "MO"))
+  expect_no_error(zi_list_zctas(year = 2024, method = "intersect", state = "MO"))
 })
