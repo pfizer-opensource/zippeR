@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Retired `[Epic E] Code & Test Quality Audit` (#48) from `docs/ROADMAP.md` to `Recently Shipped`, and registered `[Epic H] User-Facing API Ergonomics & Dependency Reduction` (#109), `[Epic I] CI & Development Infrastructure Health` (#110), and `[Epic J] v0.3.0 Release` (#111) with an epic dependency graph (#48)
+- Raised `[Epic I]` (#110) to `priority/high` after discovering that CI checks did not execute on PRs #105/#106, allowing a `line_length_linter` violation to reach `main` (#113)
 - Updated `NEWS.md`, `README.md`/`README.Rmd`, and `cran-comments.md` with full 0.2.0 release notes, a "What's New" section, and expanded CRAN reviewer summary (#73)
 - Corrected `zi_get_geometry()`/`zi_list_zctas()` documentation and `NEWS.md` wording to accurately describe 2024 geometry support: nationwide requests (no `state`/`county`) already work today, while state- or county-scoped requests abort until internal lookup data is rebuilt; refined the `zi_list_zctas()` 2024 abort message to reference #104; added live-verified regression tests confirming 2020-2023 continue to work correctly (#104)
 
