@@ -95,3 +95,7 @@ docs/README.md
 
 # pkgdown build output
 _site/
+
+# Python bytecode from vendored validators
+__pycache__/
+*.pyc

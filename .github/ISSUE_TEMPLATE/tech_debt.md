@@ -7,12 +7,12 @@ labels: tech-debt
 
 <!--
 Title format: [Tech Debt] <verb-phrase> — keep under ~80 chars.
-File via .github/skills/backlog/SKILL.md when possible — it auto-fills a Score (tier by default, WSJF if opted in) and Parent-epic and links the sub-issue. This template is the human fallback.
+File via .github/skills/backlog/SKILL.md when possible — it auto-fills WSJF and Parent-epic and links the sub-issue. This template is the human fallback.
 
 Suggested labels (set via the GitHub UI sidebar, NOT in this body):
 - tech-debt (auto-applied)
 - exactly one of priority/blocker | priority/high | priority/medium
-- exactly one of tier/quick-win | tier/big-bet | tier/fill-in | tier/reconsider (default; compute below) — or, if this repo has opted into WSJF via .agent.config.yml, exactly one of wsjf/critical | wsjf/high | wsjf/medium | wsjf/low instead
+- exactly one of wsjf/critical | wsjf/high | wsjf/medium | wsjf/low (compute below)
 See .github/LABELS.md for the full vocabulary.
 -->
 
@@ -37,17 +37,7 @@ The concrete symptom: brittle helper, repeated workarounds, slow tests, unclear 
 
 The refactor, not just "clean it up." Describe the target shape: helper signatures, file layout, contract changes. Note any breaking impact on callers.
 
-<!-- TIER-START -->
-## Tier: `tier/<value>`
-
-<one-line rationale — impact × effort, per _partials/scoring-mode.md's 2×2>
-<!-- TIER-END -->
-
-<!--
-If this repo has opted into WSJF via .agent.config.yml (wsjf.enabled: true),
-replace the Tier block above with this WSJF block instead:
-
-WSJF-START
+<!-- WSJF-START -->
 ## WSJF Score: <total> (`wsjf/<bucket>`)
 
 | Component                         | Score | Rationale |
@@ -59,8 +49,7 @@ WSJF-START
 | Job Size                          |       |           |
 | **WSJF (CoD / Job Size)**         |       | — |
 | Override                          |       |           |
-WSJF-END
--->
+<!-- WSJF-END -->
 
 ## Acceptance criteria
 
@@ -86,7 +75,7 @@ WSJF-END
 - [ ] Motivation + current pain are concrete
 - [ ] Acceptance criteria measurable
 - [ ] Out of scope explicit
-- [ ] Labels applied (Type + Priority + Score label — `tier/*` default or `wsjf/*` if opted in)
+- [ ] Labels applied (Type + Priority + WSJF bucket)
 - [ ] Parent epic linked above (or `standalone — <reason>`)
 
 See [`../CONTRIBUTING.md`](../CONTRIBUTING.md) §3 for the full Definition of Ready.
