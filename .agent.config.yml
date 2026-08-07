@@ -1,0 +1,7 @@
+profile: minimal
+
+tracker:
+  provider: github
+
+# zippeR is a public open-source CRAN package: no Jira, no Confluence.
+# Docs live as markdown-in-git under docs/ per the `minimal` profile.

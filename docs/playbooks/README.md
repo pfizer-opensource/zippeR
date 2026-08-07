@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-04-27
+last_updated: 2026-07-29
 last_updated_by: github-copilot-cli
 owner_skill: playbooks/SKILL.md
 quadrant: tutorials
@@ -27,7 +27,7 @@ For one-off or rare operations, a session checkpoint is the right artifact, not 
 | [`pick-up-stale-issue.md`](./pick-up-stale-issue.md) | Resume a stalled issue and ship it through PR | 2026-04-27 |
 | [`start-new-epic.md`](./start-new-epic.md) | Promote an objective into an epic with sub-issues on a roadmap horizon | 2026-04-27 |
 
-Additional playbooks (`release-dataset-update`, `bootstrap-new-repo`, `file-an-ADR`) named in [#88](https://github.com/pfizer-evgen/evgen-open-data-pipelines/issues/88) ship as needed via [`playbooks/SKILL.md`](../../.github/skills/playbooks/SKILL.md)'s `author` operation.
+Additional playbooks (`release-dataset-update`, `bootstrap-new-repo`, `file-an-ADR`) named in the consumer repo's issue #88 ship as needed via [`playbooks/SKILL.md`](../../.github/skills/playbooks/SKILL.md)'s `author` operation.
 
 ## Authoring
 

@@ -62,7 +62,7 @@ Invoke [`roadmap/SKILL.md`](../../.github/skills/roadmap/SKILL.md) to add the ep
 - **Next** — explicitly committed; not started yet.
 - **Later** — backlog (default for new epics unless explicitly committed).
 
-Per [ADR-0003](../decisions/ADR-0003-now-next-later-roadmap-horizons.md), the horizon IS the status; do NOT add a `(status: ...)` suffix.
+Per [ADR-0003](../../.github/vendored-decisions/ADR-0003-now-next-later-roadmap-horizons.md), the horizon IS the status; do NOT add a `(status: ...)` suffix.
 
 **Verify**: the epic appears in `docs/ROADMAP.md` under the chosen horizon section; the line links to the parent issue and (optionally) lists sub-issues inline.
 
@@ -81,7 +81,7 @@ If the epic is being promoted to Now (active work begins), file a `## Strategic 
 
 ## Pointers
 
-- **Roadmap horizons reference**: [ADR-0003](../decisions/ADR-0003-now-next-later-roadmap-horizons.md).
+- **Roadmap horizons reference**: [ADR-0003](../../.github/vendored-decisions/ADR-0003-now-next-later-roadmap-horizons.md).
 - **Epic lifecycle close**: [`epic_retrospective/SKILL.md`](../../.github/skills/epic_retrospective/SKILL.md) — refuses to close while any open sub-issue remains.
 - **Persistent-memory layer overview**: see the "Roadmap, epics, and the persistent-memory layer" section in [`.github/copilot-instructions.md`](../../.github/copilot-instructions.md).
 - **Lifecycle map**: [`docs/WORKFLOW.md`](../WORKFLOW.md).

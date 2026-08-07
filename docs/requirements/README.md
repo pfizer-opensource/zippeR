@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-04-27
+last_updated: 2026-07-29
 last_updated_by: github-copilot-cli
 owner_skill: requirements/SKILL.md
 quadrant: intent
@@ -26,6 +26,7 @@ Requirements docs are governed by [`requirements/SKILL.md`](../../.github/skills
 |---|---|---|
 | [`repo-scaling.md`](./repo-scaling.md) | v2 repo layout & data-package conventions | (pre-Epic-A umbrella spec; long-lived) |
 | [`commit-cadence-guidance.md`](./commit-cadence-guidance.md) | Commit-granularity guidance — Phase 1 Discovery output (#130) | #123 (Skills consistency & cleanup) |
+| [`context-layer.md`](./context-layer.md) | Deliberate context layer for adopting projects (content model + evolution gates; complements the `profile:` mechanism) | #223 (Broader organizational adoption) |
 
 ## Template
 
