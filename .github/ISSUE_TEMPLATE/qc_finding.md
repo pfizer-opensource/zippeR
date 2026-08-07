@@ -16,7 +16,7 @@ Suggested labels (set via the GitHub UI sidebar):
 - exactly one of priority/blocker | priority/high | priority/medium
   (severity below maps to priority: CRITICAL -> priority/blocker, HIGH ->
    priority/high, MEDIUM/LOW -> priority/medium)
-- WSJF is OPTIONAL on QC findings — severity is the dominant signal.
+- Scoring (`tier/*` default, `wsjf/*` if opted in) is OPTIONAL on QC findings — severity is the dominant signal.
 See .github/LABELS.md for the full vocabulary.
 -->
 

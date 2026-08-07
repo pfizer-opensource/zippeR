@@ -1,7 +1,7 @@
 # Dataset Requirements Template
 
 Use this template to provide initial instructions for adding a new open
-dataset to `evgen-open-data`. This template is the source of truth that
+dataset to `<repo-name>`. This template is the source of truth that
 `create_dataset_skeleton()` (and `new_dataset/SKILL.md`) copies into
 each new dataset at `datasets/<dataset-slug>/docs/requirements/<dataset-slug>.md`.
 Fill it in and hand it to the implementer (human or AI). The goal is to

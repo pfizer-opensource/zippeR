@@ -86,7 +86,7 @@ When QC is clean and the operator has UAT-confirmed the outputs, invoke [`releas
 - [ ] QC report exists with no unresolved BLOCKERs.
 - [ ] Slug registered in `data/dataset-registry.json`.
 - [ ] Aggregation parquets refreshed (if dataset feeds an aggregation).
-- [ ] Issue closed via [`backlog_retrospective/SKILL.md`](../../.github/skills/backlog_retrospective/SKILL.md) and PR opened via [`pull_request/SKILL.md`](../../.github/skills/pull_request/SKILL.md).
+- [ ] Issue closed via [`backlog_retrospective/SKILL.md`](../../.github/skills/backlog_retrospective/SKILL.md) and PR opened via [`pr_orchestrator/SKILL.md`](../../.github/skills/pr_orchestrator/SKILL.md).
 
 ## Pointers
 

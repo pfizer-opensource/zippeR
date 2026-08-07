@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-04-27
+last_updated: 2026-07-29
 last_updated_by: github-copilot-cli
 owner_skill: docs_organization/SKILL.md
 quadrant: intent
@@ -8,8 +8,8 @@ quadrant: intent
 # Requirements: Repo Scaling
 
 Use this document to capture the requirements for restructuring
-`evgen-open-data` so it can host many datasets (and more contributors)
-without the per-dataset friction we saw with the `pop-est` POC.
+`<repo-name>` so it can host many datasets (and more contributors)
+without the per-dataset friction that appears in the first proof-of-concept dataset.
 
 This is a *brief* — the implementer (human or AI) should not start work
 until each Required field below is filled in. Anything marked

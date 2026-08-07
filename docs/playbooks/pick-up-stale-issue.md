@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-04-27
+last_updated: 2026-07-31
 last_updated_by: github-copilot-cli
 owner_skill: playbooks/SKILL.md
 quadrant: tutorials
@@ -16,7 +16,7 @@ Worked example: an issue is open with an `in-progress` label from a prior sessio
 **Starting state**:
 
 - An issue (`#<N>`) is labeled `in-progress`.
-- The implementation-plan-as-comment exists on the issue per [ADR-0005](../decisions/ADR-0005-issue-comment-as-plan-contract.md).
+- The implementation-plan-as-comment exists on the issue per [ADR-0005](../../.github/vendored-decisions/ADR-0005-issue-comment-as-plan-contract.md).
 - You may or may not have a working branch locally; the durable state is on GitHub.
 
 ## Steps
@@ -34,6 +34,8 @@ The skill reconstructs full implementation context from GitHub state: reads the 
 Compare the local plan mirror at `~/.copilot/session-state/<id>/plan.md` against the live remote plan comment via the `Sync token` line — per ADR-0005 §5, the mirror's `Sync token: <comment-id>:<timestamp>` is the CAS authority.
 
 **Decision point**: **If the mirror's `Sync token` matches the live `comment.updatedAt`** → no drift; proceed. **If they diverge** → [`implementation_plan/SKILL.md`](../../.github/skills/implementation_plan/SKILL.md) (Z1) presents the three-choice prompt (use-mirror / use-remote / merge); resolve before continuing.
+
+**Semantic re-validation (mandated).** Technical sync-token freshness is not the same question as "is this plan's approach still right?" [`resume/SKILL.md`](../../.github/skills/resume/SKILL.md) Op 1 step 10 mandates a review of the plan's `### Approach` and `### Files to touch` against current codebase and issue-scope reality, with an explicit **accept** (approach still valid) or **revise** (drift found → update via `implementation_plan/SKILL.md` `Update`, then proceed) decision. Do not skip this even when the technical sync-token check above is clean — a plan can be byte-for-byte in sync with its own remote copy while still describing an approach the codebase has since outgrown.
 
 ### 3. Verify branch state
 
@@ -59,15 +61,15 @@ Walk the plan's `### Where I left off` section. For each remaining commit:
 
 Per the lifecycle reference in [`docs/WORKFLOW.md`](../WORKFLOW.md) step 7a:
 
-1. **Promote the local plan mirror** — invoke [`session_handoff/SKILL.md`](../../.github/skills/session_handoff/SKILL.md) (Z2; auto-invoked by `pull_request/SKILL.md` v2.3.0+ Step 1.5 at PR-open time, but you can run it earlier explicitly). Mirror token rewrites to live `updated_at` from the API response per ADR-0005 §5 amendment.
+1. **Promote the local plan mirror** — invoke [`session_handoff/SKILL.md`](../../.github/skills/session_handoff/SKILL.md) (Z2; auto-invoked by `pr_gate_plan_handoff/SKILL.md`, dispatched by `pr_orchestrator/SKILL.md`, at PR-open time, but you can run it earlier explicitly). Mirror token rewrites to live `updated_at` from the API response per ADR-0005 §5 amendment.
 2. **Code-review the diff** — invoke [`code_review/SKILL.md`](../../.github/skills/code_review/SKILL.md) `self-review`. Auto-files non-trivial findings via `backlog/SKILL.md` per ADR-0004.
-3. **Post a retro on each closed issue** — `pull_request/SKILL.md` v2.3.0+ Step 1.5 invokes [`backlog_retrospective/SKILL.md`](../../.github/skills/backlog_retrospective/SKILL.md) once per `Closes #N` reference *before* `gh pr create`.
+3. **Post a retro on each closed issue** — `pr_gate_retro/SKILL.md` (dispatched by `pr_orchestrator/SKILL.md`) invokes [`backlog_retrospective/SKILL.md`](../../.github/skills/backlog_retrospective/SKILL.md) once per `Closes #N` reference *before* `gh pr create`.
 4. **Run repo QC** — invoke [`run_repo_qc/SKILL.md`](../../.github/skills/run_repo_qc/SKILL.md). Test baseline must match `main`; new findings BLOCK.
 5. **Doc audit on touched paths** — invoke [`documentation_audit_changes/SKILL.md`](../../.github/skills/documentation_audit_changes/SKILL.md).
 
 ### 6. Open the PR
 
-Invoke [`pull_request/SKILL.md`](../../.github/skills/pull_request/SKILL.md) (currently v2.4.0). The skill enforces the five-section body template (Summary / Implementation / Testing / Closes / Notes), runs the gate ladder above, and dispatches between `gh pr create` (new) and `gh pr edit --body-file` (update).
+Invoke [`pr_orchestrator/SKILL.md`](../../.github/skills/pr_orchestrator/SKILL.md). The skill enforces the five-section body template (Summary / Implementation / Testing / Closes / Notes), runs the gate ladder above, and dispatches between `gh pr create` (new) and `gh pr edit --body-file` (update).
 
 **Decision point**: **If an open PR already exists for this branch**, the skill auto-detects it (Step 0 dispatch) and routes to Update mode. Confirm before proceeding. **Otherwise**: Create mode runs.
 
@@ -79,6 +81,7 @@ After the PR opens, the implementation plan stays at `Status: in-progress` until
 
 - [ ] Plan reconstruction yielded full context without re-reading the issue body.
 - [ ] Mirror-vs-remote drift was confirmed clean (or resolved via the three-choice prompt).
+- [ ] The plan's approach was semantically re-validated against current reality (accepted, or revised via `implementation_plan/SKILL.md` `Update`).
 - [ ] Worktree was clean and branch was current at every commit boundary.
 - [ ] All commits have GPG signing + the `Co-authored-by: Copilot` trailer.
 - [ ] Pre-PR gate ladder ran end-to-end with no skipped steps (or skips have explicit `_no-*:_` body markers).
@@ -86,7 +89,7 @@ After the PR opens, the implementation plan stays at `Status: in-progress` until
 
 ## Pointers
 
-- **Cross-session continuity reference**: [ADR-0005](../decisions/ADR-0005-issue-comment-as-plan-contract.md) — the plan-as-comment contract and the mirror-vs-body sync-token semantics (§5 amendment).
+- **Cross-session continuity reference**: [ADR-0005](../../.github/vendored-decisions/ADR-0005-issue-comment-as-plan-contract.md) — the plan-as-comment contract and the mirror-vs-body sync-token semantics (§5 amendment).
 - **Z-series overview**: see the "Cross-session continuity" callout in [`.github/copilot-instructions.md`](../../.github/copilot-instructions.md) for the four-skill loop (Z1 plan, Z2 handoff, Z3 resume, Z4 next-action).
 - **Lifecycle map**: [`docs/WORKFLOW.md`](../WORKFLOW.md).
 

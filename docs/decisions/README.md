@@ -9,7 +9,7 @@ quadrant: history
 
 This directory holds **repo-specific local ADRs** — architectural decisions that apply only to this repo. Numbering is independent and starts from `ADR-0001`.
 
-For **workflow-intrinsic ADRs** (vendored from `pfizer-evgen/rwd-agent-skills`), see [`.github/vendored-decisions/README.md`](../../.github/vendored-decisions/README.md). The directory separation is documented in [ADR-0007](../../.github/vendored-decisions/ADR-0007-directory-separated-adr-vendoring.md).
+For **workflow-intrinsic ADRs** (vendored from `pfizer-evgen/agentic-dev`), see [`.github/vendored-decisions/README.md`](../../.github/vendored-decisions/README.md). The directory separation is documented in [ADR-0007](../../.github/vendored-decisions/ADR-0007-directory-separated-adr-vendoring.md).
 
 ## Conventions
 
