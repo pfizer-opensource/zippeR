@@ -9,20 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `.agent.config.yml` declaring the `minimal` profile (GitHub tracker, markdown-in-git docs), reflecting that `zippeR` is a public open-source CRAN package with no Jira or Confluence integration
-- Vendored `tests/meta/validate_frontmatter.py`, `validate_agents.py`, and `validate_closing_issue_preconditions.py`; both are excluded from the package tarball via `.Rbuildignore`
+- Vendored `tests/meta/validate_frontmatter.py`, `validate_agents.py`, and `validate_closing_issue_preconditions.py`; all three are excluded from the package tarball via `.Rbuildignore`
 - Vendored the `start_work` and `confluence_docs` skills, the `product-manager` and `scrum-master` agent personas, and 13 new shared partials (provider/profile/scoring-mode, R hat, Copilot attribution, PR body-composition safety)
-
-### Changed
-- Re-pointed the vendored workflow toolkit upstream from `pfizer-evgen/rwd-agent-skills` to its renamed home `pfizer-evgen/agentic-dev`, and synced all 89 `vendored-exact` files to current upstream versions
-- Migrated the monolithic `pull_request` skill to the `pr-gates` cluster (`pr_orchestrator` plus five gate skills); `pr_orchestrator/SKILL.md` is now the entry point for opening and updating PRs
-- Retired the `r-developer` and `workflow-steward` agent personas upstream; R expertise now lives in `developer` via the module-gated R "hat" partial, and `workflow-steward` was renamed `scrum-master`
-- Rebuilt `.github/copilot-instructions.md` from upstream template 1.4.0, preserving the repo's `R/` user-acceptance-testing requirement and expanding the Pre-PR QC checklist with `devtools::document()`, `devtools::test()`, and `devtools::check()` steps
-- Adopted upstream's issue templates, PR template, `CONTRIBUTING.md`, and `LABELS.md` (label vocabulary expanded 26 → 35, adding `tier/*` default scoring, `wsjf/*` opt-in, and gate-profile labels)
-
-### Added
 - Rebuilt `R/sysdata.rda` with full 2024 ZCTA geometry data (intersect and centroid vectors, reference tables); state- and county-scoped `zi_get_geometry()`/`zi_list_zctas()` requests for year 2024 now work end-to-end, matching nationwide support added previously (#91)
 
 ### Changed
+- Re-pointed the vendored workflow toolkit upstream from `pfizer-evgen/rwd-agent-skills` to its renamed home `pfizer-evgen/agentic-dev`, and synced all 84 non-overridden `vendored-exact` files to byte parity with current upstream (#116)
+- Migrated the monolithic `pull_request` skill to the `pr-gates` cluster (`pr_orchestrator` plus five gate skills); `pr_orchestrator/SKILL.md` is now the entry point for opening and updating PRs (#116)
+- Retired the `r-developer` and `workflow-steward` agent personas upstream; R expertise now lives in `developer` via the module-gated R "hat" partial, and `workflow-steward` was renamed `scrum-master` (#116)
+- Rebuilt `.github/copilot-instructions.md` from upstream template 1.4.0, preserving the repo's `R/` user-acceptance-testing requirement and expanding the Pre-PR QC checklist with `devtools::document()`, `devtools::test()`, and `devtools::check()` steps (#116)
+- Marked `.github/CONTRIBUTING.md`, `.github/LABELS.md`, `.github/PULL_REQUEST_TEMPLATE.md`, and the bug-report and feature-request issue templates as `local_override` in the vendor manifest, so future syncs leave them alone; upstream's versions target internal data-pipeline repos and are unsuitable for a public open-source package (#116)
 - Retired `[Epic E] Code & Test Quality Audit` (#48) from `docs/ROADMAP.md` to `Recently Shipped`, and registered `[Epic H] User-Facing API Ergonomics & Dependency Reduction` (#109), `[Epic I] CI & Development Infrastructure Health` (#110), and `[Epic J] v0.3.0 Release` (#111) with an epic dependency graph (#48)
 - Raised `[Epic I]` (#110) to `priority/high` after discovering that CI checks did not execute on PRs #105/#106, allowing a `line_length_linter` violation to reach `main` (#113)
 - Refactored `inst/build-data/build_vectors.R` to support partial/incremental rebuilds: per-year cached `.rda` files in `inst/data-raw/` are now checked and skipped if already present, so adding a new year no longer requires re-downloading and re-processing all prior years (#91)

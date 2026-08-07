@@ -5,19 +5,18 @@ repository. The `backlog/SKILL.md` and `backlog_retrospective/SKILL.md`
 skills read this file when present; they fall back to the embedded
 baseline only when this file is absent.
 
-The vocabulary below is the **cross-repo canonical baseline for this toolkit**
+The vocabulary below is the **EVGen cross-repo canonical baseline**
 plus any **repo-specific extensions** that follow it.
 
-## Baseline (cross-repo canonical, 35 labels)
+## Baseline (cross-repo canonical, 26 labels)
 
-The full canonical inventory: 7 Type + 6 Status + 3 Priority + 8 Score
-(4 `tier/*` default + 4 `wsjf/*` opt-in) + 3 Gate profile + 4 Meta
-+ 4 Close-reason = 35 labels.
+The full canonical inventory: 7 Type + 6 Status + 3 Priority + 4 Score
++ 2 Meta + 4 Close-reason = 26 labels.
 
 These labels are expected to exist with the same name, color, and
-purpose in every consumer repo using this toolkit (`example-consumer-repo`,
-`<org>/<analytics-repo>`, `<org>/<app-repo>`, `<org>/<data-repo>`,
-`<org>/<service-repo>`).
+purpose in every EVGen repository (`evgen-open-data-pipelines`,
+`evgen-lymeDataHub-data`, `tbd-tbeDataHub-data`, `tbd-tbeDataHub`,
+`tbd-lymeDataHub`).
 
 ### Type — what kind of work is this
 
@@ -56,32 +55,9 @@ Repos may specialize the *purpose* text for their domain in the
 "Repo customizations" section below; the *names and colors* are
 fixed.
 
-### Gate profile — how much ceremony this task earns (per [ADR-0014](../docs/decisions/ADR-0014-task-weight-gate-profiles.md))
+### Score — quantitative WSJF prioritization bucket
 
-Assigned at triage (`triage/SKILL.md`) by the Product Owner. `gate-profile/standard`
-is the fail-safe default when no label is present — an unclassified task never
-silently gets the light treatment.
-
-| Label                  | Color     | Purpose                                                                                                     |
-|------------------------|-----------|---------------------------------------------------------------------------------------------------------------|
-| `gate-profile/light`   | `#0E8A16` | Plan-handoff + retro only; code-review and changelog gates are skippable via the `_no-code-review:` / `_no-prep-gate:` markers. Doc-only edits, single-file fixes under a small LOC threshold, mechanical renames. |
-| `gate-profile/standard`| `#FBCA04` | All five gates (today's default). Ordinary feature/bugfix work. Fail-safe default when unlabeled.             |
-| `gate-profile/full`    | `#B60205` | All five gates, plus a mandatory Tech Lead review pass before merge. Architecturally significant changes.     |
-
-### Score — backlog-item prioritization signal (per [ADR-0014](vendored-decisions/ADR-0014-wsjf-opt-in-lightweight-default.md))
-
-Two mechanisms, resolved by `_partials/scoring-mode.md`'s single-sourced read of `.agent.config.yml`'s `wsjf.enabled` key. **Conflict rule (unchanged in both modes):** when an issue carries both a `priority/*` label and a `tier/*` or `wsjf/*` label, `priority/*` wins (executive priority overrides quantitative/qualitative score).
-
-**`tier/*` — default, direct impact/effort classification.** Applied when `wsjf.enabled` is absent or `false` (every repo that has not explicitly opted in). A direct 2×2 read — no arithmetic, no computed-boundary risk. Documented in `_partials/scoring-mode.md`.
-
-| Label               | Color     | Meaning (impact × effort)       |
-|---------------------|-----------|----------------------------------|
-| `tier/quick-win`    | `#0E8A16` | Do first — high impact, low effort |
-| `tier/big-bet`      | `#5319E7` | Schedule deliberately — high impact, high effort |
-| `tier/fill-in`      | `#cfd3d7` | Opportunistic — low impact, low effort |
-| `tier/reconsider`   | `#B60205` | Justify before committing — low impact, high effort |
-
-**`wsjf/*` — opt-in, quantitative WSJF bucket.** Applied only when a repo sets `wsjf.enabled: true` in `.agent.config.yml`. WSJF (Weighted Shortest Job First) is documented in [`CONTRIBUTING.md`](CONTRIBUTING.md) §"WSJF prioritization" and computed by `backlog/SKILL.md` per `_partials/wsjf-scoring.md` (v2.0.0+). Each issue carrying a WSJF body block also gets exactly one bucket label. The override (when `priority/*` disagrees) is recorded as a row inside the WSJF body block.
+WSJF (Weighted Shortest Job First) is documented in [`CONTRIBUTING.md`](CONTRIBUTING.md) §"WSJF prioritization" and computed by `backlog/SKILL.md` (v1.5.0+). Each issue carrying a WSJF body block also gets exactly one bucket label. **Conflict rule:** when an issue carries both a `priority/*` label and a `wsjf/*` label, `priority/*` wins (executive priority overrides quantitative score). The override is recorded as a row inside the WSJF body block.
 
 | Label             | Color     | Score range                                                              |
 |-------------------|-----------|--------------------------------------------------------------------------|
@@ -95,9 +71,7 @@ Two mechanisms, resolved by `_partials/scoring-mode.md`'s single-sourced read of
 | Label      | Color     | Purpose                                  |
 |------------|-----------|------------------------------------------|
 | `question`     | `#d876e3` | Further information is requested         |
-| `no-changelog` | `#cfd3d7` | PR is internal/refactor; opts out of the `pr_gate_changelog/SKILL.md` changelog gate |
-| `qc-review-cycling` | `#B60205` | `code_review/SKILL.md`'s QC-round loop guard escalated: 3+ gate rounds without convergence on a must-fix (BLOCKER or HIGH) finding (or an oscillating BLOCKER/HIGH finding); the dev agent stops auto-resolving and human adjudication is needed. Set on the PR if one exists, otherwise on the linked closing issue(s) (Create mode, before `gh pr create` runs). Set by `code_review/SKILL.md` itself (its QC-round loop guard step 5), invoked in gate mode by `pr_gate_code_review/SKILL.md`; cleared manually once the target converges or is closed. |
-| `qc-review-round-<N>` | `#D93F0B` | Dynamic, numbered label (e.g. `qc-review-round-1`, `qc-review-round-2`, …) tracking the current QC-round loop guard round count on its target — the PR if one exists, otherwise the linked closing issue(s). Swapped (new added and confirmed before the old is removed) by `code_review/SKILL.md` on every gate-mode invocation; replaces the prior local-report-file-count approach so state survives fresh clones/sessions. A genuinely new PR/issue starts at round 1 with no round label to inherit, but this label is **not** automatically cleaned up if a target is closed and later reopened — clearing it remains a manual operator step, same as `qc-review-cycling`. |
+| `no-changelog` | `#cfd3d7` | PR is internal/refactor; opts out of the `pull_request/SKILL.md` changelog gate |
 
 ### Close-reason — set BEFORE closing an issue without a full retro
 
@@ -112,7 +86,7 @@ issue at close time. `--reason` alone is not sufficient.
 | `invalid`     | `#e4e669` | This doesn't seem right                       |
 | `not-planned` | `#cfd3d7` | Closed without action; out of scope           |
 
-## Removed (do NOT add to any consumer repo using this toolkit)
+## Removed (do NOT add to any EVGen repo)
 
 These two GitHub defaults are public-OSS conventions that don't fit
 private internal repos. If they exist in a repo, they should be
@@ -125,13 +99,6 @@ deleted as part of label migration.
 
 - **Every new issue must carry at least one Type label.** The
   `backlog/SKILL.md` enforces this in its issue-creation step.
-- **Every open issue must carry exactly one `gate-profile/*` label**,
-  assigned at triage (`triage/SKILL.md`), before `start_work/SKILL.md`
-  permits implementation to begin (per [ADR-0014](../docs/decisions/ADR-0014-task-weight-gate-profiles.md)).
-  `gate-profile/standard` is the fail-safe default *at classification
-  time* when the correct tier is ambiguous — it does not exempt an issue
-  from needing a label; `start_work/SKILL.md` treats an absent label as
-  a genuine blocking finding, not an advisory.
 - **Most new issues should also carry a Priority label.** Skip only
   for low-stakes or speculative items where priority is undecided.
 - **Status labels are added/removed during the issue's lifetime**,
@@ -151,10 +118,10 @@ deleted as part of label migration.
 > appears in the baseline overrides the baseline entry's *purpose*;
 > name and color stay fixed.
 
-### `example-consumer-repo` (example customization)
+### `evgen-open-data-pipelines` (this repo)
 
-An example dataset-oriented consumer repo might specialize the priority axis
-to dataset-scale impact like this:
+The priority axis is specialized to dataset-scale impact (this repo
+ships reference data packages; the failure modes are scale-dependent):
 
 | Label              | Purpose (specialized)                          |
 |--------------------|------------------------------------------------|
