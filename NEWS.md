@@ -3,14 +3,14 @@
 ## New features and improvements
 
 * UDS Mapper crosswalk data (2009–2022) is now bundled with the package, eliminating the runtime network dependency on an external GitHub repository
-* Partial support for 2024 TIGRIS year: `zi_list_zctas()` accepts 2024 in its valid range. Nationwide `zi_get_geometry()` requests (no `state`/`county`) for 2024 already work, served directly from `tigris`; state- or county-scoped `zi_get_geometry()`/`zi_list_zctas()` requests for 2024 abort with an informative message. The `inst/build-data/build_vectors.R` pipeline has been audited and confirmed staged/ready to rebuild the internal 2024 data, but that rebuild (a heavy nationwide TIGER/Line download) has not yet been run; full 2024 support for state/county-scoped requests is tracked in [#104](https://github.com/pfizer-opensource/zippeR/issues/104). 2010-2023 continue to work as before (regression-tested)
+* Full support for 2024 TIGRIS year: `zi_list_zctas()` and `zi_get_geometry()` now support 2024 for all request types, including state- and county-scoped requests (previously these aborted pending a rebuild of internal lookup data, tracked in [#104](https://github.com/pfizer-opensource/zippeR/issues/104), now resolved). 2010-2023 continue to work as before (regression-tested)
 * Deprecated parameter aliases `input_zip` and `dict` in `zi_crosswalk()` with backwards-compatible support until early 2027
 * `@examplesIf` guards replace `\donttest{}`/`\dontrun{}` wrappers in all network-dependent and API-key-dependent examples
 * Minimum R version set to 4.1
 
 ## Bug fixes
 
-* `zi_get_demographics()` and `zi_aggregate()` now accept `year` values through 2024 for `survey` values `"acs1"` and `"acs5"` (previously capped at 2022), bringing them in line with `zi_get_geometry()`'s currently-working 2023 support. Note that `zi_get_geometry()`/`zi_list_zctas()` still only support ZCTA geometry through 2023; full 2024 geometry support is tracked in a follow-up issue pending an internal data rebuild
+* `zi_get_demographics()` and `zi_aggregate()` now accept `year` values through 2024 for `survey` values `"acs1"` and `"acs5"` (previously capped at 2022), bringing them in line with `zi_get_geometry()`'s full 2024 support
 * Resolved several input validation gaps across `zi_aggregate()`, `zi_crosswalk()`, `zi_convert()`, `zi_get_geometry()`, `zi_get_demographics()`, `zi_load_crosswalk()`, `zi_load_labels()`, `zi_load_labels_list()`, `zi_prep_hud()`, `zi_repair()`, and `zi_validate()`
 * Fixed a number of incorrect column references, variable scoping errors, and unsafe dispatch patterns identified during a code quality audit
 * Replaced live Census API calls in tests with local fixtures so `R CMD check` passes on CRAN without a Census API key
