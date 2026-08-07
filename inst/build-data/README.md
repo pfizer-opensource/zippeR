@@ -15,14 +15,23 @@ must be run first.
 **What it does:**
 
 1. Downloads US state boundaries from the Census Bureau (via `tigris::states()`).
-2. Downloads ZCTA shapefiles for every available year (2010, 2012–2024) from the
-   Census Bureau (via `tigris::zctas()`).
+2. Downloads and processes ZCTA shapefiles for every available year (2010, 2012–2024)
+   from the Census Bureau (via `tigris::zctas()`) — **but only for years that are not
+   already cached**. See "Partial rebuilds" below.
 3. Intersects ZCTAs with state boundaries using two methods (geometric
    intersection and centroid containment) to produce per-state ZCTA vectors for
    each year.
 4. Compares year-over-year changes and builds a reference lookup table.
 5. Stores ZCTA3 GeoJSON URLs (sourced from `chris-prener/zcta3` on GitHub).
 6. Saves all results to `R/sysdata.rda`.
+
+**Partial rebuilds:** the download/process step checks `inst/data-raw/` for each
+year's cached `zcta<YYYY>.rda` and `zcta<YYYY>_centroid.rda` files. If both already
+exist for a given year, that year is skipped entirely — no re-download, no
+re-processing. This means adding a new year (e.g. 2025) only requires that year's
+cache files to be absent; all prior years' caches are reused as-is. To force a full
+rebuild of a specific year (e.g. if source data was corrected upstream), delete that
+year's two cache files from `inst/data-raw/` before running the script.
 
 **Outputs:**
 
@@ -75,7 +84,6 @@ Scripts must be run in this order:
 | Package | Purpose |
 |---------|---------|
 | `devtools` | Load in-development package (`build_sample.R`) |
-| `usethis` | Interactive prompts (`build_vectors.R`) |
 | `dplyr` | Data manipulation |
 | `tigris` | Download Census TIGER/Line shapefiles |
 | `sf` | Spatial operations (intersection, centroid, transform) |
@@ -101,9 +109,10 @@ Scripts must be run in this order:
 
 ## Notes
 
-- `build_vectors.R` prompts interactively whether to use local ZCTA data
-  (previously cached in `inst/data-raw/`) or to re-download from the Census
-  Bureau. Downloading fresh data requires substantial time and bandwidth.
+- `build_vectors.R` no longer prompts interactively. It always runs the
+  fetch/process step, but automatically skips any year whose cached `.rda`
+  files already exist in `inst/data-raw/` (see "Partial rebuilds" above), so
+  re-running it is cheap unless new years are missing.
 - The `inst/data-raw/` directory contains cached intermediate `.rda` files from
   `build_vectors.R`. These are not shipped to end users but are preserved for
   incremental rebuilds.
