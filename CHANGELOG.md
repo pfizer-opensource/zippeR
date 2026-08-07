@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Retired `[Epic E] Code & Test Quality Audit` (#48) from `docs/ROADMAP.md` to `Recently Shipped`, and registered `[Epic H] User-Facing API Ergonomics & Dependency Reduction` (#109), `[Epic I] CI & Development Infrastructure Health` (#110), and `[Epic J] v0.3.0 Release` (#111) with an epic dependency graph (#48)
 - Raised `[Epic I]` (#110) to `priority/high` after discovering that CI checks did not execute on PRs #105/#106, allowing a `line_length_linter` violation to reach `main` (#113)
+- Expanded `[Epic I]` (#110) scope to four sub-issues, adding the Node.js 20 runner deprecation affecting all `actions/*` references (#114) and the Linux syslib cache tar restore failure (#115)
 - Refactored `inst/build-data/build_vectors.R` to support partial/incremental rebuilds: per-year cached `.rda` files in `inst/data-raw/` are now checked and skipped if already present, so adding a new year no longer requires re-downloading and re-processing all prior years (#91)
 - Removed the obsolete interactive `usethis::ui_yeah()` style prompt from `build_vectors.R`; the script now always runs its cache-aware fetch/process step (#91)
 - Removed the `zi_list_zctas()` guard that aborted state-/county-scoped 2024 requests; 2024 is now fully supported across all `zippeR` geometry functions (#91)
