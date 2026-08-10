@@ -49,23 +49,6 @@ jobs:
         id: week
         run: echo "week=$(date +%V)" >> "$GITHUB_OUTPUT"
 
-      - name: Cache Linux system dependencies
-        id: cache-linux-syslibs
-        if: runner.os == 'Linux'
-        uses: actions/cache@v4
-        with:
-          path: |
-            /usr/lib/x86_64-linux-gnu/libgdal*
-            /usr/lib/x86_64-linux-gnu/libproj*
-            /usr/lib/x86_64-linux-gnu/libgeos*
-            /usr/lib/x86_64-linux-gnu/libudunits*
-            /usr/include/gdal
-            /usr/include/proj
-            /usr/include/geos
-          key: syslibs-linux-${{ hashFiles('.github/workflows/R-CMD-check.yaml') }}-${{ steps.week.outputs.week }}
-          restore-keys: |
-            syslibs-linux-
-
       - name: Cache macOS Homebrew dependencies
         id: cache-macos-syslibs
         if: runner.os == 'macOS'
@@ -85,7 +68,7 @@ jobs:
         run: brew install udunits gdal proj
 
       - name: Install Linux specific dependencies for sf
-        if: runner.os == 'Linux' && steps.cache-linux-syslibs.outputs.cache-hit != 'true'
+        if: runner.os == 'Linux'
         run: sudo apt-get install -y --no-install-recommends libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
       - name: Install Dependencies
