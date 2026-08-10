@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rebuilt `R/sysdata.rda` with full 2024 ZCTA geometry data (intersect and centroid vectors, reference tables); state- and county-scoped `zi_get_geometry()`/`zi_list_zctas()` requests for year 2024 now work end-to-end, matching nationwide support added previously (#91)
 
 ### Changed
+- Added a `brew link --overwrite udunits gdal proj` step after the macOS `sf` dependency install in `R-CMD-check.yaml`, so a cache miss no longer silently leaves the runner-image-preinstalled formulae unlinked with a `##[warning] ... not linked` annotation (#122)
 - Re-pointed the vendored workflow toolkit upstream from `pfizer-evgen/rwd-agent-skills` to its renamed home `pfizer-evgen/agentic-dev`, and synced all 84 non-overridden `vendored-exact` files to byte parity with current upstream (#116)
 - Migrated the monolithic `pull_request` skill to the `pr-gates` cluster (`pr_orchestrator` plus five gate skills); `pr_orchestrator/SKILL.md` is now the entry point for opening and updating PRs (#116)
 - Retired the `r-developer` and `workflow-steward` agent personas upstream; R expertise now lives in `developer` via the module-gated R "hat" partial, and `workflow-steward` was renamed `scrum-master` (#116)
