@@ -32,19 +32,30 @@ jobs:
           use-public-rspm: true
 
       - name: Install Linux system dependencies for sf
-        run: sudo apt-get install -y --no-install-recommends libgdal-dev libproj-dev libgeos-dev libudunits2-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgdal-dev libproj-dev libgeos-dev libudunits2-dev
+
+      # Rotating weekly segment lets the tigris cache actually grow/refresh
+      # instead of being pinned forever to the DESCRIPTION hash (#102 finding 4).
+      - name: Get week number for cache rotation
+        id: week
+        run: echo "week=$(date +%V)" >> "$GITHUB_OUTPUT"
 
       - name: Cache tigris downloads
         uses: actions/cache@v4
         with:
           path: ~/.cache/R/tigris
-          key: tigris-${{ hashFiles('DESCRIPTION') }}
-          restore-keys: tigris-
+          key: tigris-${{ hashFiles('DESCRIPTION') }}-${{ steps.week.outputs.week }}
+          restore-keys: |
+            tigris-${{ hashFiles('DESCRIPTION') }}-
+            tigris-
 
       - name: Install Dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache: TRUE
+          cache: 'always'
+          cache-version: 1
           extra-packages: any::testthat, any::rcmdcheck
           needs: check
 

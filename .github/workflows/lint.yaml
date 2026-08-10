@@ -10,6 +10,10 @@ name: lint
 
 permissions: read-all
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -25,7 +29,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache: TRUE
+          cache: 'always'
+          cache-version: 1
           extra-packages: any::lintr, local::.
           needs: lint
 

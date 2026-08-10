@@ -10,6 +10,10 @@ name: R-CMD-check
 
 permissions: read-all
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -69,12 +73,15 @@ jobs:
 
       - name: Install Linux specific dependencies for sf
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y --no-install-recommends libgdal-dev libproj-dev libgeos-dev libudunits2-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
       - name: Install Dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache: TRUE
+          cache: 'always'
+          cache-version: 1
           install-pandoc: TRUE
           extra-packages: any::rcmdcheck, any::spelling
           needs: check
