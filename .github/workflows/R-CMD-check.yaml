@@ -71,6 +71,15 @@ jobs:
         if: runner.os == 'macOS' && steps.cache-macos-syslibs.outputs.cache-hit != 'true'
         run: brew install udunits gdal proj
 
+      # The macOS runner image ships udunits/gdal/proj pre-installed but
+      # unlinked, so on a cache miss `brew install` treats them as already
+      # present and skips linking, only emitting a "not linked" warning.
+      # Force-link them so pkg-config/*-config paths sf/terra expect are
+      # guaranteed to resolve, without touching the cache mechanism itself.
+      - name: Link macOS Homebrew dependencies for sf
+        if: runner.os == 'macOS'
+        run: brew link --overwrite udunits gdal proj
+
       - name: Install Linux specific dependencies for sf
         if: runner.os == 'Linux'
         run: |
