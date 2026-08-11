@@ -1,5 +1,5 @@
 ---
-last_updated: "2026-08-06"
+last_updated: "2026-08-10"
 ---
 # Roadmap — zippeR
 
@@ -9,7 +9,6 @@ _No epics in progress._
 
 ## Next (planned)
 
-- **[Epic I] CI & Development Infrastructure Health** (#110) — Restore reliable CI check execution and correct the caching layer; 0/2 sub-issues closed
 - **[Epic H] User-Facing API Ergonomics & Dependency Reduction** (#109) — Self-contained `zi_`-prefixed API surface plus Phase 3 dependency decisions; 0/3 sub-issues closed
 - **[Epic J] v0.3.0 Release** (#111) — Ship 2024 ZCTA support to CRAN; sub-issues to be filed at kickoff
 
@@ -19,6 +18,7 @@ _No epics in progress._
 
 ## Recently Shipped
 
+- **[Epic I] CI & Development Infrastructure Health** (#110) — closed 2026-08-10
 - **[Epic E] Code & Test Quality Audit** (#48) — closed 2026-08-06
 - **[Epic G] CRAN Release Preparation** (#79) — closed 2026-06-02
 - **[Epic F] New Features & Enhancements** (#49) — closed 2026-06-01
@@ -31,9 +31,8 @@ _No epics in progress._
 
 ```mermaid
 graph TD
-  I["#110 Epic I — CI health"] --> J["#111 Epic J — v0.3.0 Release"]
-  H["#109 Epic H — API ergonomics"] -.optional.-> J
+  H["#109 Epic H — API ergonomics"] -.optional.-> J["#111 Epic J — v0.3.0 Release"]
 ```
 
-- [Epic I] should land before [Epic J] so release checks run against a trustworthy pipeline.
+- [Epic I] closed 2026-08-10 — its precondition on [Epic J] (release checks running against a trustworthy pipeline) is satisfied; the dependency edge is resolved and removed from the graph.
 - [Epic H] is optional for the release; #108 (`zi_census_api_key()`) is a good candidate to include if it lands in time.
