@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `zi_census_api_key()`, a `zi_`-prefixed wrapper around `tidycensus::census_api_key()`, exported, documented, tested, and referenced from `zi_get_demographics()`, `zi_aggregate()`, and the README, so Census API key setup no longer requires calling a function from another package (#108)
 - `.agent.config.yml` declaring the `minimal` profile (GitHub tracker, markdown-in-git docs), reflecting that `zippeR` is a public open-source CRAN package with no Jira or Confluence integration
 - Vendored `tests/meta/validate_frontmatter.py`, `validate_agents.py`, and `validate_closing_issue_preconditions.py`; all three are excluded from the package tarball via `.Rbuildignore`
 - Vendored the `start_work` and `confluence_docs` skills, the `product-manager` and `scrum-master` agent personas, and 13 new shared partials (provider/profile/scoring-mode, R hat, Copilot attribution, PR body-composition safety)
