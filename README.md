@@ -118,6 +118,19 @@ mo_zcta5 <- zi_get_geometry(year = 2012, state = "MO", method = "centroid",
     includes = c("51640", "52542", "52573", "52626"))
 ```
 
+### Setting Up a Census API Key
+
+Both `zi_get_demographics()` and `zi_aggregate()` require a Census API
+key, which can be obtained at
+<https://api.census.gov/data/key_signup.html>. Use `zi_census_api_key()`
+to store it for the current session or install it in your `.Renviron`
+file for future sessions, without needing to call
+`tidycensus::census_api_key()` directly:
+
+``` r
+zi_census_api_key(key = "<PASTE KEY>", install = TRUE)
+```
+
 ### Downloading ZCTA Demographic Data
 
 The `zi_get_demographics()` function provides access to demographic data

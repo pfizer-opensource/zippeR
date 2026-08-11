@@ -6,6 +6,11 @@ template:
   bootstrap: 5
 
 reference:
+  - title: "Setup"
+    desc: "Configure Census API Access"
+    contents:
+    - zi_census_api_key
+
   - title: "Data Preparation"
     desc: "Ensure vectors of ZIP Codes or ZCTAs are Valid"
     contents:

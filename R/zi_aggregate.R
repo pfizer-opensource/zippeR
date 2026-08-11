@@ -47,7 +47,7 @@
 #'     made up of three-digital \code{ZCTA3} values.
 #' @param key A Census API key, which can be obtained at
 #'     \url{https://api.census.gov/data/key_signup.html}. This can be omitted if
-#'     \code{tidycensus::census_api_key()} has been used to write your key to
+#'     \code{zi_census_api_key()} has been used to write your key to
 #'     your \code{.Renviron} file. You can check whether an API key has been
 #'     written to \code{.Renviron} by using \code{Sys.getenv("CENSUS_API_KEY")}.
 #'

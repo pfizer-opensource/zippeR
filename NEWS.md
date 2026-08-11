@@ -1,3 +1,9 @@
+# zippeR (development version)
+
+## New features and improvements
+
+* Added `zi_census_api_key()`, a `zi_`-prefixed wrapper around `tidycensus::census_api_key()`, so Census API key setup no longer requires calling a function from another package. Referenced from `zi_get_demographics()` and `zi_aggregate()` documentation and the README (#108)
+
 # zippeR 0.2.0
 
 ## New features and improvements
