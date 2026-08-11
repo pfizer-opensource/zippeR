@@ -37,11 +37,26 @@ zi_census_api_key <- function(key, overwrite = FALSE, install = FALSE){
     ))
   }
 
+  if (is.na(key)){
+    cli::cli_abort("{.arg key} cannot be {.val NA}. Please provide a Census API key.")
+  }
+
+  if (key == ""){
+    cli::cli_abort("{.arg key} cannot be an empty string. Please provide a Census API key.")
+  }
+
+  if (grepl("['\"\r\n]", key)){
+    cli::cli_abort(c(
+      "{.arg key} contains an invalid character.",
+      "i" = "Census API keys do not contain quotes or line breaks; check that you copied the key correctly."
+    ))
+  }
+
   if (length(overwrite) != 1){
     cli::cli_abort("{.arg overwrite} must be a single value.")
   }
 
-  if (!is.logical(overwrite)){
+  if (!is.logical(overwrite) || is.na(overwrite)){
     cli::cli_abort(c(
       "{.arg overwrite} must be {.val TRUE} or {.val FALSE}.",
       "i" = "You provided {.val {overwrite}}."
@@ -52,16 +67,16 @@ zi_census_api_key <- function(key, overwrite = FALSE, install = FALSE){
     cli::cli_abort("{.arg install} must be a single value.")
   }
 
-  if (!is.logical(install)){
+  if (!is.logical(install) || is.na(install)){
     cli::cli_abort(c(
       "{.arg install} must be {.val TRUE} or {.val FALSE}.",
       "i" = "You provided {.val {install}}."
     ))
   }
 
-  # delegate to tidycensus
-  out <- tidycensus::census_api_key(key = key, overwrite = overwrite, install = install)
+  # delegate to tidycensus for its side effect (session env var / .Renviron write)
+  tidycensus::census_api_key(key = key, overwrite = overwrite, install = install)
 
-  return(invisible(out))
+  return(invisible(key))
 
 }

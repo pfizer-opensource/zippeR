@@ -25,3 +25,23 @@ test_that("incorrectly specified parameters trigger appropriate errors", {
   expect_error(zi_census_api_key(key = correct_key, install = c(TRUE, FALSE)),
                "`install` must be a single value", fixed = TRUE)
 })
+
+test_that("missing or invalid key values trigger appropriate errors", {
+  expect_error(zi_census_api_key(key = NA_character_),
+               "`key` cannot be \"NA\"", fixed = TRUE)
+  expect_error(zi_census_api_key(key = ""),
+               "`key` cannot be an empty string", fixed = TRUE)
+  expect_error(zi_census_api_key(key = "111111'abc"),
+               "`key` contains an invalid character", fixed = TRUE)
+  expect_error(zi_census_api_key(key = "111111\"abc"),
+               "`key` contains an invalid character", fixed = TRUE)
+  expect_error(zi_census_api_key(key = "111111\nabc"),
+               "`key` contains an invalid character", fixed = TRUE)
+})
+
+test_that("NA overwrite and install values trigger appropriate errors", {
+  expect_error(zi_census_api_key(key = correct_key, overwrite = NA),
+               "`overwrite` must be", fixed = TRUE)
+  expect_error(zi_census_api_key(key = correct_key, install = NA),
+               "`install` must be", fixed = TRUE)
+})
