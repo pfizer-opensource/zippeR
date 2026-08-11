@@ -31,9 +31,8 @@ _No epics in progress._
 
 ```mermaid
 graph TD
-  I["#110 Epic I — CI health"] --> J["#111 Epic J — v0.3.0 Release"]
-  H["#109 Epic H — API ergonomics"] -.optional.-> J
+  H["#109 Epic H — API ergonomics"] -.optional.-> J["#111 Epic J — v0.3.0 Release"]
 ```
 
-- [Epic I] should land before [Epic J] so release checks run against a trustworthy pipeline.
+- [Epic I] closed 2026-08-10 — its precondition on [Epic J] (release checks running against a trustworthy pipeline) is satisfied; the dependency edge is resolved and removed from the graph.
 - [Epic H] is optional for the release; #108 (`zi_census_api_key()`) is a good candidate to include if it lands in time.
