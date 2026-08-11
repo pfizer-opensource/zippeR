@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-05-31
+last_updated: 2026-08-11
 last_updated_by: github-copilot-cli
 owner_skill: adr/SKILL.md
 quadrant: history
@@ -26,6 +26,7 @@ For **workflow-intrinsic ADRs** (vendored from `pfizer-evgen/agentic-dev`), see 
 | [0002](./ADR-0002-persona-model-growth-criteria.md) | Persona-model growth criteria (6th+ persona justification) | accepted | 2026-04-30 |
 | [0003](./ADR-0003-pr-orchestrator-gate-contract.md) | PR skill orchestrator↔gate contract | accepted | 2026-05-20 |
 | [0004](./ADR-0004-uds-crosswalk-internalization.md) | Bundle UDS crosswalk data in inst/extdata rather than downloading at runtime | accepted | 2026-05-31 |
+| [0005](./ADR-0005-dplyr-removal-decision.md) | Remove dplyr as a direct Import, replacing ~110 call sites with Base R | accepted | 2026-08-11 |
 
 ---
 
