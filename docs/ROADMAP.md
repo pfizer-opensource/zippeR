@@ -14,6 +14,7 @@ last_updated: "2026-08-11"
 ## Later (aspirational)
 
 - **[Epic K] Vendored Workflow Toolkit Adoption & Governance** (#123) — Make the vendored toolkit's labels and ADR corpus real, so lifecycle gates resolve from decisions rather than absence; 0/4 sub-issues closed; deferred until after the next release (Epic J)
+- **[Epic L] dplyr Removal Implementation** (#129) — Execute ADR-0005's decision to remove `dplyr` as a direct Import, converting ~110 call sites across 9 files to Base R; 0/5 sub-issues closed; non-blocking cleanup, sequenced after the next release (Epic J)
 - **Deprecated argument removal** (#71) — Remove `input_zip` and `dict` from `zi_crosswalk()`; time-gated to early 2027
 
 ## Recently Shipped
@@ -38,3 +39,4 @@ graph TD
 - [Epic I] closed 2026-08-10 — its precondition on [Epic J] (release checks running against a trustworthy pipeline) is satisfied; the dependency edge is resolved and removed from the graph.
 - [Epic H] is optional for the release; #108 (`zi_census_api_key()`) is a good candidate to include if it lands in time.
 - [Epic K] is preferred-but-not-blocking for [Epic J] — the release cycle runs more meaningfully once lifecycle gates resolve from recorded decisions, but no release artifact depends on it. Internally, #120 gates both #118 and #119.
+- [Epic L] is the follow-up implementation epic to #86's research under [Epic H] — it becomes actionable once #86 closes (ADR-0005 is already accepted); it does not block [Epic J]'s release and is not itself represented as a graph edge above since it has no blocking relationship to either [Epic J] or [Epic K].
