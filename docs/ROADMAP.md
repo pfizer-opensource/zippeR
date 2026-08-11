@@ -5,16 +5,15 @@ last_updated: "2026-08-11"
 
 ## Now (in progress)
 
-_No epics in progress._
+- **[Epic H] User-Facing API Ergonomics & Dependency Reduction** (#109) — Self-contained `zi_`-prefixed API surface plus Phase 3 dependency decisions; 0/3 sub-issues closed
 
 ## Next (planned)
 
-- **[Epic H] User-Facing API Ergonomics & Dependency Reduction** (#109) — Self-contained `zi_`-prefixed API surface plus Phase 3 dependency decisions; 0/3 sub-issues closed
 - **[Epic J] v0.3.0 Release** (#111) — Ship 2024 ZCTA support to CRAN; sub-issues to be filed at kickoff
-- **[Epic K] Vendored Workflow Toolkit Adoption & Governance** (#123) — Make the vendored toolkit's labels and ADR corpus real, so lifecycle gates resolve from decisions rather than absence; 0/4 sub-issues closed
 
 ## Later (aspirational)
 
+- **[Epic K] Vendored Workflow Toolkit Adoption & Governance** (#123) — Make the vendored toolkit's labels and ADR corpus real, so lifecycle gates resolve from decisions rather than absence; 0/4 sub-issues closed; deferred until after the next release (Epic J)
 - **Deprecated argument removal** (#71) — Remove `input_zip` and `dict` from `zi_crosswalk()`; time-gated to early 2027
 
 ## Recently Shipped
