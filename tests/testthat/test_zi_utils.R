@@ -122,3 +122,66 @@ test_that("left_join_base disambiguates colliding non-key columns with .x/.y suf
   expect_equal(out$source_zcta.y, c("X", "Y"))
 
 })
+
+# test group_summarise_base() ------------------------------------------------
+
+test_that("group_summarise_base does not conflate a real NA with the literal string \"NA\"", {
+
+  df <- data.frame(k = c(NA_character_, "NA", "A", "B"), v = c(1, 2, 3, 4), stringsAsFactors = FALSE)
+
+  out <- group_summarise_base(df, "k", function(d) list(total = sum(d$v)))
+
+  # four distinct groups must survive: "A", "B", the literal string "NA", and
+  # the real NA - a string-label-based implementation can collapse the last
+  # two into one group
+  expect_equal(nrow(out), 4)
+  expect_equal(out$total[out$k == "NA" & !is.na(out$k)], 2)
+  expect_equal(out$total[is.na(out$k)], 1)
+
+})
+
+test_that("group_summarise_base sorts ascending to match dplyr's locale-independent (C-locale) order", {
+
+  df <- data.frame(k = c("b", NA, "a", "Z", "z", "A", NA), v = 1:7, stringsAsFactors = FALSE)
+
+  out <- group_summarise_base(df, "k", function(d) list(n = nrow(d)))
+
+  # dplyr::group_by()+summarise() sorts ascending under C locale regardless
+  # of session locale (upper before lower, byte order), with NA last
+  expect_equal(out$k, c("A", "Z", "a", "b", "z", NA))
+  expect_equal(out$n, c(1, 1, 1, 1, 1, 2))
+
+})
+
+test_that("group_summarise_base returns a typed zero-row data frame for empty input", {
+
+  df <- data.frame(ZCTA3 = character(0), variable = character(0), value = numeric(0),
+                    stringsAsFactors = FALSE)
+
+  out <- group_summarise_base(df, c("ZCTA3", "variable"),
+                               function(d) list(value = sum(d$value, na.rm = TRUE)))
+
+  expect_equal(nrow(out), 0)
+  expect_equal(names(out), c("ZCTA3", "variable", "value"))
+  expect_true(is.character(out$ZCTA3))
+  expect_true(is.character(out$variable))
+  expect_true(is.numeric(out$value))
+
+})
+
+test_that("group_summarise_base supports multi-column grouping, matching dplyr", {
+
+  df <- data.frame(
+    g1 = c("A", "A", "B", "B", "A", NA),
+    g2 = c(1, 1, 2, 2, NA, NA),
+    v = 1:6,
+    stringsAsFactors = FALSE
+  )
+
+  out <- group_summarise_base(df, c("g1", "g2"), function(d) list(total = sum(d$v)))
+
+  expect_equal(out$g1, c("A", "A", "B", NA))
+  expect_equal(out$g2, c(1, NA, 2, NA))
+  expect_equal(out$total, c(3, 5, 7, 6))
+
+})

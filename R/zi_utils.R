@@ -63,26 +63,56 @@ left_join_base <- function(x, y, by, suffixes = c(".x", ".y")) {
 # Performs a split-apply-combine grouped aggregation in Base R, matching
 # dplyr::group_by(group_vars)+dplyr::summarise()'s output contract: one row
 # per unique combination of `group_vars` present in `.data`, sorted ascending
-# by those columns (in the order given), with the group-key columns first
+# by those columns (in the order given, C-locale/byte-order via
+# order(method = "radix") - matching dplyr::group_by()'s locale-independent
+# sort exactly, including NA sorting last), with the group-key columns first
 # followed by whatever columns `summarise_fun` returns.
 #
 # `summarise_fun` is called once per group with that group's subset data.frame
 # and must return a named list or single-row data.frame of the aggregated
 # columns (e.g. function(d) list(value = sum(d$value, na.rm = TRUE))).
 #
-# Grouping uses interaction() over `group_vars`, which (like dplyr::group_by())
-# treats NA as a real, matchable grouping level rather than splitting NA rows
-# into their own singleton groups (unlike base split() on a plain factor).
+# Grouping is done by detecting run-boundaries in the sorted data (NA treated
+# as equal to a preceding NA, mirroring dplyr::group_by()'s NA-as-a-real-level
+# semantics), rather than by building string labels via factor()/interaction().
+# The latter would silently collide a real NA with the literal string "NA"
+# (both stringify to "NA" as an interaction label), merging otherwise-distinct
+# groups - the run-boundary approach never stringifies keys, so this can't happen.
 group_summarise_base <- function(.data, group_vars, summarise_fun) {
 
-  ## build a single grouping key that treats NA as a real level, mirroring
-  ## dplyr::group_by()'s NA-grouping semantics (see zi_prep_hud.R's ave()-based
-  ## grouping for the same NA-as-a-level requirement)
-  key_cols <- lapply(.data[group_vars], function(x) factor(x, exclude = NULL))
-  keys <- do.call(interaction, c(key_cols, list(drop = TRUE, lex.order = TRUE)))
+  if (nrow(.data) == 0) {
+    ## preserve grouping-column types/names on empty input; the summarised
+    ## column schema is unknown without at least one row, so probe it with a
+    ## single all-NA row of .data's own column types, then discard that row
+    probe <- .data[NA_integer_, , drop = FALSE]
+    summarised_probe <- as.data.frame(summarise_fun(probe))
+    out <- cbind(.data[group_vars], summarised_probe[0, , drop = FALSE])
+    out <- out[0, , drop = FALSE]
+    rownames(out) <- NULL
+    return(out)
+  }
 
-  ## split into groups (in ascending key order) and summarise each
-  groups <- split(.data, keys)
+  ## order ascending by group_vars using radix (C-locale, locale-independent)
+  ## sort, matching dplyr::group_by()'s ordering contract exactly, including
+  ## NA-last placement
+  ord <- do.call(order, c(as.list(.data[group_vars]), list(method = "radix")))
+  .data <- .data[ord, , drop = FALSE]
+
+  ## identify group boundaries by detecting where any group_var's value
+  ## changes from the previous (now-sorted) row
+  n <- nrow(.data)
+  changed <- rep(FALSE, n)
+  for (col in group_vars) {
+    v <- .data[[col]]
+    same_as_prev <- c(FALSE, (!is.na(v[-1]) & !is.na(v[-n]) & v[-1] == v[-n]) |
+                                (is.na(v[-1]) & is.na(v[-n])))
+    changed <- changed | !same_as_prev
+  }
+  changed[1] <- TRUE
+  group_id <- cumsum(changed)
+
+  ## split into groups (already in ascending key order) and summarise each
+  groups <- split(.data, group_id)
   summarised <- lapply(groups, summarise_fun)
 
   ## recover the group-key values (one row per group, same order as `groups`)
