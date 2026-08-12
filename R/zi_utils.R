@@ -10,7 +10,13 @@
 # stats::setNames("y_col", "x_col")) joins x's named column against y's
 # value column, keeping only x's column name in the output (mirroring
 # dplyr::left_join(by = c("x_col" = "y_col"))).
-left_join_base <- function(x, y, by) {
+#
+# When x and y share a non-key column name, merge() (like dplyr::left_join())
+# disambiguates both copies with `suffixes` (default ".x"/".y"); resolve_col()
+# below maps each original column name to whichever name actually survived in
+# merge()'s output (suffixed or not) so collisions are preserved rather than
+# erroring out on a stale, pre-collision column name.
+left_join_base <- function(x, y, by, suffixes = c(".x", ".y")) {
 
   idx_col <- ".zi_join_idx"
   x[[idx_col]] <- seq_len(nrow(x))
@@ -23,15 +29,28 @@ left_join_base <- function(x, y, by) {
     by_y <- unname(by)
   }
 
-  out <- merge(x, y, by.x = by_x, by.y = by_y, all.x = TRUE, sort = FALSE)
+  out <- merge(x, y, by.x = by_x, by.y = by_y, all.x = TRUE, sort = FALSE,
+               suffixes = suffixes)
 
   ## restore x's original row order
   out <- out[order(out[[idx_col]]), , drop = FALSE]
   out[[idx_col]] <- NULL
 
-  ## restore column order: x's original columns, then new y columns
-  x_cols <- setdiff(names(x), idx_col)
-  y_new_cols <- setdiff(names(y), by_y)
+  ## restore column order: x's original columns, then new y columns,
+  ## resolving each original name to its (possibly suffixed) name in `out`
+  resolve_col <- function(orig, suffix) {
+    if (orig %in% names(out)) return(orig)
+    suffixed <- paste0(orig, suffix)
+    if (suffixed %in% names(out)) return(suffixed)
+    cli::cli_abort("Could not resolve output column for {.val {orig}} after joining.")
+  }
+
+  x_cols_orig <- setdiff(names(x), idx_col)
+  y_cols_orig <- setdiff(names(y), by_y)
+
+  x_cols <- vapply(x_cols_orig, resolve_col, character(1), suffix = suffixes[1])
+  y_new_cols <- vapply(y_cols_orig, resolve_col, character(1), suffix = suffixes[2])
+
   out <- out[, c(x_cols, y_new_cols), drop = FALSE]
 
   rownames(out) <- NULL

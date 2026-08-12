@@ -101,3 +101,24 @@ test_that("left_join_base supports composite (multi-column) keys with NA and dup
   expect_equal(out$weight, c(0.5, NA, 0.6, 0.7))
 
 })
+
+test_that("left_join_base disambiguates colliding non-key columns with .x/.y suffixes, matching dplyr", {
+
+  x_collide <- data.frame(
+    zip5 = c("001", "002"),
+    source_zcta = c("A", "B"),
+    stringsAsFactors = FALSE
+  )
+  y_collide <- data.frame(
+    zip5 = c("001", "002"),
+    source_zcta = c("X", "Y"),
+    stringsAsFactors = FALSE
+  )
+
+  out <- left_join_base(x_collide, y_collide, by = stats::setNames("zip5", "zip5"))
+
+  expect_equal(names(out), c("zip5", "source_zcta.x", "source_zcta.y"))
+  expect_equal(out$source_zcta.x, c("A", "B"))
+  expect_equal(out$source_zcta.y, c("X", "Y"))
+
+})
