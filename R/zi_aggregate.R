@@ -388,7 +388,7 @@ zi_census_intensive <- function(.data, weights, method){
   ZCTA3 = GEOID = variable = value = weight = NULL
 
   ## join
-  .data <- dplyr::left_join(.data, weights, by = c("ZCTA3", "GEOID"))
+  .data <- left_join_base(.data, weights, by = c("ZCTA3", "GEOID"))
 
   ## group_by
   .data <- dplyr::group_by(.data, ZCTA3, variable)
@@ -436,7 +436,7 @@ zi_census_weights <- function(year, key){
     totals <- dplyr::summarise(totals, total_pop = sum(value, na.rm = TRUE))
 
     ## join
-    out <- dplyr::left_join(out, totals, by = "ZCTA3")
+    out <- left_join_base(out, totals, by = "ZCTA3")
 
     ## calculate proportions
     out$weight <- out$value / out$total_pop
@@ -480,7 +480,7 @@ zi_acs_intensive <- function(.data, weights, method){
   ZCTA3 = GEOID = variable = estimate = weight = moe = NULL
 
   ## join
-  .data <- dplyr::left_join(.data, weights, by = c("ZCTA3", "GEOID"))
+  .data <- left_join_base(.data, weights, by = c("ZCTA3", "GEOID"))
 
   ## group_by
   .data <- dplyr::group_by(.data, ZCTA3, variable)
@@ -531,7 +531,7 @@ zi_acs_weights <- function(year, survey, key){
     totals <- dplyr::summarise(totals, total_pop = sum(estimate, na.rm = TRUE))
 
     ## join
-    out <- dplyr::left_join(out, totals, by = "ZCTA3")
+    out <- left_join_base(out, totals, by = "ZCTA3")
 
     ## calculate proportions
     out$weight <- out$estimate / out$total_pop

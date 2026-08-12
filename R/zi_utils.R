@@ -1,3 +1,45 @@
+# Internal left join helper (replaces dplyr::left_join())
+# Wraps base merge() to reproduce dplyr::left_join()'s row-order and
+# column-order contract: all rows of x are kept in their original order,
+# and the output columns are x's original columns followed by any new
+# (non-key) columns from y. merge() itself neither preserves x's row
+# order nor keeps that column layout, so both are restored explicitly.
+#
+# `by` follows dplyr's convention: an unnamed character vector joins on
+# identically-named columns in x and y; a named character vector (e.g.
+# stats::setNames("y_col", "x_col")) joins x's named column against y's
+# value column, keeping only x's column name in the output (mirroring
+# dplyr::left_join(by = c("x_col" = "y_col"))).
+left_join_base <- function(x, y, by) {
+
+  idx_col <- ".zi_join_idx"
+  x[[idx_col]] <- seq_len(nrow(x))
+
+  if (is.null(names(by)) || all(names(by) == "")) {
+    by_x <- by
+    by_y <- by
+  } else {
+    by_x <- names(by)
+    by_y <- unname(by)
+  }
+
+  out <- merge(x, y, by.x = by_x, by.y = by_y, all.x = TRUE, sort = FALSE)
+
+  ## restore x's original row order
+  out <- out[order(out[[idx_col]]), , drop = FALSE]
+  out[[idx_col]] <- NULL
+
+  ## restore column order: x's original columns, then new y columns
+  x_cols <- setdiff(names(x), idx_col)
+  y_new_cols <- setdiff(names(y), by_y)
+  out <- out[, c(x_cols, y_new_cols), drop = FALSE]
+
+  rownames(out) <- NULL
+
+  return(out)
+
+}
+
 # Internal weighted median helper (replaces spatstat.univar::weighted.median)
 # Computes the weighted median of x using weights w.
 # NA values in x or w are silently dropped (consistent with na.rm = TRUE in

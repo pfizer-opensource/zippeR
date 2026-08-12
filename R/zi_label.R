@@ -241,7 +241,7 @@ zi_label <- function(.data, input_var, label_source = "UDS", source_var,
 
   ## join with input data
   join_by <- stats::setNames(source_varQN, input_varQN)
-  out <- dplyr::left_join(.data, dict, by = join_by)
+  out <- left_join_base(.data, dict, by = join_by)
 
   ## create tibble
   out <- tibble::as_tibble(out)
