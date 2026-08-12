@@ -90,14 +90,25 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   out <- out[order(out$zip5, out$state, out$geoid), ]
   out <- dplyr::group_by(out, zip5, state)
 
+  # ave() groups by combining vectors via split(); unlike dplyr::group_by(),
+  # split() drops NA keys into per-row singleton groups instead of grouping
+  # them together. Coercing to factors with exclude = NULL preserves NA as a
+  # real grouping level, matching dplyr's grouped max() semantics exactly.
+  # These must be (re)computed against out's row order at the point ave()
+  # is called, since return_max reorders out by geoid beforehand.
+
   if (return_max){
     out <- out[order(out$geoid), ]
-    grp_max <- stats::ave(out$ratio, out$zip5, out$state,
+    zip5_grp <- factor(out$zip5, exclude = NULL)
+    state_grp <- factor(out$state, exclude = NULL)
+    grp_max <- stats::ave(out$ratio, zip5_grp, state_grp,
                     FUN = function(x) max(x, na.rm = TRUE))
     out <- out[!is.na(out$ratio) & out$ratio == grp_max, ]
     out <- dplyr::slice(out, 1)
   } else if (!return_max){
-    grp_max <- stats::ave(out$ratio, out$zip5, out$state,
+    zip5_grp <- factor(out$zip5, exclude = NULL)
+    state_grp <- factor(out$state, exclude = NULL)
+    grp_max <- stats::ave(out$ratio, zip5_grp, state_grp,
                     FUN = function(x) max(x, na.rm = TRUE))
     out$max <- ifelse(out$ratio == grp_max, TRUE, FALSE)
   }
