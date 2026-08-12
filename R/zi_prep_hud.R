@@ -83,7 +83,7 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   names(state_df) <- c("state", "state_fips")
   state_df$state <- toupper(state_df$state)
 
-  out <- dplyr::left_join(hud, state_df, by = "state")
+  out <- left_join_base(hud, state_df, by = "state")
   out <- out[, c("zip5", "geoid", "state", "state_fips", "ratio")]
 
   # identify max

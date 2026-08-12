@@ -1,3 +1,64 @@
+# Internal left join helper (replaces dplyr::left_join())
+# Wraps base merge() to reproduce dplyr::left_join()'s row-order and
+# column-order contract: all rows of x are kept in their original order,
+# and the output columns are x's original columns followed by any new
+# (non-key) columns from y. merge() itself neither preserves x's row
+# order nor keeps that column layout, so both are restored explicitly.
+#
+# `by` follows dplyr's convention: an unnamed character vector joins on
+# identically-named columns in x and y; a named character vector (e.g.
+# stats::setNames("y_col", "x_col")) joins x's named column against y's
+# value column, keeping only x's column name in the output (mirroring
+# dplyr::left_join(by = c("x_col" = "y_col"))).
+#
+# When x and y share a non-key column name, merge() (like dplyr::left_join())
+# disambiguates both copies with `suffixes` (default ".x"/".y"); resolve_col()
+# below maps each original column name to whichever name actually survived in
+# merge()'s output (suffixed or not) so collisions are preserved rather than
+# erroring out on a stale, pre-collision column name.
+left_join_base <- function(x, y, by, suffixes = c(".x", ".y")) {
+
+  idx_col <- ".zi_join_idx"
+  x[[idx_col]] <- seq_len(nrow(x))
+
+  if (is.null(names(by)) || all(names(by) == "")) {
+    by_x <- by
+    by_y <- by
+  } else {
+    by_x <- names(by)
+    by_y <- unname(by)
+  }
+
+  out <- merge(x, y, by.x = by_x, by.y = by_y, all.x = TRUE, sort = FALSE,
+               suffixes = suffixes)
+
+  ## restore x's original row order
+  out <- out[order(out[[idx_col]]), , drop = FALSE]
+  out[[idx_col]] <- NULL
+
+  ## restore column order: x's original columns, then new y columns,
+  ## resolving each original name to its (possibly suffixed) name in `out`
+  resolve_col <- function(orig, suffix) {
+    if (orig %in% names(out)) return(orig)
+    suffixed <- paste0(orig, suffix)
+    if (suffixed %in% names(out)) return(suffixed)
+    cli::cli_abort("Could not resolve output column for {.val {orig}} after joining.")
+  }
+
+  x_cols_orig <- setdiff(names(x), idx_col)
+  y_cols_orig <- setdiff(names(y), by_y)
+
+  x_cols <- vapply(x_cols_orig, resolve_col, character(1), suffix = suffixes[1])
+  y_new_cols <- vapply(y_cols_orig, resolve_col, character(1), suffix = suffixes[2])
+
+  out <- out[, c(x_cols, y_new_cols), drop = FALSE]
+
+  rownames(out) <- NULL
+
+  return(out)
+
+}
+
 # Internal weighted median helper (replaces spatstat.univar::weighted.median)
 # Computes the weighted median of x using weights w.
 # NA values in x or w are silently dropped (consistent with na.rm = TRUE in
