@@ -59,6 +59,45 @@ left_join_base <- function(x, y, by, suffixes = c(".x", ".y")) {
 
 }
 
+# Internal group_by()+summarise() helper (replaces dplyr::group_by()+dplyr::summarise())
+# Performs a split-apply-combine grouped aggregation in Base R, matching
+# dplyr::group_by(group_vars)+dplyr::summarise()'s output contract: one row
+# per unique combination of `group_vars` present in `.data`, sorted ascending
+# by those columns (in the order given), with the group-key columns first
+# followed by whatever columns `summarise_fun` returns.
+#
+# `summarise_fun` is called once per group with that group's subset data.frame
+# and must return a named list or single-row data.frame of the aggregated
+# columns (e.g. function(d) list(value = sum(d$value, na.rm = TRUE))).
+#
+# Grouping uses interaction() over `group_vars`, which (like dplyr::group_by())
+# treats NA as a real, matchable grouping level rather than splitting NA rows
+# into their own singleton groups (unlike base split() on a plain factor).
+group_summarise_base <- function(.data, group_vars, summarise_fun) {
+
+  ## build a single grouping key that treats NA as a real level, mirroring
+  ## dplyr::group_by()'s NA-grouping semantics (see zi_prep_hud.R's ave()-based
+  ## grouping for the same NA-as-a-level requirement)
+  key_cols <- lapply(.data[group_vars], function(x) factor(x, exclude = NULL))
+  keys <- do.call(interaction, c(key_cols, list(drop = TRUE, lex.order = TRUE)))
+
+  ## split into groups (in ascending key order) and summarise each
+  groups <- split(.data, keys)
+  summarised <- lapply(groups, summarise_fun)
+
+  ## recover the group-key values (one row per group, same order as `groups`)
+  group_key_rows <- do.call(rbind, lapply(groups, function(d) d[1, group_vars, drop = FALSE]))
+  rownames(group_key_rows) <- NULL
+
+  summarised_rows <- do.call(rbind, lapply(summarised, as.data.frame))
+  rownames(summarised_rows) <- NULL
+
+  out <- cbind(group_key_rows, summarised_rows)
+  rownames(out) <- NULL
+
+  out
+}
+
 # Internal weighted median helper (replaces spatstat.univar::weighted.median)
 # Computes the weighted median of x using weights w.
 # NA values in x or w are silently dropped (consistent with na.rm = TRUE in
