@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rebuilt `R/sysdata.rda` with full 2024 ZCTA geometry data (intersect and centroid vectors, reference tables); state- and county-scoped `zi_get_geometry()`/`zi_list_zctas()` requests for year 2024 now work end-to-end, matching nationwide support added previously (#91)
 
 ### Changed
+- Converted all `dplyr::filter()`, `select()`, `mutate()`, and `arrange()` call sites in `zi_aggregate.R`, `zi_crosswalk.R`, `zi_get_demographics.R`, `zi_get_geometry.R`, `zi_list_zctas.R`, `zi_load_crosswalk.R`, `zi_load_labels.R`, and `zi_prep_hud.R` to Base R equivalents, as part of Epic L's dplyr removal; behavior is unchanged, no `rlang` introduced (#130)
 - Registered `[Epic K] Vendored Workflow Toolkit Adoption & Governance` (#123) on `docs/ROADMAP.md` under `Next`, with a preferred-but-not-blocking dependency edge to `[Epic J]` (#111) and a note that #120 gates #118 and #119 (#123)
 - Added a `brew link --overwrite udunits gdal proj` step after the macOS `sf` dependency install in `R-CMD-check.yaml`, so a cache miss no longer silently leaves the runner-image-preinstalled formulae unlinked with a `##[warning] ... not linked` annotation (#122)
 - Retired `[Epic I] CI & Development Infrastructure Health` (#110) from `docs/ROADMAP.md` to `Recently Shipped`; all five sub-issues (#102, #113, #114, #115, #122) shipped, resolving the caching-layer defects, checks-not-firing gap, Node.js 20 deprecation warnings, and macOS Homebrew warnings

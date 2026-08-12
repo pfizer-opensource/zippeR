@@ -95,9 +95,9 @@ zi_list_zctas <- function(year, state, method){
 
   # subset based on method
   if (method == "centroid"){
-    sub <- dplyr::filter(reference_centroids, fips %in% statez & year == yearz)
+    sub <- reference_centroids[reference_centroids$fips %in% statez & reference_centroids$year == yearz, ]
   } else if (method == "intersect"){
-    sub <- dplyr::filter(reference_intersects, fips %in% statez & year == yearz)
+    sub <- reference_intersects[reference_intersects$fips %in% statez & reference_intersects$year == yearz, ]
   }
 
   sub <- sub$obj

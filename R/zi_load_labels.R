@@ -133,8 +133,8 @@ zi_load_labels_uds <- function(year){
   out <- zi_load_uds(year = year)
 
   # format output
-  out <- dplyr::select(out, zip5 = ZIP, label_city = PO_NAME, label_state = STATE,
-                       label_type = ZIP_TYPE)
+  out <- stats::setNames(out[, c("ZIP", "PO_NAME", "STATE", "ZIP_TYPE")],
+                   c("zip5", "label_city", "label_state", "label_type"))
 
   # return output
   return(out)

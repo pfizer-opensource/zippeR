@@ -147,7 +147,7 @@ zi_get_demographics <- function(year, variables = NULL,
 
     ## prep data
     if (!is.null(out)){
-      out <- dplyr::mutate(out, GEOID = sub("^\\S+ ", "", NAME))
+      out$GEOID <- sub("^\\S+ ", "", out$NAME)
     }
 
   }
@@ -155,12 +155,12 @@ zi_get_demographics <- function(year, variables = NULL,
   # tidy if data are returned
   if (!is.null(out)){
     ## remove additional cols and re-arrange
-    out <- dplyr::select(out, -NAME)
-    out <- dplyr::arrange(out, GEOID)
+    out <- out[, setdiff(names(out), "NAME")]
+    out <- out[order(out$GEOID), ]
 
     ## optionally subset
     if (!is.null(zcta)){
-      out <- dplyr::filter(out, GEOID %in% zcta)
+      out <- out[out$GEOID %in% zcta, ]
     }
   }
 

@@ -68,11 +68,14 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   hud <- dplyr::rename_with(.data, tolower)
 
   if (by == "residential"){
-    hud <- dplyr::select(hud, zip5 = zip, geoid, state, ratio = res_ratio)
+    hud <- stats::setNames(hud[, c("zip", "geoid", "state", "res_ratio")],
+                     c("zip5", "geoid", "state", "ratio"))
   } else if (by == "commercial"){
-    hud <- dplyr::select(hud, zip5 = zip, geoid, state, ratio = bus_ratio)
+    hud <- stats::setNames(hud[, c("zip", "geoid", "state", "bus_ratio")],
+                     c("zip5", "geoid", "state", "ratio"))
   } else if (by == "total"){
-    hud <- dplyr::select(hud, zip5 = zip, geoid, state, ratio = tot_ratio)
+    hud <- stats::setNames(hud[, c("zip", "geoid", "state", "tot_ratio")],
+                     c("zip5", "geoid", "state", "ratio"))
   }
 
   # convert state_fips using static lookup (avoids network download)
@@ -81,28 +84,39 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   state_df$state <- toupper(state_df$state)
 
   out <- dplyr::left_join(hud, state_df, by = "state")
-  out <- dplyr::select(out, zip5, geoid, state, state_fips, ratio)
+  out <- out[, c("zip5", "geoid", "state", "state_fips", "ratio")]
 
   # identify max
-  out <- dplyr::arrange(out, zip5, state, geoid)
+  out <- out[order(out$zip5, out$state, out$geoid), ]
   out <- dplyr::group_by(out, zip5, state)
 
+  # ave() groups by combining vectors via split(); unlike dplyr::group_by(),
+  # split() drops NA keys into per-row singleton groups instead of grouping
+  # them together. Coercing to factors with exclude = NULL preserves NA as a
+  # real grouping level, matching dplyr's grouped max() semantics exactly.
+  # These must be (re)computed against out's row order at the point ave()
+  # is called, since return_max reorders out by geoid beforehand.
+
   if (return_max){
-    out <- dplyr::arrange(out, geoid)
-    out <- dplyr::filter(out, !is.na(ratio))
-    out <- dplyr::filter(out, ratio == max(ratio, na.rm = TRUE))
+    out <- out[order(out$geoid), ]
+    zip5_grp <- factor(out$zip5, exclude = NULL)
+    state_grp <- factor(out$state, exclude = NULL)
+    grp_max <- stats::ave(out$ratio, zip5_grp, state_grp,
+                    FUN = function(x) max(x, na.rm = TRUE))
+    out <- out[!is.na(out$ratio) & out$ratio == grp_max, ]
     out <- dplyr::slice(out, 1)
   } else if (!return_max){
-    out <- dplyr::mutate(out,
-                         max = ifelse(ratio == max(ratio, na.rm = TRUE),
-                                      TRUE, FALSE)
-    )
+    zip5_grp <- factor(out$zip5, exclude = NULL)
+    state_grp <- factor(out$state, exclude = NULL)
+    grp_max <- stats::ave(out$ratio, zip5_grp, state_grp,
+                    FUN = function(x) max(x, na.rm = TRUE))
+    out$max <- ifelse(out$ratio == grp_max, TRUE, FALSE)
   }
 
   out <- dplyr::ungroup(out)
 
   # subset on max and prep output
-  out <- dplyr::filter(out, !is.na(state))
+  out <- out[!is.na(out$state), ]
 
   # return output
   return(out)

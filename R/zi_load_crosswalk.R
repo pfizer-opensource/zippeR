@@ -149,7 +149,8 @@ zi_load_uds <- function(year) {
   }
 
   all_data <- readRDS(crosswalk_path)
-  out <- dplyr::filter(all_data, .data$year == .env$year)
+  requested_year <- year
+  out <- all_data[all_data$year == requested_year, ]
   out$year <- NULL
 
   # check validation
