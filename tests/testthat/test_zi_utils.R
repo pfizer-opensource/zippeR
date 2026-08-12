@@ -169,6 +169,21 @@ test_that("group_summarise_base returns a typed zero-row data frame for empty in
 
 })
 
+test_that("group_summarise_base does not conflate NA and NaN in a numeric grouping column", {
+
+  df <- data.frame(k = c(NA_real_, NaN, 1, 2), v = c(4, 6, 10, 20))
+
+  out <- group_summarise_base(df, "k", function(d) list(total = sum(d$v)))
+
+  # dplyr::group_by()+summarise() keeps NA and NaN as distinct group keys;
+  # is.na() alone treats both as missing, so a naive implementation can
+  # silently merge them into one group
+  expect_equal(nrow(out), 4)
+  expect_equal(out$total[is.na(out$k) & !is.nan(out$k)], 4)
+  expect_equal(out$total[is.nan(out$k)], 6)
+
+})
+
 test_that("group_summarise_base supports multi-column grouping, matching dplyr", {
 
   df <- data.frame(

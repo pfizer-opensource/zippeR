@@ -99,13 +99,18 @@ group_summarise_base <- function(.data, group_vars, summarise_fun) {
   .data <- .data[ord, , drop = FALSE]
 
   ## identify group boundaries by detecting where any group_var's value
-  ## changes from the previous (now-sorted) row
+  ## changes from the previous (now-sorted) row. NaN and NA are both
+  ## "missing" under is.na(), but dplyr treats them as distinct group keys
+  ## (numeric NaN != NA); is.nan() distinguishes them here so a NaN row is
+  ## never merged into a real-NA group (or vice versa). is.nan() is safe to
+  ## call on any vector type (returns all-FALSE for non-double types).
   n <- nrow(.data)
   changed <- rep(FALSE, n)
   for (col in group_vars) {
     v <- .data[[col]]
-    same_as_prev <- c(FALSE, (!is.na(v[-1]) & !is.na(v[-n]) & v[-1] == v[-n]) |
-                                (is.na(v[-1]) & is.na(v[-n])))
+    both_missing_same_kind <- is.na(v[-1]) & is.na(v[-n]) & (is.nan(v[-1]) == is.nan(v[-n]))
+    both_present_equal <- !is.na(v[-1]) & !is.na(v[-n]) & v[-1] == v[-n]
+    same_as_prev <- c(FALSE, both_present_equal | both_missing_same_kind)
     changed <- changed | !same_as_prev
   }
   changed[1] <- TRUE
