@@ -226,8 +226,9 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
   }
 
   # prep data
-  .data <- dplyr::mutate(.data, ZCTA3 = substr(GEOID, 1, 3), .before = GEOID)
-  .data <- dplyr::arrange(.data, ZCTA3)
+  .data$ZCTA3 <- substr(.data$GEOID, 1, 3)
+  .data <- .data[, c("ZCTA3", setdiff(names(.data), "ZCTA3"))]
+  .data <- .data[order(.data$ZCTA3), ]
 
   # call underlying tidycensus data
   if (survey %in% c("sf1", "sf3")){
@@ -253,8 +254,8 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     } else if (extensive_id & intensive_id){
 
       ## subset data
-      extensive_df <- dplyr::filter(.data, variable %in% extensive)
-      intensive_df <- dplyr::filter(.data, variable %in% intensive)
+      extensive_df <- .data[.data$variable %in% extensive, ]
+      intensive_df <- .data[.data$variable %in% intensive, ]
 
       ## calculate weights
       weights <- zi_census_weights(year = year, key = key)
@@ -266,7 +267,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
 
         ## combine
         out <- dplyr::bind_rows(extensive_df, intensive_df)
-        out <- dplyr::arrange(out, ZCTA3, variable)
+        out <- out[order(out$ZCTA3, out$variable), ]
       } else {
         out <- NULL
       }
@@ -296,8 +297,8 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
     } else if (extensive_id & intensive_id){
 
       ## subset data
-      extensive_df <- dplyr::filter(.data, variable %in% extensive)
-      intensive_df <- dplyr::filter(.data, variable %in% intensive)
+      extensive_df <- .data[.data$variable %in% extensive, ]
+      intensive_df <- .data[.data$variable %in% intensive, ]
 
       ## calculate weights
       weights <- zi_acs_weights(year = year, survey = survey, key = key)
@@ -309,7 +310,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
 
         ## combine
         out <- dplyr::bind_rows(extensive_df, intensive_df)
-        out <- dplyr::arrange(out, ZCTA3, variable)
+        out <- out[order(out$ZCTA3, out$variable), ]
       } else {
         out <- NULL
       }
@@ -320,7 +321,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
   if (!is.null(out)){
     # optionally subset
     if (!is.null(zcta)){
-      out <- dplyr::filter(out, ZCTA3 %in% zcta)
+      out <- out[out$ZCTA3 %in% zcta, ]
     }
 
     # optionally pivot
@@ -354,7 +355,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
       wide_names <- c("ZCTA3", sort(wide_names))
 
       ## re-order columns alphabetically
-      out <- dplyr::select(out, dplyr::all_of(wide_names))
+      out <- out[, wide_names]
 
     }
   }
@@ -425,9 +426,10 @@ zi_census_weights <- function(year, key){
 
   if (!is.null(out)){
     ## prep data
-    out <- dplyr::mutate(out, ZCTA3 = substr(GEOID, 1, 3), .before = GEOID)
-    out <- dplyr::select(out, -NAME)
-    out <- dplyr::arrange(out, ZCTA3)
+    out$ZCTA3 <- substr(out$GEOID, 1, 3)
+    out <- out[, c("ZCTA3", setdiff(names(out), "ZCTA3"))]
+    out <- out[, setdiff(names(out), "NAME")]
+    out <- out[order(out$ZCTA3), ]
 
     ## group by and sum
     totals <- dplyr::group_by(out, ZCTA3)
@@ -437,10 +439,10 @@ zi_census_weights <- function(year, key){
     out <- dplyr::left_join(out, totals, by = "ZCTA3")
 
     ## calculate proportions
-    out <- dplyr::mutate(out, weight = value / total_pop)
+    out$weight <- out$value / out$total_pop
 
     ## subset
-    out <- dplyr::select(out, ZCTA3, GEOID, weight)
+    out <- out[, c("ZCTA3", "GEOID", "weight")]
   }
 
   ## return output
@@ -455,7 +457,7 @@ zi_acs_extensive <- function(.data){
   ZCTA3 = variable = estimate = moe = NULL
 
   ## square MOEs
-  .data <- dplyr::mutate(.data, moe = moe^2)
+  .data$moe <- .data$moe^2
 
   ## group by and sum
   .data <- dplyr::group_by(.data, ZCTA3, variable)
@@ -464,7 +466,7 @@ zi_acs_extensive <- function(.data){
                             moe = sum(moe, na.rm = TRUE))
 
   ## square root of MOE
-  .data <- dplyr::mutate(.data, moe = sqrt(moe))
+  .data$moe <- sqrt(.data$moe)
 
   ## return output
   return(.data)
@@ -518,10 +520,11 @@ zi_acs_weights <- function(year, survey, key){
 
   if (!is.null(out)){
     ## prep data
-    out <- dplyr::mutate(out, GEOID = sub("^\\S+ ", "", NAME))
-    out <- dplyr::mutate(out, ZCTA3 = substr(GEOID, 1, 3), .before = GEOID)
-    out <- dplyr::select(out, -NAME)
-    out <- dplyr::arrange(out, ZCTA3)
+    out$GEOID <- sub("^\\S+ ", "", out$NAME)
+    out$ZCTA3 <- substr(out$GEOID, 1, 3)
+    out <- out[, c("ZCTA3", setdiff(names(out), "ZCTA3"))]
+    out <- out[, setdiff(names(out), "NAME")]
+    out <- out[order(out$ZCTA3), ]
 
     ## group by and sum
     totals <- dplyr::group_by(out, ZCTA3)
@@ -531,10 +534,10 @@ zi_acs_weights <- function(year, survey, key){
     out <- dplyr::left_join(out, totals, by = "ZCTA3")
 
     ## calculate proportions
-    out <- dplyr::mutate(out, weight = estimate / total_pop)
+    out$weight <- out$estimate / out$total_pop
 
     ## subset
-    out <- dplyr::select(out, ZCTA3, GEOID, weight)
+    out <- out[, c("ZCTA3", "GEOID", "weight")]
   }
 
   ## return output

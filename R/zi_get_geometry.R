@@ -342,7 +342,7 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
       }
 
       ## subset
-      out <- dplyr::filter(out, GEOID %in% zcta_vec)
+      out <- out[out$GEOID %in% zcta_vec, ]
 
     } else if (!is.null(state) & !is.null(county)){
 
@@ -364,7 +364,7 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
         }
 
         ## subset
-        out <- dplyr::filter(out, GEOID %in% zcta_vec)
+        out <- out[out$GEOID %in% zcta_vec, ]
       } else {
         out <- NULL
       }
@@ -382,10 +382,10 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
       if (is.null(territory)){
 
         ## all territories not including American Samoa
-        out <- dplyr::filter(out, !(substr(GEOID, 1, 3) %in% c("006", "007", "008", "009", "969")))
+        out <- out[!(substr(out$GEOID, 1, 3) %in% c("006", "007", "008", "009", "969")), ]
 
         ## American Samoa
-        out <- dplyr::filter(out, GEOID != "96799")
+        out <- out[out$GEOID != "96799", ]
 
       } else if (!is.null(territory)){
 
@@ -408,7 +408,7 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
 
       ## subset
       if (!is.null(excludes)){
-        out <- dplyr::filter(out, !(GEOID %in% excludes))
+        out <- out[!(out$GEOID %in% excludes), ]
       }
 
     }
@@ -416,16 +416,16 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
     # subset based on starts with
     if (!is.null(out)){
       if (!is.null(starts_with)){
-        out <- dplyr::filter(out, substr(GEOID, 1, 2) %in% starts_with)
+        out <- out[substr(out$GEOID, 1, 2) %in% starts_with, ]
       }
 
       # subset columns based on return
       if (return == "id"){
-        out <- dplyr::select(out, GEOID)
+        out <- out[, "GEOID"]
       }
 
       # order output
-      out <- dplyr::arrange(out, GEOID)
+      out <- out[order(out$GEOID), ]
     }
   }
 
@@ -445,8 +445,8 @@ zi_process_county <- function(cb, state, county, year, zcta, method, style){
 
   # if tigris call successful, wrangle
   if (!is.null(counties)){
-    counties <- dplyr::select(counties, GEOID)
-    counties <- dplyr::filter(counties, GEOID %in% county)
+    counties <- counties[, "GEOID"]
+    counties <- counties[counties$GEOID %in% county, ]
 
     # calculate centroids
     if (method == "centroid"){
@@ -456,9 +456,9 @@ zi_process_county <- function(cb, state, county, year, zcta, method, style){
     # create simplified data
     if (style == "zcta5"){
       if (year < 2020){
-        zcta <- dplyr::select(zcta, GEOID10)
+        zcta <- zcta[, "GEOID10"]
       } else if (year >= 2020) {
-        zcta <- dplyr::select(zcta, GEOID20)
+        zcta <- zcta[, "GEOID20"]
       }
     }
 
@@ -521,9 +521,9 @@ zi_get_zcta3 <- function(year, state, county, territory, cb, starts_with,
 
     ## subset based on year
     if (year < 2020){
-      out <- dplyr::filter(out, ZCTA3 %in% zcta_vec)
+      out <- out[out$ZCTA3 %in% zcta_vec, ]
     } else if (year >= 2020){
-      out <- dplyr::filter(out, ZCTA3 %in% zcta_vec)
+      out <- out[out$ZCTA3 %in% zcta_vec, ]
     }
 
   } else if (!is.null(state) & !is.null(county)){
@@ -539,7 +539,7 @@ zi_get_zcta3 <- function(year, state, county, territory, cb, starts_with,
       zcta_vec <- zcta_vec[!(zcta_vec %in% excludes)]
 
       ## subset based on year
-      out <- dplyr::filter(out, ZCTA3 %in% zcta_vec)
+      out <- out[out$ZCTA3 %in% zcta_vec, ]
     } else {
       out <- NULL
     }
@@ -550,7 +550,7 @@ zi_get_zcta3 <- function(year, state, county, territory, cb, starts_with,
     if (is.null(territory)){
 
       ## all territories not including American Samoa
-      out <- dplyr::filter(out, !(ZCTA3 %in% c("006", "007", "008", "009", "969")))
+      out <- out[!(out$ZCTA3 %in% c("006", "007", "008", "009", "969")), ]
 
       ## American Samoa
       out <- sf::st_difference(out, samoa_bounding_box)
@@ -588,7 +588,7 @@ zi_get_zcta3 <- function(year, state, county, territory, cb, starts_with,
 
     ## remove exclusions
     if (!is.null(excludes)){
-      out <- dplyr::filter(out, !(ZCTA3 %in% excludes))
+      out <- out[!(out$ZCTA3 %in% excludes), ]
     }
 
   }
@@ -596,11 +596,11 @@ zi_get_zcta3 <- function(year, state, county, territory, cb, starts_with,
   # subset based on starts with
   if (!is.null(out)){
     if (!is.null(starts_with)){
-      out <- dplyr::filter(out, substr(ZCTA3, 1, 2) %in% starts_with)
+      out <- out[substr(out$ZCTA3, 1, 2) %in% starts_with, ]
     }
 
     # order output
-    out <- dplyr::arrange(out, ZCTA3)
+    out <- out[order(out$ZCTA3), ]
   }
 
   # return output

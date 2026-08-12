@@ -280,9 +280,9 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
       dict <- zi_prep_hud(dict, by = by, return_max = return_max)
 
       if (return == "id"){
-        dict <- dplyr::select(dict, zip5, source_geoid = geoid)
+        dict <- stats::setNames(dict[, c("zip5", "geoid")], c("zip5", "source_geoid"))
       } else if (return == "all"){
-        dict <- dplyr::select(dict, zip5, geoid, dplyr::everything())
+        dict <- dict[, c("zip5", "geoid", setdiff(names(dict), c("zip5", "geoid")))]
       }
 
       source_resultQN <- "geoid"
@@ -292,9 +292,11 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
       dict <- zi_load_uds(year = year)
 
       if (return == "id"){
-        dict <- dplyr::select(dict, zip5 = ZIP, source_zcta = ZCTA)
+        dict <- stats::setNames(dict[, c("ZIP", "ZCTA")], c("zip5", "source_zcta"))
       } else if (return == "all"){
-        dict <- dplyr::select(dict, zip5 = ZIP, zcta = ZCTA, dplyr::everything())
+        rest <- setdiff(names(dict), c("ZIP", "ZCTA"))
+        dict <- dict[, c("ZIP", "ZCTA", rest)]
+        names(dict)[1:2] <- c("zip5", "zcta")
       }
 
       source_resultQN <- "zcta"
@@ -309,13 +311,14 @@ zi_crosswalk <- function(.data, input_var, zip_source = "UDS", source_var,
     dict <- zip_source
 
     if (return == "id"){
-      dict <- dplyr::select(dict, dplyr::all_of(source_varQN), dplyr::all_of(source_resultQN))
+      dict <- dict[, c(source_varQN, source_resultQN)]
 
       source_new_result <- paste0("source_", source_resultQN)
       names(dict)[names(dict) == source_resultQN] <- source_new_result
 
     } else if (return == "all"){
-      dict <- dplyr::select(dict, dplyr::all_of(source_varQN), dplyr::all_of(source_resultQN), dplyr::everything())
+      cols <- c(source_varQN, source_resultQN)
+      dict <- dict[, c(cols, setdiff(names(dict), cols))]
     }
   }
 
