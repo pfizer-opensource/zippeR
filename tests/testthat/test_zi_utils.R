@@ -184,6 +184,22 @@ test_that("group_summarise_base does not conflate NA and NaN in a numeric groupi
 
 })
 
+test_that("group_summarise_base coalesces non-contiguous repeated NA/NaN into two groups, matching dplyr", {
+
+  df <- data.frame(k = c(NA_real_, NaN, NA_real_, NaN), v = c(1, 2, 3, 4))
+
+  out <- group_summarise_base(df, "k", function(d) list(total = sum(d$v)))
+
+  # order()'s radix method ties NA and NaN (preserves input order rather than
+  # sub-sorting by kind), so interleaved NA/NaN values would stay
+  # non-contiguous - and therefore split into 4 singleton groups - unless the
+  # sort explicitly disambiguates NaN from NA before run-boundary detection
+  expect_equal(nrow(out), 2)
+  expect_equal(out$total[is.na(out$k) & !is.nan(out$k)], 4)
+  expect_equal(out$total[is.nan(out$k)], 6)
+
+})
+
 test_that("group_summarise_base supports multi-column grouping, matching dplyr", {
 
   df <- data.frame(

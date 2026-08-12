@@ -94,8 +94,19 @@ group_summarise_base <- function(.data, group_vars, summarise_fun) {
 
   ## order ascending by group_vars using radix (C-locale, locale-independent)
   ## sort, matching dplyr::group_by()'s ordering contract exactly, including
-  ## NA-last placement
-  ord <- do.call(order, c(as.list(.data[group_vars]), list(method = "radix")))
+  ## NA-last placement. is.nan(v) is included as a secondary sort key
+  ## immediately after each column's value: order()'s radix method treats NA
+  ## and NaN as tied (same relative position preserved, not sub-sorted by
+  ## kind), so without this, interleaved NA/NaN values in the same column
+  ## would not end up contiguous after sorting, breaking the run-boundary
+  ## detection below (which does distinguish NaN from real NA).
+  ord_keys <- list()
+  for (col in group_vars) {
+    v <- .data[[col]]
+    ord_keys[[length(ord_keys) + 1]] <- v
+    ord_keys[[length(ord_keys) + 1]] <- is.nan(v)
+  }
+  ord <- do.call(order, c(ord_keys, list(method = "radix")))
   .data <- .data[ord, , drop = FALSE]
 
   ## identify group boundaries by detecting where any group_var's value
