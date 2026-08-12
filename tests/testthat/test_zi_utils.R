@@ -177,10 +177,12 @@ test_that("group_summarise_base does not conflate NA and NaN in a numeric groupi
 
   # dplyr::group_by()+summarise() keeps NA and NaN as distinct group keys;
   # is.na() alone treats both as missing, so a naive implementation can
-  # silently merge them into one group
+  # silently merge them into one group. dplyr also sorts NaN ahead of NA
+  # (both after all non-missing values), so row order is checked exactly.
   expect_equal(nrow(out), 4)
-  expect_equal(out$total[is.na(out$k) & !is.nan(out$k)], 4)
-  expect_equal(out$total[is.nan(out$k)], 6)
+  expect_equal(out$total, c(10, 20, 6, 4))
+  expect_true(is.nan(out$k[3]))
+  expect_true(is.na(out$k[4]) && !is.nan(out$k[4]))
 
 })
 
@@ -193,10 +195,12 @@ test_that("group_summarise_base coalesces non-contiguous repeated NA/NaN into tw
   # order()'s radix method ties NA and NaN (preserves input order rather than
   # sub-sorting by kind), so interleaved NA/NaN values would stay
   # non-contiguous - and therefore split into 4 singleton groups - unless the
-  # sort explicitly disambiguates NaN from NA before run-boundary detection
+  # sort explicitly disambiguates NaN from NA before run-boundary detection.
+  # dplyr sorts NaN ahead of NA, so row order is checked exactly too.
   expect_equal(nrow(out), 2)
-  expect_equal(out$total[is.na(out$k) & !is.nan(out$k)], 4)
-  expect_equal(out$total[is.nan(out$k)], 6)
+  expect_equal(out$total, c(6, 4))
+  expect_true(is.nan(out$k[1]))
+  expect_true(is.na(out$k[2]) && !is.nan(out$k[2]))
 
 })
 
