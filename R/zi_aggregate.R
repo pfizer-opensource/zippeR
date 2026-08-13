@@ -369,12 +369,11 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
 ## Extensive Decennial Census
 zi_census_extensive <- function(.data){
 
-  # global variables
-  ZCTA3 = variable = value = NULL
-
   ## group by and sum
-  .data <- dplyr::group_by(.data, ZCTA3, variable)
-  .data <- dplyr::summarise(.data, value = sum(value, na.rm = TRUE))
+  .data <- group_summarise_base(.data, c("ZCTA3", "variable"),
+    function(d) list(value = sum(d$value, na.rm = TRUE))
+  )
+  .data <- tibble::as_tibble(.data)
 
   ## return output
   return(.data)
@@ -384,22 +383,17 @@ zi_census_extensive <- function(.data){
 ## Intensive Decennial Census
 zi_census_intensive <- function(.data, weights, method){
 
-  # global variables
-  ZCTA3 = GEOID = variable = value = weight = NULL
-
   ## join
   .data <- left_join_base(.data, weights, by = c("ZCTA3", "GEOID"))
 
-  ## group_by
-  .data <- dplyr::group_by(.data, ZCTA3, variable)
-
   ## summarise (method dependent)
   if (method == "mean"){
-    .data <- dplyr::summarise(.data, value = stats::weighted.mean(value, weight, na.rm = TRUE))
+    .data <- group_summarise_base(.data, c("ZCTA3", "variable"),
+      function(d) list(value = stats::weighted.mean(d$value, d$weight, na.rm = TRUE))
+    )
   } else if (method == "median"){
-    .data <- dplyr::summarise(
-      .data,
-      value = weighted_median(value, weight)
+    .data <- group_summarise_base(.data, c("ZCTA3", "variable"),
+      function(d) list(value = weighted_median(d$value, d$weight))
     )
   } else {
     cli::cli_abort(c(
@@ -408,6 +402,8 @@ zi_census_intensive <- function(.data, weights, method){
     ))
   }
 
+  .data <- tibble::as_tibble(.data)
+
   ## return output
   return(.data)
 
@@ -415,9 +411,6 @@ zi_census_intensive <- function(.data, weights, method){
 
 ## Intensive Census Weights
 zi_census_weights <- function(year, key){
-
-  # global variables
-  GEOID = NAME = ZCTA3 = total_pop = value = weight = NULL
 
   ## call get_decennial
   out <- zi_get_decennial(geography = "zcta", variables = "P001001",
@@ -432,8 +425,9 @@ zi_census_weights <- function(year, key){
     out <- out[order(out$ZCTA3), ]
 
     ## group by and sum
-    totals <- dplyr::group_by(out, ZCTA3)
-    totals <- dplyr::summarise(totals, total_pop = sum(value, na.rm = TRUE))
+    totals <- group_summarise_base(out, "ZCTA3",
+      function(d) list(total_pop = sum(d$value, na.rm = TRUE))
+    )
 
     ## join
     out <- left_join_base(out, totals, by = "ZCTA3")
@@ -453,20 +447,21 @@ zi_census_weights <- function(year, key){
 ## Extensive ACS
 zi_acs_extensive <- function(.data){
 
-  # global variables
-  ZCTA3 = variable = estimate = moe = NULL
-
   ## square MOEs
   .data$moe <- .data$moe^2
 
   ## group by and sum
-  .data <- dplyr::group_by(.data, ZCTA3, variable)
-  .data <- dplyr::summarise(.data,
-                            estimate = sum(estimate, na.rm = TRUE),
-                            moe = sum(moe, na.rm = TRUE))
+  .data <- group_summarise_base(.data, c("ZCTA3", "variable"),
+    function(d) list(
+      estimate = sum(d$estimate, na.rm = TRUE),
+      moe = sum(d$moe, na.rm = TRUE)
+    )
+  )
 
   ## square root of MOE
   .data$moe <- sqrt(.data$moe)
+
+  .data <- tibble::as_tibble(.data)
 
   ## return output
   return(.data)
@@ -476,24 +471,23 @@ zi_acs_extensive <- function(.data){
 ## Intensive ACS
 zi_acs_intensive <- function(.data, weights, method){
 
-  # global variables
-  ZCTA3 = GEOID = variable = estimate = weight = moe = NULL
-
   ## join
   .data <- left_join_base(.data, weights, by = c("ZCTA3", "GEOID"))
 
-  ## group_by
-  .data <- dplyr::group_by(.data, ZCTA3, variable)
-
   ## summarise (method dependent)
   if (method == "mean"){
-    .data <- dplyr::summarise(.data,
-                              estimate = stats::weighted.mean(estimate, weight, na.rm = TRUE),
-                              moe = stats::weighted.mean(moe, weight, na.rm = TRUE))
+    .data <- group_summarise_base(.data, c("ZCTA3", "variable"),
+      function(d) list(
+        estimate = stats::weighted.mean(d$estimate, d$weight, na.rm = TRUE),
+        moe = stats::weighted.mean(d$moe, d$weight, na.rm = TRUE)
+      )
+    )
   } else if (method == "median"){
-    .data <- dplyr::summarise(.data,
-                              estimate = weighted_median(estimate, weight),
-                              moe = weighted_median(moe, weight)
+    .data <- group_summarise_base(.data, c("ZCTA3", "variable"),
+      function(d) list(
+        estimate = weighted_median(d$estimate, d$weight),
+        moe = weighted_median(d$moe, d$weight)
+      )
     )
   } else {
     cli::cli_abort(c(
@@ -502,6 +496,8 @@ zi_acs_intensive <- function(.data, weights, method){
     ))
   }
 
+  .data <- tibble::as_tibble(.data)
+
   ## return output
   return(.data)
 
@@ -509,9 +505,6 @@ zi_acs_intensive <- function(.data, weights, method){
 
 ## Intensive ACS Weights
 zi_acs_weights <- function(year, survey, key){
-
-  # global variables
-  GEOID = NAME = ZCTA3 = total_pop = estimate = weight = NULL
 
   ## call get_acs
   out <- zi_get_acs(geography = "zcta", variables = "B01003_001",
@@ -527,8 +520,9 @@ zi_acs_weights <- function(year, survey, key){
     out <- out[order(out$ZCTA3), ]
 
     ## group by and sum
-    totals <- dplyr::group_by(out, ZCTA3)
-    totals <- dplyr::summarise(totals, total_pop = sum(estimate, na.rm = TRUE))
+    totals <- group_summarise_base(out, "ZCTA3",
+      function(d) list(total_pop = sum(d$estimate, na.rm = TRUE))
+    )
 
     ## join
     out <- left_join_base(out, totals, by = "ZCTA3")

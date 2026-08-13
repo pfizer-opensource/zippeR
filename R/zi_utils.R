@@ -59,6 +59,93 @@ left_join_base <- function(x, y, by, suffixes = c(".x", ".y")) {
 
 }
 
+# Internal group_by()+summarise() helper (replaces dplyr::group_by()+dplyr::summarise())
+# Performs a split-apply-combine grouped aggregation in Base R, matching
+# dplyr::group_by(group_vars)+dplyr::summarise()'s output contract: one row
+# per unique combination of `group_vars` present in `.data`, sorted ascending
+# by those columns (in the order given, C-locale/byte-order via
+# order(method = "radix") - matching dplyr::group_by()'s locale-independent
+# sort exactly, including NA sorting last), with the group-key columns first
+# followed by whatever columns `summarise_fun` returns.
+#
+# `summarise_fun` is called once per group with that group's subset data.frame
+# and must return a named list or single-row data.frame of the aggregated
+# columns (e.g. function(d) list(value = sum(d$value, na.rm = TRUE))).
+#
+# Grouping is done by detecting run-boundaries in the sorted data (NA treated
+# as equal to a preceding NA, mirroring dplyr::group_by()'s NA-as-a-real-level
+# semantics), rather than by building string labels via factor()/interaction().
+# The latter would silently collide a real NA with the literal string "NA"
+# (both stringify to "NA" as an interaction label), merging otherwise-distinct
+# groups - the run-boundary approach never stringifies keys, so this can't happen.
+group_summarise_base <- function(.data, group_vars, summarise_fun) {
+
+  if (nrow(.data) == 0) {
+    ## preserve grouping-column types/names on empty input; the summarised
+    ## column schema is unknown without at least one row, so probe it with a
+    ## single all-NA row of .data's own column types, then discard that row
+    probe <- .data[NA_integer_, , drop = FALSE]
+    summarised_probe <- as.data.frame(summarise_fun(probe))
+    out <- cbind(.data[group_vars], summarised_probe[0, , drop = FALSE])
+    out <- out[0, , drop = FALSE]
+    rownames(out) <- NULL
+    return(out)
+  }
+
+  ## order ascending by group_vars using radix (C-locale, locale-independent)
+  ## sort, matching dplyr::group_by()'s ordering contract exactly, including
+  ## NA-last placement. !is.nan(v) is included as a secondary sort key
+  ## immediately after each column's value: order()'s radix method treats NA
+  ## and NaN as tied (same relative position preserved, not sub-sorted by
+  ## kind), so without this, interleaved NA/NaN values in the same column
+  ## would not end up contiguous after sorting, breaking the run-boundary
+  ## detection below (which does distinguish NaN from real NA). Negating
+  ## is.nan() (rather than using it directly) sorts NaN ahead of NA, matching
+  ## dplyr::group_by()'s NaN-before-NA group ordering exactly.
+  ord_keys <- list()
+  for (col in group_vars) {
+    v <- .data[[col]]
+    ord_keys[[length(ord_keys) + 1]] <- v
+    ord_keys[[length(ord_keys) + 1]] <- !is.nan(v)
+  }
+  ord <- do.call(order, c(ord_keys, list(method = "radix")))
+  .data <- .data[ord, , drop = FALSE]
+
+  ## identify group boundaries by detecting where any group_var's value
+  ## changes from the previous (now-sorted) row. NaN and NA are both
+  ## "missing" under is.na(), but dplyr treats them as distinct group keys
+  ## (numeric NaN != NA); is.nan() distinguishes them here so a NaN row is
+  ## never merged into a real-NA group (or vice versa). is.nan() is safe to
+  ## call on any vector type (returns all-FALSE for non-double types).
+  n <- nrow(.data)
+  changed <- rep(FALSE, n)
+  for (col in group_vars) {
+    v <- .data[[col]]
+    both_missing_same_kind <- is.na(v[-1]) & is.na(v[-n]) & (is.nan(v[-1]) == is.nan(v[-n]))
+    both_present_equal <- !is.na(v[-1]) & !is.na(v[-n]) & v[-1] == v[-n]
+    same_as_prev <- c(FALSE, both_present_equal | both_missing_same_kind)
+    changed <- changed | !same_as_prev
+  }
+  changed[1] <- TRUE
+  group_id <- cumsum(changed)
+
+  ## split into groups (already in ascending key order) and summarise each
+  groups <- split(.data, group_id)
+  summarised <- lapply(groups, summarise_fun)
+
+  ## recover the group-key values (one row per group, same order as `groups`)
+  group_key_rows <- do.call(rbind, lapply(groups, function(d) d[1, group_vars, drop = FALSE]))
+  rownames(group_key_rows) <- NULL
+
+  summarised_rows <- do.call(rbind, lapply(summarised, as.data.frame))
+  rownames(summarised_rows) <- NULL
+
+  out <- cbind(group_key_rows, summarised_rows)
+  rownames(out) <- NULL
+
+  out
+}
+
 # Internal weighted median helper (replaces spatstat.univar::weighted.median)
 # Computes the weighted median of x using weights w.
 # NA values in x or w are silently dropped (consistent with na.rm = TRUE in

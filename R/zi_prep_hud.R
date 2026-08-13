@@ -88,7 +88,6 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
 
   # identify max
   out <- out[order(out$zip5, out$state, out$geoid), ]
-  out <- dplyr::group_by(out, zip5, state)
 
   # ave() groups by combining vectors via split(); unlike dplyr::group_by(),
   # split() drops NA keys into per-row singleton groups instead of grouping
@@ -104,7 +103,12 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
     grp_max <- stats::ave(out$ratio, zip5_grp, state_grp,
                     FUN = function(x) max(x, na.rm = TRUE))
     out <- out[!is.na(out$ratio) & out$ratio == grp_max, ]
-    out <- dplyr::slice(out, 1)
+    # dplyr::slice(out, 1) on a zip5/state-grouped tibble takes the first
+    # remaining row per group, preserving current row order (sorted by geoid
+    # above) - !duplicated() on the same key columns reproduces this exactly,
+    # including NA-as-a-real-level grouping (duplicated() treats repeated NA
+    # values as matches, mirroring dplyr's grouping here).
+    out <- out[!duplicated(out[c("zip5", "state")]), ]
   } else if (!return_max){
     zip5_grp <- factor(out$zip5, exclude = NULL)
     state_grp <- factor(out$state, exclude = NULL)
@@ -113,10 +117,9 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
     out$max <- ifelse(out$ratio == grp_max, TRUE, FALSE)
   }
 
-  out <- dplyr::ungroup(out)
-
   # subset on max and prep output
   out <- out[!is.na(out$state), ]
+  out <- tibble::as_tibble(out)
 
   # return output
   return(out)
