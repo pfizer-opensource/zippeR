@@ -83,6 +83,10 @@ normalize_uds_year <- function(year) {
 }
 
 # Build combined dataset -----------------------------------------------------
+# NOTE: comments below intentionally reference dplyr by name to document
+# the exact behavior this Base R helper reproduces (Epic L, #129). These
+# are explanatory references, not functional dplyr usage, and are out of
+# scope for "dplyr reference removal" (see #141).
 # bind_rows_base(): row-binds two data frames by column name (matching
 # dplyr::bind_rows()'s contract), since not every year's schema includes
 # every standard column (see standard_cols intersection above). Missing

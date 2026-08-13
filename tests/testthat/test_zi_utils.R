@@ -1,4 +1,8 @@
 # fixture data (no API calls) ------------------------------------------------
+# NOTE: several test titles/comments below intentionally reference dplyr by
+# name to document the exact behavior each Base R helper reproduces (Epic
+# L, #129). These are explanatory references, not functional dplyr usage,
+# and are out of scope for "dplyr reference removal" (see #141).
 
 x_simple <- data.frame(
   id = c(1, 2, NA, 3),
