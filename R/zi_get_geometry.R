@@ -317,9 +317,6 @@ zi_get_geometry <- function(year, style = "zcta5", return = "id", class = "sf",
 zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
                          starts_with, includes, excludes, method){
 
-  # global variables
-  GEOID10 = GEOID20 = GEOID = NULL
-
   # tigris call - TAG
   out <- zi_get_tigris(.f = "zctas", year = year, state = NULL, cb = cb)
 
@@ -336,9 +333,9 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
 
       ## rename year
       if (year < 2020){
-        out <- dplyr::rename(out, GEOID = GEOID10)
+        names(out)[names(out) == "GEOID10"] <- "GEOID"
       } else if (year >= 2020){
-        out <- dplyr::rename(out, GEOID = GEOID20)
+        names(out)[names(out) == "GEOID20"] <- "GEOID"
       }
 
       ## subset
@@ -358,9 +355,9 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
 
         ## rename year
         if (year < 2020){
-          out <- dplyr::rename(out, GEOID = GEOID10)
+          names(out)[names(out) == "GEOID10"] <- "GEOID"
         } else if (year >= 2020){
-          out <- dplyr::rename(out, GEOID = GEOID20)
+          names(out)[names(out) == "GEOID20"] <- "GEOID"
         }
 
         ## subset
@@ -373,9 +370,9 @@ zi_get_zcta5 <- function(year, return = "id", state, county, territory, cb,
 
       ## rename year
       if (year < 2020){
-        out <- dplyr::rename(out, GEOID = GEOID10)
+        names(out)[names(out) == "GEOID10"] <- "GEOID"
       } else if (year >= 2020){
-        out <- dplyr::rename(out, GEOID = GEOID20)
+        names(out)[names(out) == "GEOID20"] <- "GEOID"
       }
 
       ## manage territories

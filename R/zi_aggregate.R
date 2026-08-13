@@ -266,7 +266,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
         intensive_df <- zi_census_intensive(intensive_df, weights = weights, method = intensive_method)
 
         ## combine
-        out <- dplyr::bind_rows(extensive_df, intensive_df)
+        out <- bind_rows_base(extensive_df, intensive_df)
         out <- out[order(out$ZCTA3, out$variable), ]
       } else {
         out <- NULL
@@ -309,7 +309,7 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
         intensive_df <- zi_acs_intensive(intensive_df, weights = weights, method = intensive_method)
 
         ## combine
-        out <- dplyr::bind_rows(extensive_df, intensive_df)
+        out <- bind_rows_base(extensive_df, intensive_df)
         out <- out[order(out$ZCTA3, out$variable), ]
       } else {
         out <- NULL
@@ -336,7 +336,8 @@ zi_aggregate <- function(.data, year, extensive = NULL, intensive = NULL,
         out <- tibble::as_tibble(out)
       } else {
         ## prep names
-        out <- dplyr::rename(out, "E" = "estimate", "M" = "moe")
+        names(out)[names(out) == "estimate"] <- "E"
+        names(out)[names(out) == "moe"] <- "M"
 
         ## pivot ACS (estimate + moe columns)
         out <- stats::reshape(as.data.frame(out), idvar = "ZCTA3", timevar = "variable",

@@ -163,7 +163,8 @@ zi_load_labels_usps <- function(type, include_scf, vintage){
     out <- tibble::as_tibble(out)
 
     ## rename cols
-    out <- dplyr::rename(out, label_area = destination_area, label_state = destination_state)
+    names(out)[names(out) == "destination_area"] <- "label_area"
+    names(out)[names(out) == "destination_state"] <- "label_state"
 
     ## optionally remove scf cols
     if (!include_scf){
