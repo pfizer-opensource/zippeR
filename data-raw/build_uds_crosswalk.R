@@ -17,7 +17,6 @@
 #   Retrieved: run Sys.time() below to record date of build
 
 # Dependencies ---------------------------------------------------------------
-library(dplyr)
 library(readr)
 library(stringr)
 library(tibble)
@@ -58,7 +57,7 @@ normalize_uds_year <- function(year) {
 
   # remove rows with no ZCTA (must happen before zero-padding so "N/A" is caught)
   if ("zcta" %in% names(df)) {
-    df <- dplyr::filter(df, !(zcta %in% c("N/A", NA, "No ZCTA", "")))
+    df <- df[!(df$zcta %in% c("N/A", NA, "No ZCTA", "")), , drop = FALSE]
   }
 
   # zero-pad ZIP and ZCTA to 5 digits
@@ -67,16 +66,16 @@ normalize_uds_year <- function(year) {
 
   # remove military ZIPs
   if ("zip_type" %in% names(df)) {
-    df <- dplyr::filter(df, !grepl("^M", zip_type))
+    df <- df[!grepl("^M", df$zip_type), , drop = FALSE]
   }
 
   # title-case post office names
   if ("po_name" %in% names(df)) {
-    df <- dplyr::mutate(df, po_name = stringr::str_to_title(po_name))
+    df$po_name <- stringr::str_to_title(df$po_name)
   }
 
   # sort and add year tag
-  df <- dplyr::arrange(df, zip)
+  df <- df[order(df$zip), , drop = FALSE]
   df$year <- as.integer(year)
 
   cat(" OK (", nrow(df), "rows )\n", sep = "")
@@ -84,8 +83,31 @@ normalize_uds_year <- function(year) {
 }
 
 # Build combined dataset -----------------------------------------------------
+# bind_rows_base(): row-binds two data frames by column name (matching
+# dplyr::bind_rows()'s contract), since not every year's schema includes
+# every standard column (see standard_cols intersection above). Missing
+# columns are filled with NA for the frame that lacks them.
+bind_rows_base <- function(x, y) {
+  x_cols <- names(x)
+  y_only_cols <- setdiff(names(y), x_cols)
+  all_cols <- c(x_cols, y_only_cols)
+
+  for (col in y_only_cols) {
+    x[[col]] <- NA
+  }
+  for (col in x_cols) {
+    if (!(col %in% names(y))) {
+      y[[col]] <- NA
+    }
+  }
+
+  out <- rbind(x[, all_cols, drop = FALSE], y[, all_cols, drop = FALSE])
+  rownames(out) <- NULL
+  out
+}
+
 all_years <- lapply(UDS_YEARS, normalize_uds_year)
-crosswalk  <- dplyr::bind_rows(all_years)
+crosswalk  <- Reduce(bind_rows_base, all_years)
 
 cat("\nCombined rows:", nrow(crosswalk), "\n")
 cat("Years present:", paste(sort(unique(crosswalk$year)), collapse = ", "), "\n")

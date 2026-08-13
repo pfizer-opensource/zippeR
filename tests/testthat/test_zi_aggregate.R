@@ -106,21 +106,21 @@ dec_weights <- tibble::tibble(
 )
 
 test_that("zi_census_extensive sums values by ZCTA3 and variable", {
-  input <- dplyr::filter(dec_fixture, variable == "P001001")
+  input <- dec_fixture[dec_fixture$variable == "P001001", ]
   result <- zi_census_extensive(input)
 
   expect_s3_class(result, "tbl_df")
   expect_true(all(c("ZCTA3", "variable", "value") %in% names(result)))
 
-  r630 <- dplyr::filter(result, ZCTA3 == "630")
-  r631 <- dplyr::filter(result, ZCTA3 == "631")
+  r630 <- result[result$ZCTA3 == "630", ]
+  r631 <- result[result$ZCTA3 == "631", ]
 
   expect_equal(r630$value, 600)
   expect_equal(r631$value, 750)
 })
 
 test_that("zi_census_intensive computes weighted mean correctly", {
-  input <- dplyr::filter(dec_fixture, variable == "P013001")
+  input <- dec_fixture[dec_fixture$variable == "P013001", ]
   result <- zi_census_intensive(input, weights = dec_weights, method = "mean")
 
   expect_s3_class(result, "tbl_df")
@@ -128,17 +128,17 @@ test_that("zi_census_intensive computes weighted mean correctly", {
 
   # expected weighted mean for 630: (35.2*100 + 38.1*200 + 42.0*300) / 600
   expected_630 <- stats::weighted.mean(c(35.2, 38.1, 42.0), c(100 / 600, 200 / 600, 300 / 600))
-  r630 <- dplyr::filter(result, ZCTA3 == "630")
+  r630 <- result[result$ZCTA3 == "630", ]
   expect_equal(r630$value, expected_630, tolerance = 1e-6)
 
   # expected weighted mean for 631: (29.5*150 + 33.7*250 + 40.1*350) / 750
   expected_631 <- stats::weighted.mean(c(29.5, 33.7, 40.1), c(150 / 750, 250 / 750, 350 / 750))
-  r631 <- dplyr::filter(result, ZCTA3 == "631")
+  r631 <- result[result$ZCTA3 == "631", ]
   expect_equal(r631$value, expected_631, tolerance = 1e-6)
 })
 
 test_that("zi_census_intensive computes weighted median correctly", {
-  input <- dplyr::filter(dec_fixture, variable == "P013001")
+  input <- dec_fixture[dec_fixture$variable == "P013001", ]
   result <- zi_census_intensive(input, weights = dec_weights, method = "median")
 
   expect_s3_class(result, "tbl_df")
@@ -148,7 +148,7 @@ test_that("zi_census_intensive computes weighted median correctly", {
   # sorted x = c(35.2, 38.1, 42.0), cumsum(w)/sum(w) = c(1/6, 1/2, 1)
   # first index where cumsum >= 0.5 is index 2 → value 38.1
   expected_630 <- 38.1
-  r630 <- dplyr::filter(result, ZCTA3 == "630")
+  r630 <- result[result$ZCTA3 == "630", ]
   expect_equal(r630$value, expected_630, tolerance = 1e-6)
 })
 
@@ -181,24 +181,24 @@ acs_weights <- tibble::tibble(
 )
 
 test_that("zi_acs_extensive sums estimates and propagates MOE correctly", {
-  input <- dplyr::filter(acs_fixture, variable == "B01003_001")
+  input <- acs_fixture[acs_fixture$variable == "B01003_001", ]
   result <- zi_acs_extensive(input)
 
   expect_s3_class(result, "tbl_df")
   expect_true(all(c("ZCTA3", "variable", "estimate", "moe") %in% names(result)))
 
-  r630 <- dplyr::filter(result, ZCTA3 == "630")
+  r630 <- result[result$ZCTA3 == "630", ]
   expect_equal(r630$estimate, 6000)
   # MOE = sqrt(100^2 + 150^2 + 200^2)
   expect_equal(r630$moe, sqrt(100^2 + 150^2 + 200^2), tolerance = 1e-6)
 
-  r631 <- dplyr::filter(result, ZCTA3 == "631")
+  r631 <- result[result$ZCTA3 == "631", ]
   expect_equal(r631$estimate, 7500)
   expect_equal(r631$moe, sqrt(120^2 + 180^2 + 220^2), tolerance = 1e-6)
 })
 
 test_that("zi_acs_intensive computes weighted mean for estimate and moe", {
-  input <- dplyr::filter(acs_fixture, variable == "B19013_001")
+  input <- acs_fixture[acs_fixture$variable == "B19013_001", ]
   result <- zi_acs_intensive(input, weights = acs_weights, method = "mean")
 
   expect_s3_class(result, "tbl_df")
@@ -209,13 +209,13 @@ test_that("zi_acs_intensive computes weighted mean for estimate and moe", {
   expected_est_630 <- stats::weighted.mean(c(55000, 62000, 48000), w630)
   expected_moe_630 <- stats::weighted.mean(c(5000, 6000, 4500), w630)
 
-  r630 <- dplyr::filter(result, ZCTA3 == "630")
+  r630 <- result[result$ZCTA3 == "630", ]
   expect_equal(r630$estimate, expected_est_630, tolerance = 1e-6)
   expect_equal(r630$moe, expected_moe_630, tolerance = 1e-6)
 })
 
 test_that("zi_acs_intensive computes weighted median for estimate and moe", {
-  input <- dplyr::filter(acs_fixture, variable == "B19013_001")
+  input <- acs_fixture[acs_fixture$variable == "B19013_001", ]
   result <- zi_acs_intensive(input, weights = acs_weights, method = "median")
 
   expect_s3_class(result, "tbl_df")
@@ -228,7 +228,7 @@ test_that("zi_acs_intensive computes weighted median for estimate and moe", {
   expected_est_630 <- 48000
   expected_moe_630 <- 4500
 
-  r630 <- dplyr::filter(result, ZCTA3 == "630")
+  r630 <- result[result$ZCTA3 == "630", ]
   expect_equal(r630$estimate, expected_est_630, tolerance = 1e-6)
   expect_equal(r630$moe, expected_moe_630, tolerance = 1e-6)
 })
@@ -250,10 +250,10 @@ test_that("zi_aggregate works with decennial extensive data", {
   expect_true(all(c("ZCTA3", "variable", "value") %in% names(result)))
   expect_equal(nrow(result), 2)
 
-  r630 <- dplyr::filter(result, ZCTA3 == "630")
+  r630 <- result[result$ZCTA3 == "630", ]
   expect_equal(r630$value, 600)
 
-  r631 <- dplyr::filter(result, ZCTA3 == "631")
+  r631 <- result[result$ZCTA3 == "631", ]
   expect_equal(r631$value, 750)
 })
 
@@ -354,7 +354,7 @@ test_that("zi_aggregate works with live Census data", {
     variables = c(medincome = "B19013_001"),
     state = "VT",
     year = 2020
-  ) |> dplyr::select(-NAME)
+  ) |> (\(d) d[, setdiff(names(d), "NAME"), drop = FALSE])()
 
   expect_error(
     zi_aggregate(year = 2020, survey = correct_survey,
