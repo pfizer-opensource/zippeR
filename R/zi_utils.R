@@ -1,3 +1,8 @@
+# NOTE: the comments in this file intentionally reference dplyr by name to
+# document the exact behavior each Base R helper reproduces (Epic L, #129).
+# These are explanatory references, not functional dplyr usage, and are
+# out of scope for "dplyr reference removal" (see #141).
+
 # Internal left join helper (replaces dplyr::left_join())
 # Wraps base merge() to reproduce dplyr::left_join()'s row-order and
 # column-order contract: all rows of x are kept in their original order,

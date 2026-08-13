@@ -90,6 +90,10 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   # identify max
   out <- out[order(out$zip5, out$state, out$geoid), ]
 
+  # NOTE: comments below intentionally reference dplyr by name to document
+  # the exact behavior each Base R construct reproduces (Epic L, #129).
+  # These are explanatory references, not functional dplyr usage, and are
+  # out of scope for "dplyr reference removal" (see #141).
   # ave() groups by combining vectors via split(); unlike dplyr::group_by(),
   # split() drops NA keys into per-row singleton groups instead of grouping
   # them together. Coercing to factors with exclude = NULL preserves NA as a
