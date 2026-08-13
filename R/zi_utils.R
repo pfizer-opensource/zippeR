@@ -146,6 +146,38 @@ group_summarise_base <- function(.data, group_vars, summarise_fun) {
   out
 }
 
+# Internal bind_rows() helper (replaces dplyr::bind_rows())
+# Row-binds two data frames by column name rather than position, matching
+# dplyr::bind_rows()'s contract: the union of both frames' column names is
+# used, any column missing from one frame is filled with NA for that frame's
+# rows, and the output column order follows the union order (x's columns
+# first, in x's order, followed by any additional y-only columns, in y's
+# order) so downstream code relying on column position/order still works
+# even if x and y arrive with differently-ordered or partially-overlapping
+# schemas. rbind() alone would error (or silently misalign) on mismatched
+# columns, so this restores dplyr's more permissive behavior.
+bind_rows_base <- function(x, y) {
+
+  x_cols <- names(x)
+  y_only_cols <- setdiff(names(y), x_cols)
+  all_cols <- c(x_cols, y_only_cols)
+
+  for (col in y_only_cols) {
+    x[[col]] <- NA
+  }
+  for (col in x_cols) {
+    if (!(col %in% names(y))) {
+      y[[col]] <- NA
+    }
+  }
+
+  out <- rbind(x[, all_cols, drop = FALSE], y[, all_cols, drop = FALSE])
+  rownames(out) <- NULL
+
+  return(out)
+
+}
+
 # Internal weighted median helper (replaces spatstat.univar::weighted.median)
 # Computes the weighted median of x using weights w.
 # NA values in x or w are silently dropped (consistent with na.rm = TRUE in

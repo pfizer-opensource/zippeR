@@ -65,7 +65,8 @@ zi_prep_hud <- function(.data, by, return_max = TRUE){
   }
 
   ## tidy
-  hud <- dplyr::rename_with(.data, tolower)
+  hud <- .data
+  names(hud) <- tolower(names(.data))
 
   if (by == "residential"){
     hud <- stats::setNames(hud[, c("zip", "geoid", "state", "res_ratio")],
